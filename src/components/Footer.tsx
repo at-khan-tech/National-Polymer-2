@@ -213,146 +213,206 @@ export const Footer: React.FC = () => {
             aria-label="Footer navigation"
             className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-4"
           >
-            {/* Column 1: Quick Links */}
+            {/* Column 1: Company */}
             <div>
               <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-white">
-                Quick Links
+                About Us
               </h2>
-              <ul className="mt-5 space-y-3 text-sm">
+              <ul className="mt-5 space-y-2.5 text-xs sm:text-sm">
                 <li>
-                  <Link href="#home" className="text-white/70 hover:text-white transition-colors">
-                    Home
+                  <Link href="/about#about-detail" className="text-white/70 hover:text-white transition-colors">
+                    Company in Detail
                   </Link>
                 </li>
                 <li>
-                  <Link href="#about" className="text-white/70 hover:text-white transition-colors">
-                    About Us
+                  <Link href="/about#vision-mission" className="text-white/70 hover:text-white transition-colors">
+                    Vision &amp; Mission
                   </Link>
                 </li>
                 <li>
-                  <Link href="#team" className="text-white/70 hover:text-white transition-colors">
+                  <Link href="/about#why-choose-us" className="text-white/70 hover:text-white transition-colors">
+                    Why Choose Us
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/about#global-network" className="text-white/70 hover:text-white transition-colors">
+                    Global Supply Network
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/about#suppliers-partners" className="text-white/70 hover:text-white transition-colors">
+                    Suppliers &amp; Partners
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/about#quality-compliance" className="text-white/70 hover:text-white transition-colors">
+                    Quality &amp; Compliance
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/about#sustainability" className="text-white/70 hover:text-white transition-colors">
+                    Sustainability
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/about#team" className="text-white/70 hover:text-white transition-colors">
                     Our Team
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#standards" className="text-white/70 hover:text-white transition-colors">
-                    Standards
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#gallery" className="text-white/70 hover:text-white transition-colors">
-                    Gallery
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#contact" className="text-white/70 hover:text-white transition-colors">
-                    Contact Us
                   </Link>
                 </li>
               </ul>
             </div>
 
-            {/* Column 2: Resins & Polymers */}
+            {/* Column 2: Products */}
             <div>
               <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-white">
                 Products
               </h2>
-              <ul className="mt-5 space-y-3 text-sm">
+              <ul className="mt-5 space-y-2.5 text-xs sm:text-sm">
                 <li>
-                  <Link href="#products" className="text-white/70 hover:text-white transition-colors">
-                    HDPE &amp; LDPE Resins
+                  <Link href="/products/pp" className="text-white/70 hover:text-white transition-colors">
+                    PP (Polypropylene)
                   </Link>
                 </li>
                 <li>
-                  <Link href="#products" className="text-white/70 hover:text-white transition-colors">
-                    LLDPE Film Grades
+                  <Link href="/products/pe" className="text-white/70 hover:text-white transition-colors">
+                    PE (HDPE / LDPE / LLDPE)
                   </Link>
                 </li>
                 <li>
-                  <Link href="#products" className="text-white/70 hover:text-white transition-colors">
-                    PP &amp; PPCP Resins
+                  <Link href="/products/pvc" className="text-white/70 hover:text-white transition-colors">
+                    PVC (Polyvinyl Chloride)
                   </Link>
                 </li>
                 <li>
-                  <Link href="#products" className="text-white/70 hover:text-white transition-colors">
-                    PVC Suspension &amp; Paste
+                  <Link href="/products/pet" className="text-white/70 hover:text-white transition-colors">
+                    PET Resins
                   </Link>
                 </li>
                 <li>
-                  <Link href="#products" className="text-white/70 hover:text-white transition-colors">
-                    PET Resins &amp; Preforms
+                  <Link href="/products/ps" className="text-white/70 hover:text-white transition-colors">
+                    PS (GPPS &amp; HIPS)
                   </Link>
                 </li>
                 <li>
-                  <Link href="#products" className="text-white/70 hover:text-white transition-colors">
-                    Prime EVA &amp; Off-Grade
+                  <Link href="/products/engineering-plastics" className="text-white/70 hover:text-white transition-colors">
+                    Engineering Plastics
                   </Link>
                 </li>
-              </ul>
-            </div>
-
-            {/* Column 3: Secondary & Recycled */}
-            <div>
-              <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-white">
-                Recycling &amp; Scrap
-              </h2>
-              <ul className="mt-5 space-y-3 text-sm">
                 <li>
-                  <Link href="#products" className="text-white/70 hover:text-white transition-colors">
+                  <Link href="/products/masterbatch-additives" className="text-white/70 hover:text-white transition-colors">
+                    Masterbatch / Additives
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/products/recycled" className="text-white/70 hover:text-white transition-colors">
                     Recycled Granules
                   </Link>
                 </li>
                 <li>
-                  <Link href="#products" className="text-white/70 hover:text-white transition-colors">
-                    HDPE &amp; PVC Regrinds
+                  <Link href="/products/near-prime" className="text-white/70 hover:text-white transition-colors">
+                    Near Prime Resins
                   </Link>
                 </li>
                 <li>
-                  <Link href="#products" className="text-white/70 hover:text-white transition-colors">
-                    Plastic Scraps &amp; Lumps
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#products" className="text-white/70 hover:text-white transition-colors">
-                    LDPE Film Bales
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#products" className="text-white/70 hover:text-white transition-colors">
-                    BOPP Rolls &amp; Waste
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#products" className="text-white/70 hover:text-white transition-colors">
-                    Floor Sweeping Resins
+                  <Link href="/products/off-grade" className="text-white/70 hover:text-white transition-colors">
+                    Off Grade / Off Spec
                   </Link>
                 </li>
               </ul>
             </div>
 
-            {/* Column 4: Global Sourcing */}
+            {/* Column 3: Solutions & Applications */}
             <div>
               <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-white">
-                Global Trade
+                Solutions
               </h2>
-              <ul className="mt-5 space-y-3 text-sm">
+              <ul className="mt-5 space-y-2.5 text-xs sm:text-sm">
                 <li>
-                  <span className="text-white/70 block">Sourcing: USA &amp; Canada</span>
+                  <Link href="/solutions/prime-supply" className="text-white/70 hover:text-white transition-colors">
+                    Prime Supply Programs
+                  </Link>
                 </li>
                 <li>
-                  <span className="text-white/70 block">Sourcing: Australia</span>
+                  <Link href="/solutions/alternative-materials" className="text-white/70 hover:text-white transition-colors">
+                    Alternative Materials
+                  </Link>
                 </li>
                 <li>
-                  <span className="text-white/70 block">Sourcing: Far East Hubs</span>
+                  <Link href="/solutions/recycled-materials" className="text-white/70 hover:text-white transition-colors">
+                    Recycled Materials
+                  </Link>
                 </li>
                 <li>
-                  <span className="text-white/70 block">Export: Indian Sub-Continent</span>
+                  <Link href="/solutions/grade-matching" className="text-white/70 hover:text-white transition-colors">
+                    Grade Matching
+                  </Link>
                 </li>
                 <li>
-                  <span className="text-white/70 block">Export: Africa &amp; Europe</span>
+                  <Link href="/solutions/global-sourcing" className="text-white/70 hover:text-white transition-colors">
+                    Global Sourcing
+                  </Link>
                 </li>
                 <li>
-                  <span className="text-white/70 block">Export: Latin America</span>
+                  <Link href="/solutions/supply-chain-solutions" className="text-white/70 hover:text-white transition-colors">
+                    Supply Chain Solutions
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/applications" className="text-white font-semibold hover:underline block pt-2">
+                    View All 7 Applications &rarr;
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 4: Markets & Inquiries */}
+            <div>
+              <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-white">
+                Markets &amp; Desk
+              </h2>
+              <ul className="mt-5 space-y-2.5 text-xs sm:text-sm">
+                <li>
+                  <Link href="/markets#middle-east" className="text-white/70 hover:text-white transition-colors">
+                    Middle East &amp; GCC
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/markets#indian-subcontinent" className="text-white/70 hover:text-white transition-colors">
+                    Indian Subcontinent
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/markets#africa" className="text-white/70 hover:text-white transition-colors">
+                    Africa
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/markets#europe" className="text-white/70 hover:text-white transition-colors">
+                    Europe
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/markets#latin-america" className="text-white/70 hover:text-white transition-colors">
+                    Latin America
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/blogs" className="text-white/70 hover:text-white transition-colors">
+                    Industry Blogs
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/contact" className="text-white/70 hover:text-white transition-colors">
+                    Contact Form &amp; Map
+                  </Link>
+                </li>
+                <li className="pt-2">
+                  <Link
+                    href="/enquiry"
+                    className="inline-block rounded bg-white text-primary px-4 py-2 text-xs font-bold uppercase tracking-wider hover:bg-gray-100"
+                  >
+                    Enquiry Form RFQ
+                  </Link>
                 </li>
               </ul>
             </div>

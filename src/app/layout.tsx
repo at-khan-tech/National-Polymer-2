@@ -4,6 +4,7 @@ import "./globals.css";
 import { AOSProvider } from "@/components/AOSProvider";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -36,6 +37,7 @@ export default function RootLayout({
           <AOSProvider>
             {children}
             <ThemeSwitcher />
+            <WhatsAppButton />
           </AOSProvider>
         </ThemeProvider>
       </body>
