@@ -29,8 +29,8 @@ export const Header: React.FC = () => {
         <nav
           className={`relative flex items-center w-full h-16 md:h-20 transition-all duration-300 ${
             scrolled
-              ? "bg-navy/95 backdrop-blur-md shadow-lg text-white"
-              : "bg-gradient-to-b from-black/85 via-black/45 to-transparent text-white"
+              ? "bg-white/95 backdrop-blur-md shadow-lg text-gray-900"
+              : "bg-white/95 backdrop-blur-md shadow-[0_4px_14px_rgba(255,255,255,0.35)] text-gray-900"
           }`}
         >
           <div className="flex flex-row justify-between items-center w-full px-4 sm:px-6 lg:px-8 h-full text-xs">
@@ -54,12 +54,12 @@ export const Header: React.FC = () => {
                 className="focus-primary inline-flex items-center gap-3"
                 title="National Polymers FZ LLC"
               >
-                <div className="relative h-11 md:h-14 w-36 md:w-48 bg-white/95 rounded-sm p-1.5 shadow-sm flex items-center justify-center">
+                <div className="relative h-12 md:h-16 w-44 md:w-56 flex items-center justify-center">
                   <Image
                     src="/images/logo.png"
                     alt="National Polymers FZ LLC Logo"
                     fill
-                    className="object-contain p-1"
+                    className="object-contain"
                     priority
                   />
                 </div>
@@ -73,7 +73,7 @@ export const Header: React.FC = () => {
                 return (
                   <li
                     key={item.name}
-                    className="relative group h-full flex items-center px-2.5 2xl:px-3 text-white/90 hover:text-white transition-colors"
+                    className="relative group h-full flex items-center px-2.5 2xl:px-3 text-gray-900 hover:text-primary transition-colors"
                   >
                     <Link
                       href={item.href}
@@ -83,7 +83,7 @@ export const Header: React.FC = () => {
                       {hasSub && (
                         <Icon
                           name="chevron-down"
-                          className="w-3.5 h-3.5 text-white/60 group-hover:text-primary transition-transform group-hover:rotate-180"
+                          className="w-3.5 h-3.5 text-gray-500 group-hover:text-primary transition-transform group-hover:rotate-180"
                         />
                       )}
                     </Link>
