@@ -35,85 +35,7 @@ export const Footer: React.FC = () => {
     <footer id="contact" className="w-full bg-primary text-white transition-colors duration-300">
       <div className="container mx-auto px-5 py-14 sm:px-6 lg:px-8 lg:py-16">
         {/* Newsletter Section */}
-        <section
-          aria-labelledby="newsletter-heading"
-          className="mb-12 grid gap-6 border-b border-white/25 pb-12 lg:grid-cols-2 lg:gap-12"
-        >
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
-              Stay connected
-            </p>
-            <h2
-              id="newsletter-heading"
-              className="mt-3 text-2xl font-semibold text-white sm:text-3xl"
-            >
-              Have A Question In Mind?
-            </h2>
-            <p className="mt-3 max-w-lg text-sm leading-7 text-white/90">
-              If you have any questions regarding Polymer materials, prime resin pricing, or customized
-              grade enquiries, subscribe or drop us a line directly.
-            </p>
-          </div>
 
-          <form onSubmit={handleSubscribe} className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label htmlFor="newsletter-name" className="mb-2 block text-sm">
-                  Name (optional)
-                </label>
-                <input
-                  id="newsletter-name"
-                  value={newsletterName}
-                  onChange={(e) => setNewsletterName(e.target.value)}
-                  name="name"
-                  autoComplete="name"
-                  maxLength={120}
-                  placeholder="Your Name"
-                  className="w-full rounded border border-white/40 bg-white px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-white"
-                />
-              </div>
-              <div>
-                <label htmlFor="newsletter-email" className="mb-2 block text-sm">
-                  Email address *
-                </label>
-                <input
-                  id="newsletter-email"
-                  value={newsletterEmail}
-                  onChange={(e) => setNewsletterEmail(e.target.value)}
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  maxLength={254}
-                  placeholder="name@company.com"
-                  className="w-full rounded border border-white/40 bg-white px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-white"
-                />
-              </div>
-            </div>
-
-            <label className="flex items-start gap-3 text-sm leading-6">
-              <input
-                type="checkbox"
-                required
-                className="mt-1 h-4 w-4 shrink-0 accent-white"
-              />
-              <span>
-                I agree to receive National Polymers FZ LLC updates &amp; market reports. Read our{" "}
-                <Link href="#contact" className="underline underline-offset-2">
-                  Privacy Policy
-                </Link>
-                .
-              </span>
-            </label>
-
-            <button
-              type="submit"
-              className="rounded bg-white px-6 py-3 text-sm font-semibold text-primary-darker transition-colors hover:bg-gray-100 cursor-pointer shadow-md"
-            >
-              {subscribed ? "Subscribed Successfully!" : "Enquiry & Subscribe"}
-            </button>
-          </form>
-        </section>
 
         {/* Main Footer Links & Company Info */}
         <div className="grid gap-12 border-b border-white/15 pb-12 lg:grid-cols-[1.35fr_2fr]">
@@ -121,12 +43,12 @@ export const Footer: React.FC = () => {
           <div className="max-w-md">
             <Link
               href="/"
-              className="inline-block bg-white p-2 rounded shadow-sm"
+              className="inline-block"
               aria-label="National Polymers FZ LLC home"
             >
-              <div className="relative h-12 w-44">
+              <div className="relative h-14 w-52">
                 <Image
-                  src="/images/logo.png"
+                  src="/images/logo_footer.png"
                   alt="National Polymers FZ LLC"
                   fill
                   className="object-contain"

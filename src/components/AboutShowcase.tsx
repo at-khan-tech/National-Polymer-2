@@ -126,7 +126,7 @@ export const AboutShowcase: React.FC = () => {
           {/* Right Column: Office Image */}
           <div className="relative h-72 md:h-full w-full md:w-5/12 lg:w-7/12 overflow-hidden group">
             <Image
-              src="https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Foffices%2Fflags.jpeg&w=1536&q=70"
+              src="/images/experience.png"
               alt="National Polymers Global Presence"
               fill
               className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"

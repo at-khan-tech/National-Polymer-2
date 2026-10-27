@@ -56,7 +56,7 @@ export const Header: React.FC = () => {
               >
                 <div className="relative h-14 md:h-18 w-48 md:w-64 flex items-center justify-center">
                   <Image
-                    src="/images/logo.png"
+                    src="/images/logo_header.png"
                     alt="National Polymers FZ LLC Logo"
                     fill
                     className="object-contain"
@@ -67,7 +67,7 @@ export const Header: React.FC = () => {
             </div>
 
             {/* Middle: Desktop Navigation Links (Full Sequence matching PDF) */}
-            <ul className="hidden xl:flex items-center h-full uppercase text-xs font-semibold tracking-wider">
+            <ul className="hidden xl:flex items-center h-full uppercase text-[13px] font-semibold tracking-wider">
               {MAIN_NAVIGATION.filter((item) => !item.isCTA).map((item) => {
                 const hasSub = item.subItems && item.subItems.length > 0;
                 return (
@@ -132,12 +132,6 @@ export const Header: React.FC = () => {
             {/* Right: Quick Actions (Enquiry Button & WhatsApp) */}
             <div className="flex items-center gap-2.5">
               <Link
-                href="/admin"
-                className="inline-flex items-center gap-2 border border-primary/20 bg-primary/5 text-primary hover:bg-primary hover:text-white font-semibold text-xs uppercase tracking-wider px-3.5 py-2 rounded-sm transition-all"
-              >
-                <span>Admin Panel</span>
-              </Link>
-              <Link
                 href="/enquiry"
                 className="inline-flex items-center gap-2 bg-primary hover:bg-primary-darker text-white font-semibold text-xs uppercase tracking-wider px-4 py-2.5 rounded-sm transition-all shadow-md hover:scale-105"
               >
@@ -166,7 +160,7 @@ export const Header: React.FC = () => {
               <div className="flex justify-between items-center pb-5 border-b border-gray-200">
                 <div className="relative h-12 w-44">
                   <Image
-                    src="/images/logo.png"
+                    src="/images/logo_header.png"
                     alt="National Polymers FZ LLC"
                     fill
                     className="object-contain"

@@ -27,3 +27,10 @@ npm run dev
 npm run build
 ```
 Open [http://localhost:3000](http://localhost:3000) to view in browser.
+
+## Admin Panel
+
+The admin panel is available at `/admin`. Set `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and
+`ADMIN_SESSION_SECRET` in `.env.local` for local development and in the deployment
+environment for production. Use a long, unique session secret; do not commit credentials.
+Admin sessions use an HTTP-only cookie and expire after eight hours.

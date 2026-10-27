@@ -33,19 +33,19 @@ const slides = [
 ];
 
 const teamPhotos = [
-  "https://www.multitradegroup.com/images/jumboshots-optimized/person-1.webp",
-  "https://www.multitradegroup.com/images/jumboshots-optimized/person-2.webp",
-  "https://www.multitradegroup.com/images/jumboshots-optimized/person-3.webp",
-  "https://www.multitradegroup.com/images/jumboshots-optimized/person-4.webp",
-  "https://www.multitradegroup.com/images/jumboshots-optimized/person-5.webp",
-  "https://www.multitradegroup.com/images/jumboshots-optimized/person-6.webp",
-  "https://www.multitradegroup.com/images/jumboshots-optimized/person-7.webp",
-  "https://www.multitradegroup.com/images/jumboshots-optimized/person-8.webp",
-  "https://www.multitradegroup.com/images/jumboshots-optimized/person-9.webp",
-  "https://www.multitradegroup.com/images/jumboshots-optimized/person-10.webp",
-  "https://www.multitradegroup.com/images/jumboshots-optimized/person-11.webp",
-  "https://www.multitradegroup.com/images/jumboshots-optimized/peter-v6.png",
-  "https://www.multitradegroup.com/images/jumboshots-optimized/person-12.webp",
+  "/images/team/team-01.png",
+  "/images/team/team-02.png",
+  "/images/team/team-03.png",
+  "/images/team/team-04.png",
+  "/images/team/team-05.png",
+  "/images/team/team-06.png",
+  "/images/team/team-07.png",
+  "/images/team/team-08.png",
+  "/images/team/team-09.png",
+  "/images/team/team-10.png",
+  "/images/team/team-11.png",
+  "/images/team/team-12.png",
+  "/images/team/team-13.png",
 ];
 
 export const HeroStage: React.FC = () => {
@@ -108,7 +108,9 @@ export const HeroStage: React.FC = () => {
             >
               <Image
                 src={photoSrc}
-                alt="National Polymers Team Member"
+                alt={`National Polymers team member ${((idx % teamPhotos.length) + 1)
+                  .toString()
+                  .padStart(2, "0")}`}
                 fill
                 priority={idx < 5}
                 sizes="(max-width: 768px) 300px, 500px"

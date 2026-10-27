@@ -12,7 +12,7 @@ import { Testimonials } from "@/components/Testimonials";
 import { LatestInsights } from "@/components/LatestInsights";
 import { LatestNews } from "@/components/LatestNews";
 import { SocialFeed } from "@/components/SocialFeed";
-import { FeaturedVideos } from "@/components/FeaturedVideos";
+
 import { ExpertAdviceCTA } from "@/components/ExpertAdviceCTA";
 import { Footer } from "@/components/Footer";
 
@@ -40,7 +40,7 @@ export default function Home() {
         <InDemandMaterials />
 
         {/* 4. Grade System (Prime, Near-Prime, Off-Grade, Recycled) */}
-        <GradeSystem />
+        {/* <GradeSystem /> */}
 
         {/* Worldwide Capacity & Strategy Stats */}
         <WorldwideCapacity />
@@ -51,20 +51,7 @@ export default function Home() {
         {/* 5. Client Testimonials */}
         <Testimonials />
 
-        {/* 6. Latest Blogs & Insights */}
-        <LatestInsights />
 
-        {/* Latest News & Stories Feed */}
-        <LatestNews />
-
-        {/* 7. Instagram Feeds & Social Highlights */}
-        <SocialFeed />
-
-        {/* Featured Videos */}
-        <FeaturedVideos />
-
-        {/* 8. Call to Actions (Consultation CTA Banner) */}
-        <ExpertAdviceCTA />
       </main>
 
       {/* Complete Footer */}

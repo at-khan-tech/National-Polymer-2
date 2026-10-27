@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { addBlog, getAllBlogs } from "@/lib/content-store";
 
 export async function GET() {
@@ -13,6 +14,10 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!(await isAdminAuthenticated())) {
+    return NextResponse.json({ message: "Admin sign-in is required." }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
 

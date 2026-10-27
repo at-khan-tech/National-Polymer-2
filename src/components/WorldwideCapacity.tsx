@@ -73,7 +73,7 @@ export const WorldwideCapacity: React.FC = () => {
             <div className="h-full w-full flex justify-center items-center">
               <div className="relative w-full max-w-sm aspect-[10/14] sm:aspect-[10/16] overflow-hidden rounded shadow-md group">
                 <Image
-                  src="https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Foffices%2Fboardroom.jpg&w=1536&q=70"
+                  src="/images/team/management-trading-team.jpg"
                   alt="National Polymers Management & Trading Team"
                   fill
                   className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
