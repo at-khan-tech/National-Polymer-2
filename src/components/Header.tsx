@@ -54,7 +54,7 @@ export const Header: React.FC = () => {
                 className="focus-primary inline-flex items-center gap-3"
                 title="National Polymers FZ LLC"
               >
-                <div className="relative h-12 md:h-16 w-44 md:w-56 flex items-center justify-center">
+                <div className="relative h-14 md:h-18 w-48 md:w-64 flex items-center justify-center">
                   <Image
                     src="/images/logo.png"
                     alt="National Polymers FZ LLC Logo"
@@ -67,7 +67,7 @@ export const Header: React.FC = () => {
             </div>
 
             {/* Middle: Desktop Navigation Links (Full Sequence matching PDF) */}
-            <ul className="hidden xl:flex items-center h-full uppercase text-[11px] font-semibold tracking-wider">
+            <ul className="hidden xl:flex items-center h-full uppercase text-xs font-semibold tracking-wider">
               {MAIN_NAVIGATION.filter((item) => !item.isCTA).map((item) => {
                 const hasSub = item.subItems && item.subItems.length > 0;
                 return (
@@ -131,6 +131,12 @@ export const Header: React.FC = () => {
 
             {/* Right: Quick Actions (Enquiry Button & WhatsApp) */}
             <div className="flex items-center gap-2.5">
+              <Link
+                href="/admin"
+                className="inline-flex items-center gap-2 border border-primary/20 bg-primary/5 text-primary hover:bg-primary hover:text-white font-semibold text-xs uppercase tracking-wider px-3.5 py-2 rounded-sm transition-all"
+              >
+                <span>Admin Panel</span>
+              </Link>
               <Link
                 href="/enquiry"
                 className="inline-flex items-center gap-2 bg-primary hover:bg-primary-darker text-white font-semibold text-xs uppercase tracking-wider px-4 py-2.5 rounded-sm transition-all shadow-md hover:scale-105"

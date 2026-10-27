@@ -6,7 +6,7 @@ Built with **Next.js 15 (App Router)**, **TypeScript**, **Tailwind CSS**, and in
 
 ## Features
 - **Dynamic Theme Switcher:** 
-  - *Theme 1 (Classic Gold):* Luxury gold and corporate deep navy replica.
+  - *Theme 1 (Corporate Theme, default):* Orange primary (#E95220), dark hover (#B11A00), and corporate dark blue (#2F46D8).
   - *Theme 2 (Logo Brand):* Industrial Crimson Red & Ocean Cyan palette extracted directly from the official National Polymers logo.
 - **Hero Stage:** Watermark marquee, rotating slide titles, countdown timer, team cutouts carousel.
 - **Interactive Material Finder:** 3-step application wizard for polymer grade selection.

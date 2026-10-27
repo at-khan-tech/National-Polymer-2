@@ -4,9 +4,10 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Icon } from "@/components/Icons";
-import { PRODUCTS_DATA } from "@/data/productsData";
+import { getAllProducts } from "@/lib/content-store";
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
+  const products = await getAllProducts();
   return (
     <>
       <Header />
@@ -31,7 +32,7 @@ export default function ProductsPage() {
         {/* 10 Products Grid */}
         <div className="container mx-auto px-5 sm:px-6 lg:px-8 max-w-6xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {PRODUCTS_DATA.map((product) => (
+            {products.map((product) => (
               <div
                 key={product.slug}
                 className="group flex flex-col justify-between overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/50"

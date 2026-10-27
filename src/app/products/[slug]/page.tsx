@@ -5,21 +5,15 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Icon } from "@/components/Icons";
-import { PRODUCTS_DATA } from "@/data/productsData";
+import { getAllProducts } from "@/lib/content-store";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  return PRODUCTS_DATA.map((product) => ({
-    slug: product.slug,
-  }));
-}
-
 export default async function ProductInnerPage({ params }: PageProps) {
   const { slug } = await params;
-  const product = PRODUCTS_DATA.find((p) => p.slug === slug);
+  const product = (await getAllProducts()).find((p) => p.slug === slug);
 
   if (!product) {
     notFound();

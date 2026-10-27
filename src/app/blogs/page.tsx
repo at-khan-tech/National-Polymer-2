@@ -4,9 +4,10 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Icon } from "@/components/Icons";
-import { BLOGS_DATA } from "@/data/blogsData";
+import { getAllBlogs } from "@/lib/content-store";
 
-export default function BlogsPage() {
+export default async function BlogsPage() {
+  const posts = await getAllBlogs();
   return (
     <>
       <Header />
@@ -29,7 +30,7 @@ export default function BlogsPage() {
 
         <div className="container mx-auto px-5 sm:px-6 lg:px-8 max-w-6xl">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {BLOGS_DATA.map((post) => (
+            {posts.map((post) => (
               <article
                 key={post.slug}
                 className="group flex flex-col justify-between overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"

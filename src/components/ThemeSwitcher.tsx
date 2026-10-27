@@ -28,11 +28,10 @@ export const ThemeSwitcher: React.FC = () => {
   const handleCopyCodes = () => {
     let text = "";
     if (theme === "gold") {
-      text = `National Polymers - Classic Gold Theme:
-Primary: #AE872E
-Primary Darker: #7D6225
-Primary Lighter: #F8EBD2
-Navy Background: #071A3D`;
+      text = `National Polymers - Corporate Theme:
+Primary: #E95220
+Primary Darker: #B11A00
+Corporate Dark: #2F46D8`;
     } else if (theme === "polymer") {
       text = `National Polymers - Logo Brand Theme (Crimson & Cyan):
 Primary (Red): #E5252A
@@ -115,7 +114,7 @@ Navy: ${customPalette.navy}`;
           {/* TAB 1: PRESET THEMES */}
           {activeTab === "presets" && (
             <div className="mt-3.5 space-y-2.5">
-              {/* Option 1: Classic Gold */}
+              {/* Option 1: Corporate Theme */}
               <button
                 type="button"
                 onClick={() => setTheme("gold")}
@@ -130,19 +129,19 @@ Navy: ${customPalette.navy}`;
                     <div className="flex -space-x-1">
                       <span
                         className="inline-block w-4 h-4 rounded-full border border-white shadow-sm"
-                        style={{ backgroundColor: "#AE872E" }}
+                        style={{ backgroundColor: "#E95220" }}
                       />
                       <span
                         className="inline-block w-4 h-4 rounded-full border border-white shadow-sm"
-                        style={{ backgroundColor: "#071A3D" }}
+                        style={{ backgroundColor: "#2F46D8" }}
                       />
                       <span
                         className="inline-block w-4 h-4 rounded-full border border-white shadow-sm"
-                        style={{ backgroundColor: "#F8EBD2" }}
+                        style={{ backgroundColor: "#FDE8E1" }}
                       />
                     </div>
                     <span className="font-semibold text-xs text-gray-900">
-                      1. Classic Gold (Replica)
+                      1. Corporate Theme (Default)
                     </span>
                   </div>
                   {theme === "gold" && (
@@ -152,7 +151,7 @@ Navy: ${customPalette.navy}`;
                   )}
                 </div>
                 <p className="text-[11px] text-gray-500 mt-1 pl-6">
-                  Luxury Gold (#AE872E) + Deep Navy (#071A3D)
+                  Primary #E95220 · Hover #B11A00 · Corporate Dark #2F46D8
                 </p>
               </button>
 
@@ -381,8 +380,8 @@ Navy: ${customPalette.navy}`;
         <span className="flex -space-x-1">
           {theme === "gold" && (
             <>
-              <span className="inline-block w-3.5 h-3.5 rounded-full bg-[#AE872E] ring-2 ring-gray-900" />
-              <span className="inline-block w-3.5 h-3.5 rounded-full bg-[#071A3D] ring-2 ring-gray-900" />
+              <span className="inline-block w-3.5 h-3.5 rounded-full bg-[#E95220] ring-2 ring-gray-900" />
+              <span className="inline-block w-3.5 h-3.5 rounded-full bg-[#2F46D8] ring-2 ring-gray-900" />
             </>
           )}
           {theme === "polymer" && (
@@ -412,7 +411,7 @@ Navy: ${customPalette.navy}`;
         </span>
 
         <span className="text-xs font-semibold tracking-wide">
-          {theme === "gold" && "Theme: Classic Gold"}
+          {theme === "gold" && "Theme: Corporate"}
           {theme === "polymer" && "Theme: Logo Brand"}
           {theme === "blue" && "Theme: Ocean Blue"}
           {theme === "custom" && "Theme: Custom Studio"}

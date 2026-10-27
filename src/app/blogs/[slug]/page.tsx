@@ -5,21 +5,15 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Icon } from "@/components/Icons";
-import { BLOGS_DATA } from "@/data/blogsData";
+import { getAllBlogs } from "@/lib/content-store";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  return BLOGS_DATA.map((post) => ({
-    slug: post.slug,
-  }));
-}
-
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params;
-  const post = BLOGS_DATA.find((p) => p.slug === slug);
+  const post = (await getAllBlogs()).find((p) => p.slug === slug);
 
   if (!post) {
     notFound();

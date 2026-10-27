@@ -14,12 +14,12 @@ export interface CustomPalette {
 }
 
 export const defaultCustomPalette: CustomPalette = {
-  primary: "#ae872e",
-  primaryDarker: "#7d6225",
-  primaryLighter: "#f8ebd2",
-  primarySoft: "#fff9ec",
-  accent: "#caab63",
-  navy: "#071a3d",
+  primary: "#e95220",
+  primaryDarker: "#b11a00",
+  primaryLighter: "#fde8e1",
+  primarySoft: "#fff5f1",
+  accent: "#2f46d8",
+  navy: "#2f46d8",
 };
 
 interface ThemeContextType {

@@ -3,17 +3,17 @@
 @tailwind utilities;
 
 :root {
-  --color-primary: #ae872e;
-  --color-primary-darker: #7d6225;
-  --color-primary-lighter: #f8ebd2;
-  --color-primary-soft: #fff9ec;
-  --color-accent: #caab63;
-  --color-accent-light: #f5f3ee;
-  --color-navy: #071a3d;
-  --color-navy-dark: #06152f;
-  --color-hover-card: #ae872e;
-  --color-scrollbar-thumb: #ae872e;
-  --color-scrollbar-hover: #7d6225;
+  --color-primary: #e95220;
+  --color-primary-darker: #b11a00;
+  --color-primary-lighter: #fde8e1;
+  --color-primary-soft: #fff5f1;
+  --color-accent: #2f46d8;
+  --color-accent-light: #eef0ff;
+  --color-navy: #2f46d8;
+  --color-navy-dark: #2437b5;
+  --color-hover-card: #e95220;
+  --color-scrollbar-thumb: #e95220;
+  --color-scrollbar-hover: #b11a00;
 }
 
 .theme-polymer {
