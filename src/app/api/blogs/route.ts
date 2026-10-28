@@ -21,8 +21,24 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    if (!body || typeof body !== "object") {
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
       return NextResponse.json({ message: "Invalid payload." }, { status: 400 });
+    }
+
+    if (
+      typeof body.title !== "string" ||
+      typeof body.category !== "string" ||
+      typeof body.author !== "string" ||
+      typeof body.excerpt !== "string" ||
+      !(typeof body.content === "string" ||
+        (Array.isArray(body.content) && body.content.every((paragraph: unknown) => typeof paragraph === "string"))) ||
+      !(body.tags === undefined ||
+        typeof body.tags === "string" ||
+        (Array.isArray(body.tags) && body.tags.every((tag: unknown) => typeof tag === "string"))) ||
+      !(body.imageUrl === undefined || typeof body.imageUrl === "string") ||
+      !(body.status === undefined || body.status === "draft" || body.status === "published")
+    ) {
+      return NextResponse.json({ message: "Invalid blog post fields." }, { status: 400 });
     }
 
     const blog = await addBlog({
@@ -33,6 +49,7 @@ export async function POST(request: Request) {
       content: body.content,
       imageUrl: body.imageUrl,
       tags: body.tags,
+      status: body.status,
     });
 
     return NextResponse.json({

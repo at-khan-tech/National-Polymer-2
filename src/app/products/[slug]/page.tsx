@@ -7,6 +7,8 @@ import { Footer } from "@/components/Footer";
 import { Icon } from "@/components/Icons";
 import { getAllProducts } from "@/lib/content-store";
 
+export const dynamic = "force-dynamic";
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }

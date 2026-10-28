@@ -1,18 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Icon } from "@/components/Icons";
-import { PRODUCTS_DATA } from "@/data/productsData";
+import type { ProductDetail } from "@/data/productsData";
 
 export default function EnquiryPage() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [products, setProducts] = useState<ProductDetail[]>([]);
+  const [productsLoading, setProductsLoading] = useState(true);
+  const [productsError, setProductsError] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<string>("pp");
   const [selectedGrade, setSelectedGrade] = useState<string>("");
-  const [selectedPacking, setSelectedPacking] = useState<string>("25 kg Bags");
-  const [volumeMT, setVolumeMT] = useState<string>("50 MT");
+  const [selectedPacking, setSelectedPacking] = useState<string>("25 kg Bags on Pallets");
+  const [volumeMT, setVolumeMT] = useState<string>("50 MT – 100 MT");
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -25,8 +28,46 @@ export default function EnquiryPage() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
-  const currentProductData = PRODUCTS_DATA.find((p) => p.slug === selectedProduct) || PRODUCTS_DATA[0];
+  useEffect(() => {
+    let active = true;
+
+    async function loadProducts() {
+      try {
+        const response = await fetch("/api/products", { cache: "no-store" });
+        const result = await response.json() as { products?: ProductDetail[]; message?: string };
+        if (!response.ok || !Array.isArray(result.products)) {
+          throw new Error(result.message || "Unable to load products.");
+        }
+        const loadedProducts = result.products;
+        if (active) {
+          setProducts(loadedProducts);
+          setSelectedProduct((current) =>
+            loadedProducts.some((product) => product.slug === current)
+              ? current
+              : loadedProducts[0]?.slug ?? "",
+          );
+        }
+      } catch (error) {
+        if (active) {
+          setProductsError(error instanceof Error ? error.message : "Unable to load products.");
+        }
+      } finally {
+        if (active) {
+          setProductsLoading(false);
+        }
+      }
+    }
+
+    void loadProducts();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const currentProductData = products.find((product) => product.slug === selectedProduct);
 
   const handleProductSelect = (slug: string) => {
     setSelectedProduct(slug);
@@ -39,9 +80,33 @@ export default function EnquiryPage() {
     setStep(3);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setSubmitError("");
+
+    try {
+      const response = await fetch("/api/enquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          productSlug: currentProductData?.slug,
+          grade: selectedGrade || "Standard Grade",
+          volume: volumeMT,
+          packaging: selectedPacking,
+        }),
+      });
+      const result = await response.json() as { message?: string };
+      if (!response.ok) {
+        throw new Error(result.message || "Unable to submit your enquiry.");
+      }
+      setSubmitted(true);
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : "Unable to submit your enquiry.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -64,8 +129,20 @@ export default function EnquiryPage() {
             </p>
           </div>
 
+          {productsLoading && (
+            <p role="status" className="rounded-xl border border-gray-200 bg-white p-6 text-sm text-gray-600">
+              Loading products...
+            </p>
+          )}
+          {productsError && (
+            <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-6 text-sm text-red-700">
+              {productsError}
+            </p>
+          )}
+
           {/* Stepper Bar */}
-          <div className="mb-10 bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-200">
+          {!productsLoading && !productsError && products.length > 0 && (
+            <div className="mb-10 bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-200">
             <div className="flex items-center justify-between">
               {/* Step 1 */}
               <div
@@ -119,10 +196,16 @@ export default function EnquiryPage() {
                 <span className="hidden sm:inline text-xs sm:text-sm">Submit Form</span>
               </div>
             </div>
-          </div>
+            </div>
+          )}
 
           {/* STEP 1: SELECT PRODUCT */}
-          {step === 1 && (
+          {step === 1 && !productsLoading && !productsError && products.length === 0 && (
+            <p role="alert" className="rounded-xl border border-gray-200 bg-white p-6 text-sm text-gray-600">
+              No products are currently available.
+            </p>
+          )}
+          {step === 1 && !productsLoading && !productsError && products.length > 0 && (
             <section aria-labelledby="step1-heading" className="bg-white p-6 sm:p-10 rounded-2xl shadow-sm border border-gray-200 animate-news-fade">
               <h2 id="step1-heading" className="text-xl sm:text-2xl font-normal text-gray-900 mb-1">
                 Step 1: Choose Polymer Resin Category
@@ -132,7 +215,7 @@ export default function EnquiryPage() {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {PRODUCTS_DATA.map((product) => (
+                {products.map((product) => (
                   <button
                     key={product.slug}
                     type="button"
@@ -163,7 +246,7 @@ export default function EnquiryPage() {
           )}
 
           {/* STEP 2: SELECT GRADE */}
-          {step === 2 && (
+          {step === 2 && currentProductData && (
             <section aria-labelledby="step2-heading" className="bg-white p-6 sm:p-10 rounded-2xl shadow-sm border border-gray-200 animate-news-fade">
               <div className="flex items-center justify-between mb-4">
                 <div>
@@ -232,7 +315,7 @@ export default function EnquiryPage() {
           )}
 
           {/* STEP 3: CONTACT FORM & SUBMISSION */}
-          {step === 3 && (
+          {step === 3 && currentProductData && (
             <section aria-labelledby="step3-heading" className="bg-white p-6 sm:p-10 rounded-2xl shadow-sm border border-gray-200 animate-news-fade">
               {submitted ? (
                 <div className="text-center py-12">
@@ -428,12 +511,18 @@ export default function EnquiryPage() {
                     </button>
                     <button
                       type="submit"
-                      className="inline-flex items-center gap-2 rounded-lg bg-primary hover:bg-primary-darker text-white px-8 py-3.5 font-semibold text-sm shadow-lg transition-all hover:scale-105 cursor-pointer"
+                      disabled={isSubmitting}
+                      className="inline-flex items-center gap-2 rounded-lg bg-primary hover:bg-primary-darker disabled:cursor-not-allowed disabled:opacity-60 text-white px-8 py-3.5 font-semibold text-sm shadow-lg transition-all hover:scale-105 cursor-pointer"
                     >
-                      <span>Submit RFQ &amp; Get Price Quote</span>
+                      <span>{isSubmitting ? "Submitting..." : "Submit RFQ & Get Price Quote"}</span>
                       <Icon name="arrow-forward" className="w-4 h-4" />
                     </button>
                   </div>
+                  {submitError && (
+                    <p role="alert" className="text-sm text-red-700">
+                      {submitError}
+                    </p>
+                  )}
                 </form>
               )}
             </section>

@@ -6,6 +6,8 @@ import { Footer } from "@/components/Footer";
 import { Icon } from "@/components/Icons";
 import { getAllBlogs } from "@/lib/content-store";
 
+export const dynamic = "force-dynamic";
+
 export default async function BlogsPage() {
   const posts = await getAllBlogs();
   return (

@@ -21,8 +21,17 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    if (!body || typeof body !== "object") {
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
       return NextResponse.json({ message: "Invalid payload." }, { status: 400 });
+    }
+    if (
+      !("name" in body) || typeof body.name !== "string" ||
+      !("category" in body) || typeof body.category !== "string" ||
+      !("tagline" in body) || typeof body.tagline !== "string" ||
+      !("description" in body) || typeof body.description !== "string" ||
+      !("imageUrl" in body) || typeof body.imageUrl !== "string"
+    ) {
+      return NextResponse.json({ message: "Valid product details are required." }, { status: 400 });
     }
 
     const product = await addProduct({

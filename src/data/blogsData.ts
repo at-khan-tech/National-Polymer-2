@@ -3,6 +3,7 @@ export interface BlogPost {
   title: string;
   date: string;
   readTime: string;
+  status?: "draft" | "published";
   category: string;
   author: string;
   excerpt: string;
