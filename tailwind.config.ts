@@ -29,6 +29,21 @@ export default {
           DEFAULT: "var(--color-navy)",
           dark: "var(--color-navy-dark)",
         },
+        copper: {
+          DEFAULT: "#e95220",
+          light: "#ff7448",
+          dark: "#b11a00",
+        },
+        steel: {
+          DEFAULT: "#64748b",
+          light: "#94a3b8",
+          dark: "#334155",
+        },
+        ink: {
+          DEFAULT: "#0f172a",
+          foreground: "#0f172a",
+          muted: "#64748b",
+        },
       },
       fontFamily: {
         montserrat: ["var(--font-montserrat)", "Montserrat", "sans-serif"],

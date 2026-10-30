@@ -173,3 +173,33 @@
   opacity: 1;
   transform: scale(1);
 }
+
+/* World Map SVG Route and Hub Animations */
+@keyframes mapDash {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+.animate-dash {
+  animation: mapDash 1.2s linear infinite;
+}
+
+@keyframes pulseRing {
+  0% {
+    r: 4;
+    opacity: 0.9;
+    stroke-width: 1.5;
+  }
+  100% {
+    r: 12;
+    opacity: 0;
+    stroke-width: 0.5;
+  }
+}
+
+.animate-pulse-ring {
+  animation: pulseRing 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+  transform-origin: center;
+}
+

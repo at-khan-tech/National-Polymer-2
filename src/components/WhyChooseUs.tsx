@@ -1,5 +1,6 @@
 import React from "react";
 import { Icon } from "./Icons";
+import { GlobalTradingMapSection } from "./WorldMap";
 
 export const WhyChooseUs: React.FC = () => {
   return (
@@ -101,74 +102,8 @@ export const WhyChooseUs: React.FC = () => {
           </div>
         </div>
 
-        {/* Serving Full Spectrum Section */}
-        <div id="standards" className="mt-12 border-t border-gray-200 pt-14">
-          <h2
-            data-aos="fade-up"
-            className="px-5 text-center text-3xl md:text-4xl font-light text-gray-900 leading-tight"
-          >
-            Serving the Full Spectrum of the Plastics Industry
-          </h2>
-
-          <div className="flex flex-row mt-10 max-h-max flex-wrap items-center justify-center gap-6">
-            {/* Spectrum Card 1 */}
-            <div
-              data-aos="zoom-in"
-              data-aos-delay="0"
-              className="h-96 w-full sm:w-80 bg-gray-50 hoverCard p-8 rounded shadow-sm border border-gray-100/50 flex flex-col items-center justify-center text-center gap-3 cursor-pointer"
-            >
-              <Icon
-                name="factory"
-                className="w-16 h-16 mb-2 text-primary-darker transition-colors"
-              />
-              <h3 className="text-xl font-semibold text-gray-900 transition-colors">
-                Producers &amp; Petrochemical Plants
-              </h3>
-              <p className="text-sm text-gray-600 leading-relaxed transition-colors">
-                Direct off-take agreements and global allocation handling for prime and near-prime
-                resins from major worldwide refineries.
-              </p>
-            </div>
-
-            {/* Spectrum Card 2 */}
-            <div
-              data-aos="zoom-in"
-              data-aos-delay="100"
-              className="h-96 w-full sm:w-80 bg-gray-50 hoverCard p-8 rounded shadow-sm border border-gray-100/50 flex flex-col items-center justify-center text-center gap-3 cursor-pointer"
-            >
-              <Icon
-                name="truck"
-                className="w-16 h-16 mb-2 text-primary-darker transition-colors"
-              />
-              <h3 className="text-xl font-semibold text-gray-900 transition-colors">
-                Regional Distributors &amp; Stockists
-              </h3>
-              <p className="text-sm text-gray-600 leading-relaxed transition-colors">
-                Competitive containerized and break-bulk logistics ensuring steady, uninterrupted supply
-                to regional distributors in UAE and globally.
-              </p>
-            </div>
-
-            {/* Spectrum Card 3 */}
-            <div
-              data-aos="zoom-in"
-              data-aos-delay="200"
-              className="h-96 w-full sm:w-80 bg-gray-50 hoverCard p-8 rounded shadow-sm border border-gray-100/50 flex flex-col items-center justify-center text-center gap-3 cursor-pointer"
-            >
-              <Icon
-                name="recycle"
-                className="w-16 h-16 mb-2 text-primary-darker transition-colors"
-              />
-              <h3 className="text-xl font-semibold text-gray-900 transition-colors">
-                Converters &amp; Recycled Materials
-              </h3>
-              <p className="text-sm text-gray-600 leading-relaxed transition-colors">
-                High-grade recycled granules, regrinds, lumps, and off-grade resins customized for film,
-                injection molding, blow molding, and pipe extrusion.
-              </p>
-            </div>
-          </div>
-        </div>
+        {/* Global Trading Network Map Section */}
+        <GlobalTradingMapSection />
       </div>
     </section>
   );
