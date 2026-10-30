@@ -121,29 +121,12 @@ export const InDemandMaterials: React.FC = () => {
                   src={item.image}
                   alt={item.name}
                   fill
-                  className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
+                  className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
                 />
-
-                {/* 3D Slide & Flip Glass Overlay on Product Card Hover */}
-                <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 bg-gradient-to-t from-[#0F3B82]/95 via-[#0F3B82]/80 to-transparent backdrop-blur-[2px] opacity-0 group-hover:opacity-100 translate-y-6 group-hover:translate-y-0 [transform:perspective(600px)_rotateX(15deg)] group-hover:[transform:perspective(600px)_rotateX(0deg)] transition-all duration-400 ease-out text-white text-left">
-                  <span className="text-[10px] font-bold uppercase tracking-[1.5px] text-[#FF6B00]">
-                    Certified Specifications
-                  </span>
-                  <p className="mt-1 text-xs text-white/95 font-medium leading-snug">
-                    {item.tags}
-                  </p>
-                  <Link
-                    href={item.href}
-                    className="mt-3 inline-flex items-center gap-1.5 rounded-[6px] bg-[#E10600] px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm transition-transform hover:scale-105 active:scale-95 w-fit"
-                  >
-                    <span>Instant Quotation</span>
-                    <Icon name="arrow-right" className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
               </div>
 
               <div className="flex flex-1 flex-col items-center justify-center p-7 text-center">
-                <p className="mb-3 w-fit bg-primary/15 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-primary-darker transition-colors group-hover:bg-[#0F3B82] group-hover:text-white">
+                <p className="mb-3 w-fit bg-primary/15 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-primary-darker">
                   {item.badge}
                 </p>
                 <h3 className="text-2xl font-normal text-gray-900">{item.name}</h3>
