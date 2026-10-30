@@ -4,133 +4,121 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "./Icons";
-import { CountUp } from "./CountUp";
 
 export const AboutShowcase: React.FC = () => {
   return (
-    <section id="about" className="flex flex-col w-full items-center gap-12 md:gap-16 pt-16">
-      {/* Introduction Title & Subtitle */}
-      <div className="container mx-auto px-5 sm:px-6 lg:px-8 space-y-4 max-w-5xl text-center md:text-left">
-        <span
-          data-aos="fade-up"
-          className="text-xs font-semibold uppercase tracking-[0.22em] text-primary-darker block"
-        >
-          About Us
-        </span>
-        <h2
-          data-aos="fade-up"
-          className="text-3xl md:text-5xl font-light text-gray-900 leading-tight"
-        >
-          National Polymers LLC FZ
-        </h2>
-        <p
-          data-aos="fade-up"
-          data-aos-delay="100"
-          className="text-base md:text-lg leading-relaxed text-gray-700"
-        >
-          National Polymers LLC FZ is a Global distribution &amp; Trading company involved
-          in plastic raw materials. We deal in all kinds of Prime, Near Prime, Off Grade Resins.
-          We also deal in Recycle granules, regrinds and waste.
-        </p>
-        <p
-          data-aos="fade-up"
-          data-aos-delay="150"
-          className="text-sm md:text-base leading-relaxed text-gray-600"
-        >
-          We currently buy from USA, Canada, Australia, Far East Countries and sell polymers to
-          Indian Sub-Continent, African, European &amp; Latin American Countries. National
-          Polymers FZ LLC stands for quality, trust, authenticity, integrity, and ethical
-          values in Polymer Distribution.
-        </p>
-      </div>
-
-      {/* 21 Years Badge + Office Photo Container */}
-      <div
-        data-aos="fade-up"
-        data-aos-duration="800"
-        className="container mx-auto px-5 sm:px-6 lg:px-8"
-      >
-        <div className="bg-gray-50 flex flex-col md:flex-row justify-between items-center w-full min-h-[460px] md:h-[30rem] lg:h-[34rem] xl:h-[38rem] overflow-hidden shadow-sm">
-          {/* Left Column: 21 Years Badge & Description */}
-          <div className="flex flex-col justify-center gap-6 w-full md:w-7/12 lg:w-5/12 p-8 md:p-12 lg:pl-16">
-            {/* Animated 21 Years Badge */}
-            <div className="flex items-center justify-center md:justify-start w-full">
+    <section
+      id="about"
+      aria-label="About National Polymers"
+      className="w-full bg-white py-16 sm:py-20 lg:py-24"
+    >
+      <div className="container mx-auto px-5 sm:px-6 lg:px-8 max-w-[1320px]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-16 items-center">
+          {/* ================= LEFT COLUMN: COMPANY STORY ================= */}
+          <div
+            data-aos="fade-up"
+            data-aos-duration="700"
+            className="lg:col-span-5 xl:col-span-5 flex flex-col items-start text-left"
+          >
+            {/* Eyebrow Label with Subtle Brand Accent */}
+            <div className="inline-flex flex-col items-start mb-4">
+              <span className="text-[11px] sm:text-[12px] font-bold uppercase tracking-[2px] text-[#E10600]">
+                About National Polymers
+              </span>
+              {/* Subtle Red-to-Orange Logo-Inspired Accent Line */}
               <div
-                className="relative inline-grid place-items-center select-none w-64 h-64 sm:w-72 sm:h-72 group cursor-pointer"
-                aria-label="21 Years badge"
-              >
-                {/* Background Anniversary Badge Graphics */}
-                <div className="absolute inset-0 w-full h-full transition-transform duration-700 ease-out group-hover:scale-105">
-                  <Image
-                    src="https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fyear_badge.png&w=1024&q=80"
-                    alt="21 Years Experience Badge"
-                    fill
-                    className="object-contain pointer-events-none drop-shadow-sm"
-                  />
-                </div>
+                className="mt-1.5 h-[2.5px] w-10 rounded-full bg-gradient-to-r from-[#E10600] to-[#FF6B00]"
+                aria-hidden="true"
+              />
+            </div>
 
-                {/* Animated Count-up Numbers & Label */}
-                <div className="relative z-10 flex flex-col items-center justify-center text-center">
-                  <div
-                    className="text-[5.5rem] sm:text-[7rem] leading-none font-light text-primary transition-transform duration-300 group-hover:scale-105"
-                    style={{ fontVariantNumeric: "tabular-nums" }}
-                  >
-                    <CountUp end={21} start={0} duration={2000} />
+            {/* Main Headline */}
+            <h2 className="font-montserrat text-[32px] sm:text-[40px] lg:text-[46px] xl:text-[50px] font-extrabold leading-[1.12] tracking-[-1px] text-[#0F3B82]">
+              Connecting{" "}
+              <span className="text-[#E10600]">Global Polymer</span> Supply
+            </h2>
+
+            {/* Supporting Headline */}
+            <p className="mt-3 text-[18px] sm:text-[20px] font-medium text-[#0F3B82] tracking-tight">
+              Materials. Markets. Opportunities.
+            </p>
+
+            {/* Concise Approved Company Description in Two Paragraphs */}
+            <div className="mt-5 space-y-4 max-w-[540px] text-[15px] sm:text-[16px] text-[#5B6470] leading-[1.8] font-normal">
+              <p>
+                National Polymers LLC FZ is an international distribution and
+                trading company specializing in polymer raw materials. We supply
+                prime, near-prime, and off-grade resins, alongside high-grade
+                recycled polymers, granules, regrinds, and circular materials
+                tailored for film extrusion, blow molding, injection molding,
+                and pipe compounding.
+              </p>
+              <p>
+                Headquartered at Dubai&apos;s global commercial crossroads, we
+                source directly from major petrochemical producers across the
+                USA, Canada, Australia, and Far East hubs, providing dependable,
+                containerized supply chains to manufacturing converters across
+                the Indian Subcontinent, Africa, Europe, and Latin America.
+              </p>
+            </div>
+
+            {/* Prominent About Us CTA Button */}
+            <div className="mt-8 pt-1">
+              <Link
+                href="/about"
+                className="inline-flex items-center justify-center gap-2 rounded-[8px] bg-[#0F3B82] px-6 py-3.5 text-[15px] font-semibold text-white shadow-sm transition-all duration-300 hover:bg-[#0c2e66] hover:shadow-md active:scale-[0.98]"
+              >
+                <span>Discover Our Company</span>
+                <Icon name="arrow-right" className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+
+          {/* ================= RIGHT COLUMN: INDUSTRIAL VISUAL & SUPPLY CHAIN STRIP ================= */}
+          <div
+            data-aos="fade-up"
+            data-aos-delay="150"
+            data-aos-duration="700"
+            className="lg:col-span-7 xl:col-span-7 flex flex-col w-full"
+          >
+            {/* Visual Container */}
+            <div className="w-full overflow-hidden rounded-[12px] border border-gray-200/80 bg-[#F7F9FC] shadow-sm">
+              {/* Premium Landscape Image (5:4 Aspect Ratio, Bright & Natural) */}
+              <div className="relative w-full aspect-[5/4] overflow-hidden bg-gray-100">
+                <Image
+                  src="/images/experience.png"
+                  alt="National Polymers international corporate headquarters and trading operations"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 55vw"
+                  className="object-cover object-center transition-transform duration-700 ease-out hover:scale-[1.02]"
+                  priority={false}
+                />
+              </div>
+
+              {/* Polymer Supply Chain Strip Directly Beneath the Image */}
+              <div className="w-full bg-[#F7F9FC] border-t border-gray-200/90 py-3.5 px-4 sm:px-6">
+                <div className="grid grid-cols-3 divide-x divide-gray-300/80 text-center">
+                  <div className="px-2 flex flex-col sm:flex-row items-center justify-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#E10600] shrink-0 hidden sm:inline-block" />
+                    <span className="text-[11px] sm:text-[12px] font-semibold tracking-[0.5px] uppercase text-[#0F3B82]">
+                      Global Sourcing
+                    </span>
                   </div>
-                  <div className="text-sm sm:text-base mt-2 text-gray-500 uppercase tracking-[0.3em] font-medium leading-tight">
-                    Years of <br /> Industrial Experience
+                  <div className="px-2 flex flex-col sm:flex-row items-center justify-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#FF6B00] shrink-0 hidden sm:inline-block" />
+                    <span className="text-[11px] sm:text-[12px] font-semibold tracking-[0.5px] uppercase text-[#0F3B82]">
+                      Polymer Grades
+                    </span>
+                  </div>
+                  <div className="px-2 flex flex-col sm:flex-row items-center justify-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#0F3B82] shrink-0 hidden sm:inline-block" />
+                    <span className="text-[11px] sm:text-[12px] font-semibold tracking-[0.5px] uppercase text-[#0F3B82]">
+                      Industrial Markets
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
-
-            <p className="text-base text-gray-700 leading-relaxed text-center md:text-left">
-              National Polymers LLC FZ has become a brand-name in the polymer trading
-              industry, delivering excellence and transparent sourcing globally.
-            </p>
-
-            {/* Circular Arrow Button with Animated Hover Ring */}
-            <Link
-              href="#contact"
-              className="group inline-flex items-center gap-4 text-sm font-semibold text-gray-900 hover:text-primary transition-colors"
-              aria-label="Find out more about National Polymers"
-            >
-              <span>Connect With Our Team</span>
-              <div className="relative w-12 h-12 rounded-full grid place-items-center">
-                <svg
-                  viewBox="0 0 144 144"
-                  className="w-full h-full -rotate-90 absolute inset-0"
-                >
-                  <circle
-                    cx="72"
-                    cy="72"
-                    r="49"
-                    strokeWidth="3.5"
-                    stroke="#000000"
-                    fill="none"
-                    strokeDasharray="0 308"
-                    strokeDashoffset="39"
-                    className="transition-all duration-300 group-hover:[stroke-dasharray:231_77] group-hover:stroke-primary"
-                  />
-                </svg>
-                <div className="w-full h-full flex justify-center items-center p-2 transition-transform duration-300 group-hover:translate-x-1">
-                  <Icon
-                    name="arrow-right"
-                    className="w-5 h-5 text-gray-900 group-hover:text-primary transition-colors"
-                  />
-                </div>
-              </div>
-            </Link>
-          </div>
-
-          {/* Right Column: Office Image */}
-          <div className="relative h-72 md:h-full w-full md:w-5/12 lg:w-7/12 overflow-hidden group">
-            <Image
-              src="/images/experience.png"
-              alt="National Polymers Global Presence"
-              fill
-              className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
-            />
           </div>
         </div>
       </div>
