@@ -203,3 +203,98 @@
   transform-origin: center;
 }
 
+/* ================= LENIS SMOOTH MOMENTUM SCROLL ================= */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* ================= MULTI-DIMENSIONAL 3D SCROLL ANIMATIONS ================= */
+.scroll-progress-glow {
+  box-shadow: 0 0 10px rgba(225, 6, 0, 0.7), 0 0 20px rgba(255, 107, 0, 0.5);
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-1200 {
+  perspective: 1200px;
+}
+
+/* 3D Depth Entrance: Rotates in X-space with depth Z-axis translation */
+[data-aos="3d-depth"] {
+  opacity: 0;
+  transform: perspective(1000px) rotateX(10deg) translateY(45px) translateZ(-40px) scale(0.97);
+  transition-property: opacity, transform;
+  transition-duration: 900ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+[data-aos="3d-depth"].aos-animate {
+  opacity: 1;
+  transform: perspective(1000px) rotateX(0deg) translateY(0) translateZ(0) scale(1);
+}
+
+/* 3D Tilt Left */
+[data-aos="3d-tilt-left"] {
+  opacity: 0;
+  transform: perspective(1000px) rotateY(-10deg) translateX(-35px) scale(0.97);
+  transition-property: opacity, transform;
+  transition-duration: 900ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+[data-aos="3d-tilt-left"].aos-animate {
+  opacity: 1;
+  transform: perspective(1000px) rotateY(0deg) translateX(0) scale(1);
+}
+
+/* 3D Tilt Right */
+[data-aos="3d-tilt-right"] {
+  opacity: 0;
+  transform: perspective(1000px) rotateY(10deg) translateX(35px) scale(0.97);
+  transition-property: opacity, transform;
+  transition-duration: 900ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+[data-aos="3d-tilt-right"].aos-animate {
+  opacity: 1;
+  transform: perspective(1000px) rotateY(0deg) translateX(0) scale(1);
+}
+
+/* Subtle continuous 3D floating animation */
+@keyframes float3D {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.8deg);
+  }
+}
+
+.animate-float-3d {
+  animation: float3D 6s ease-in-out infinite;
+}
+
+

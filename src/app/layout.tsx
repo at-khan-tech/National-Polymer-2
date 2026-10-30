@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { AOSProvider } from "@/components/AOSProvider";
+import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
@@ -31,14 +32,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`scroll-smooth ${montserrat.variable}`}>
+    <html lang="en" className={montserrat.variable}>
       <body className="font-montserrat antialiased bg-white text-gray-900 overflow-x-hidden selection:bg-primary selection:text-white">
         <ThemeProvider>
-          <AOSProvider>
-            {children}
-            <ThemeSwitcher />
-            <WhatsAppButton />
-          </AOSProvider>
+          <SmoothScrollProvider>
+            <AOSProvider>
+              {children}
+              <ThemeSwitcher />
+              <WhatsAppButton />
+            </AOSProvider>
+          </SmoothScrollProvider>
         </ThemeProvider>
       </body>
     </html>

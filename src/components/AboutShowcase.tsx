@@ -13,11 +13,11 @@ export const AboutShowcase: React.FC = () => {
       className="w-full bg-white py-16 sm:py-20 lg:py-24"
     >
       <div className="container mx-auto px-5 sm:px-6 lg:px-8 max-w-[1320px]">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-16 items-center perspective-1200">
           {/* ================= LEFT COLUMN: COMPANY STORY ================= */}
           <div
-            data-aos="fade-up"
-            data-aos-duration="700"
+            data-aos="3d-tilt-left"
+            data-aos-duration="850"
             className="lg:col-span-5 xl:col-span-5 flex flex-col items-start text-left"
           >
             {/* Eyebrow Label with Subtle Brand Accent */}
@@ -76,9 +76,9 @@ export const AboutShowcase: React.FC = () => {
 
           {/* ================= RIGHT COLUMN: INDUSTRIAL VISUAL & SUPPLY CHAIN STRIP ================= */}
           <div
-            data-aos="fade-up"
+            data-aos="3d-tilt-right"
             data-aos-delay="150"
-            data-aos-duration="700"
+            data-aos-duration="850"
             className="lg:col-span-7 xl:col-span-7 flex flex-col w-full"
           >
             {/* Visual Container */}

@@ -93,13 +93,13 @@ export const WhyChooseUs: React.FC = () => {
           </p>
         </div>
 
-        {/* 4 Cards Grid Matching Reference Design */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-6 xl:gap-7">
+        {/* 4 Cards Grid Matching Reference Design with 3D Depth Scroll Entrance */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-6 xl:gap-7 perspective-1200">
           {whyCards.map((card, index) => (
             <div
               key={card.id}
-              data-aos="fade-up"
-              data-aos-delay={index * 100}
+              data-aos="3d-depth"
+              data-aos-delay={index * 120}
               className="group relative flex flex-col bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden hover:-translate-y-1.5"
             >
               {/* Top Image Section with Smooth Bottom Gradient Fade */}

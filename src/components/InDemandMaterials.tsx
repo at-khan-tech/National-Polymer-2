@@ -107,12 +107,12 @@ export const InDemandMaterials: React.FC = () => {
           </Link>
         </div>
 
-        {/* 6-Card Grid */}
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {/* 6-Card Grid with 3D Depth Entrance */}
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 perspective-1200">
           {products.map((item, idx) => (
             <article
               key={idx}
-              data-aos="fade-up"
+              data-aos="3d-depth"
               data-aos-delay={item.delay}
               className="group flex h-full flex-col overflow-hidden border border-gray-200 bg-white text-gray-900 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >

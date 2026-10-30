@@ -13,12 +13,13 @@ export const WorldwideCapacity: React.FC = () => {
         className="bg-gray-50 w-full py-12 md:py-16"
       >
         <div className="container mx-auto px-5 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 place-items-center gap-8 lg:gap-12 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-3 place-items-center gap-8 lg:gap-12 w-full perspective-1200">
             {/* Column 1: Capacity & Operational Stats */}
             <div className="flex flex-col h-full gap-8 md:gap-10 items-center md:items-start justify-center w-full">
               {/* Stat 1 */}
               <div
-                data-aos="fade-up"
+                data-aos="3d-depth"
+                data-aos-delay="0"
                 className="flex flex-col gap-3 w-full max-w-xs"
               >
                 <h3 className="text-gray-500 text-base md:text-lg leading-snug">
@@ -35,7 +36,8 @@ export const WorldwideCapacity: React.FC = () => {
 
               {/* Stat 2 */}
               <div
-                data-aos="fade-up"
+                data-aos="3d-depth"
+                data-aos-delay="100"
                 className="flex flex-col gap-3 w-full max-w-xs"
               >
                 <h3 className="text-gray-500 text-base md:text-lg leading-snug">
@@ -52,8 +54,8 @@ export const WorldwideCapacity: React.FC = () => {
 
               {/* Stat 3 */}
               <div
-                data-aos="fade-up"
-                data-aos-delay="150"
+                data-aos="3d-depth"
+                data-aos-delay="200"
                 className="flex flex-col gap-3 w-full max-w-xs"
               >
                 <h3 className="text-gray-500 text-base md:text-lg leading-snug">
@@ -70,7 +72,11 @@ export const WorldwideCapacity: React.FC = () => {
             </div>
 
             {/* Column 2: Boardroom & Facility Image */}
-            <div className="h-full w-full flex justify-center items-center">
+            <div
+              data-aos="3d-depth"
+              data-aos-delay="150"
+              className="h-full w-full flex justify-center items-center"
+            >
               <div className="relative w-full max-w-sm aspect-[10/14] sm:aspect-[10/16] overflow-hidden rounded shadow-md group">
                 <Image
                   src="/images/team/management-trading-team.jpg"
@@ -82,7 +88,11 @@ export const WorldwideCapacity: React.FC = () => {
             </div>
 
             {/* Column 3: Results Driven Team Story & CTA */}
-            <div className="flex flex-col h-full justify-center gap-5 w-full max-w-md">
+            <div
+              data-aos="3d-tilt-right"
+              data-aos-delay="250"
+              className="flex flex-col h-full justify-center gap-5 w-full max-w-md"
+            >
               <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-darker">
                 Our Team
               </span>
