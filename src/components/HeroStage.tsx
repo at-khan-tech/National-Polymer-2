@@ -5,7 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "./Icons";
 
-const heroImages = [
+// 1. Classic Hero Slides (Original Design for Comparison Toggle)
+const classicHeroSlides = [
   {
     src: "/images/hero/hero1.png",
     alt: "Petrochemical refining and polymer manufacturing plant",
@@ -48,12 +49,90 @@ const heroImages = [
   },
 ];
 
+// 2. New Hero Slides (Exact Brand Colours, Typography & Layout Specified in Prompt)
+const newHeroSlides = [
+  {
+    src: "/images/hero/hero1.png",
+    alt: "Petrochemical refining and polymer manufacturing plant",
+    headlineLines: [
+      { text: "Connecting", color: "text-[#0F3B82]" },
+      { text: "Global Polymer", color: "text-[#E10600]" },
+      { text: "Supply with", color: "text-[#0F3B82]" },
+      { text: "Industrial Demand", color: "text-[#0F3B82]" },
+    ],
+    headlineClass:
+      "text-[34px] sm:text-[44px] lg:text-[60px] leading-[1.08] tracking-[-1px]",
+    supportingText: "Reliable sourcing. Right grades. Worldwide reach.",
+    primaryCta: { label: "Explore Products", href: "/products" },
+    secondaryCta: { label: "Request a Quote", href: "/enquiry" },
+  },
+  {
+    src: "/images/hero/hero2.png",
+    alt: "Multimodal logistics and polymer raw materials distribution",
+    headlineLines: [
+      { text: "Premium", color: "text-[#0F3B82]" },
+      { text: "Polymer Materials", color: "text-[#E10600]" },
+      { text: "for Diverse Applications", color: "text-[#0F3B82]" },
+    ],
+    headlineClass:
+      "text-[32px] sm:text-[42px] lg:text-[54px] leading-[1.1] tracking-[-0.8px]",
+    supportingText:
+      "Discover polymer grades for diverse industrial applications.",
+    primaryCta: { label: "Explore Our Products", href: "/products" },
+    secondaryCta: { label: "Request a Quote", href: "/enquiry" },
+  },
+  {
+    src: "/images/hero/hero3.png",
+    alt: "Deep-sea container shipping terminal and maritime network",
+    headlineLines: [
+      { text: "Global Sourcing.", color: "text-[#0F3B82]" },
+      { text: "Reliable Supply Chain.", color: "text-[#E10600]" },
+    ],
+    headlineClass:
+      "text-[34px] sm:text-[44px] lg:text-[56px] leading-[1.12] tracking-[-0.9px]",
+    supportingText: "Connecting key markets across the world.",
+    primaryCta: { label: "Explore Our Markets", href: "/markets" },
+    secondaryCta: { label: "Request a Quote", href: "/enquiry" },
+  },
+  {
+    src: "/images/hero/hero4.png",
+    alt: "Advanced polymer compounding and manufacturing facility",
+    headlineLines: [
+      { text: "Modern", color: "text-[#0F3B82]" },
+      { text: "Processing.", color: "text-[#0F3B82]" },
+      { text: "Consistent Quality.", color: "text-[#E10600]" },
+    ],
+    headlineClass:
+      "text-[32px] sm:text-[42px] lg:text-[52px] leading-[1.12] tracking-[-0.8px]",
+    supportingText:
+      "Explore materials and sourcing solutions for industrial applications.",
+    primaryCta: { label: "Explore Solutions", href: "/solutions" },
+    secondaryCta: { label: "Request a Quote", href: "/enquiry" },
+  },
+  {
+    src: "/images/hero/hero5.png",
+    alt: "Virgin polymer pellets and recycled circular materials",
+    headlineLines: [
+      { text: "Material Quality", color: "text-[#0F3B82]" },
+      { text: "You Can Rely On", color: "text-[#E10600]" },
+    ],
+    headlineClass:
+      "text-[32px] sm:text-[42px] lg:text-[52px] leading-[1.12] tracking-[-0.8px]",
+    supportingText:
+      "Explore polymer grades and available technical information.",
+    primaryCta: { label: "Find a Grade", href: "/enquiry" },
+    secondaryCta: { label: "Request a Quote", href: "/enquiry" },
+  },
+];
+
 export const HeroStage: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  // Toggle state to compare before & now: "new" (Light & Brand colors) vs "classic" (Original dark overlay)
+  const [heroDesign, setHeroDesign] = useState<"new" | "classic">("new");
 
   useEffect(() => {
     const timer = window.setInterval(() => {
-      setCurrentSlide((current) => (current + 1) % heroImages.length);
+      setCurrentSlide((current) => (current + 1) % newHeroSlides.length);
     }, 5000);
 
     return () => window.clearInterval(timer);
@@ -62,11 +141,41 @@ export const HeroStage: React.FC = () => {
   return (
     <section
       id="home"
-      className="relative h-[65vh] w-full overflow-hidden bg-black sm:h-[75vh] md:h-[95vh]"
-      aria-label="National Polymers highlights"
+      className="relative min-h-[580px] h-[75vh] w-full overflow-hidden bg-[#F7F9FC] sm:h-[82vh] md:h-[92vh]"
+      aria-label="National Polymers Hero Slider"
     >
+      {/* Design Comparison Toggle */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-8 z-30 flex items-center gap-1.5 rounded-full bg-white/95 p-1 shadow-md backdrop-blur-md border border-gray-200">
+        <button
+          type="button"
+          onClick={() => setHeroDesign("classic")}
+          className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
+            heroDesign === "classic"
+              ? "bg-[#0F3B82] text-white shadow-xs"
+              : "text-gray-600 hover:text-gray-900"
+          }`}
+          title="Switch to previous dark hero design"
+        >
+          Previous (Dark)
+        </button>
+        <button
+          type="button"
+          onClick={() => setHeroDesign("new")}
+          className={`rounded-full px-3.5 py-1.5 text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
+            heroDesign === "new"
+              ? "bg-[#E10600] text-white shadow-xs"
+              : "text-gray-600 hover:text-gray-900"
+          }`}
+          title="Switch to new light & brand colors hero design"
+        >
+          <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
+          New (Brand Colors)
+        </button>
+      </div>
+
+      {/* 5 Background Slide Images with Existing Zoom-Out Animation */}
       <div className="absolute inset-0 z-0">
-        {heroImages.map((image, index) => (
+        {newHeroSlides.map((image, index) => (
           <div
             key={image.src}
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
@@ -80,7 +189,7 @@ export const HeroStage: React.FC = () => {
               fill
               priority={index === 0}
               sizes="100vw"
-              className={`object-cover ${
+              className={`object-cover object-right md:object-center ${
                 currentSlide === index ? "hero-carousel-zoom-out" : ""
               }`}
             />
@@ -88,101 +197,189 @@ export const HeroStage: React.FC = () => {
         ))}
       </div>
 
-      <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between">
-        <div className="h-1/3 bg-gradient-to-b from-black/70 via-black/40 to-transparent" />
-        <div className="h-2/3 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />
-      </div>
+      {/* Overlays: Adapts based on Toggle */}
+      {heroDesign === "new" ? (
+        // New Design: Subtle white-to-transparent gradient on left (45-50% width) for 100% text readability
+        <div className="pointer-events-none absolute inset-0 z-10 flex">
+          <div className="h-full w-full sm:w-[70%] lg:w-[54%] bg-gradient-to-r from-white/95 via-white/85 to-transparent backdrop-blur-[0.5px]" />
+          <div className="hidden lg:block flex-1 h-full bg-gradient-to-l from-black/10 via-transparent to-transparent" />
+        </div>
+      ) : (
+        // Classic Design: Full dark gradient overlays
+        <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between">
+          <div className="h-1/3 bg-gradient-to-b from-black/70 via-black/40 to-transparent" />
+          <div className="h-2/3 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />
+        </div>
+      )}
 
-      <div className="relative z-20 flex h-full w-full flex-col items-start justify-end px-5 pb-8 text-white sm:pb-12 md:px-12 md:pb-14">
+      {/* Hero Content Container */}
+      <div className="relative z-20 flex h-full w-full flex-col justify-center px-5 sm:px-8 md:px-14 lg:px-20">
         <h1 className="sr-only">
-          National Polymers FZ LLC — Global Distribution &amp; Trading in Plastic Raw Materials
+          National Polymers FZ LLC — Global Polymer Supply with Industrial Demand
         </h1>
 
-        {/* Dynamic Slide Overlay Text */}
-        <div className="relative w-full max-w-3xl min-h-[100px] sm:min-h-[120px] md:min-h-[135px]">
-          {heroImages.map((slide, index) => {
-            const isActive = currentSlide === index;
-            return (
-              <div
-                key={slide.src}
-                className={`transition-all duration-700 ease-out ${
-                  isActive
-                    ? "opacity-100 translate-y-0 relative z-10"
-                    : "opacity-0 translate-y-4 absolute inset-0 pointer-events-none z-0"
-                }`}
-              >
-                <div className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/50 px-2.5 py-0.5 text-[11px] sm:text-xs font-medium uppercase tracking-wider text-primary-lighter backdrop-blur-md mb-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                  {slide.tagline}
+        {/* Dynamic Slides Overlay Content */}
+        <div className="relative w-full max-w-xl lg:max-w-2xl min-h-[300px] sm:min-h-[340px] flex flex-col justify-center">
+          {heroDesign === "new" ? (
+            // ==================== NEW DESIGN SLIDES ====================
+            newHeroSlides.map((slide, index) => {
+              const isActive = currentSlide === index;
+              return (
+                <div
+                  key={`new-${slide.src}`}
+                  className={`transition-all duration-700 ease-out ${
+                    isActive
+                      ? "opacity-100 translate-y-0 relative z-10"
+                      : "opacity-0 translate-y-4 absolute inset-0 pointer-events-none z-0"
+                  }`}
+                >
+                  {/* Multi-line Colored Headline */}
+                  <h2
+                    className={`font-montserrat font-[800] ${slide.headlineClass}`}
+                  >
+                    {slide.headlineLines.map((line, lIdx) => (
+                      <span key={lIdx} className={`${line.color} block`}>
+                        {line.text}
+                      </span>
+                    ))}
+                  </h2>
+
+                  {/* Supporting Text */}
+                  <p className="mt-3 sm:mt-4 text-[15px] sm:text-[18px] text-[#5B6470] font-normal leading-[1.6] max-w-lg">
+                    {slide.supportingText}
+                  </p>
+
+                  {/* Brand Action Buttons */}
+                  <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
+                    {/* Primary Button */}
+                    <Link
+                      href={slide.primaryCta.href}
+                      className="inline-flex items-center justify-center rounded-[8px] bg-[#E10600] px-6 py-3.5 text-[15px] font-semibold text-white shadow-md transition-all hover:bg-[#b91c1c] hover:shadow-lg active:scale-95"
+                    >
+                      {slide.primaryCta.label}
+                    </Link>
+
+                    {/* Secondary Button */}
+                    <Link
+                      href={slide.secondaryCta.href}
+                      className="inline-flex items-center justify-center rounded-[8px] border-2 border-[#0F3B82] bg-white px-6 py-3.5 text-[15px] font-semibold text-[#0F3B82] shadow-sm transition-all hover:bg-[#0F3B82] hover:text-white hover:shadow-md active:scale-95"
+                    >
+                      {slide.secondaryCta.label}
+                    </Link>
+                  </div>
                 </div>
+              );
+            })
+          ) : (
+            // ==================== CLASSIC (ORIGINAL) SLIDES ====================
+            classicHeroSlides.map((slide, index) => {
+              const isActive = currentSlide === index;
+              return (
+                <div
+                  key={`classic-${slide.src}`}
+                  className={`transition-all duration-700 ease-out ${
+                    isActive
+                      ? "opacity-100 translate-y-0 relative z-10"
+                      : "opacity-0 translate-y-4 absolute inset-0 pointer-events-none z-0"
+                  }`}
+                >
+                  <div className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/50 px-2.5 py-0.5 text-[11px] sm:text-xs font-medium uppercase tracking-wider text-primary-lighter backdrop-blur-md mb-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                    {slide.tagline}
+                  </div>
 
-                <h2 className="max-w-[85vw] text-xl font-bold leading-tight drop-shadow-md sm:text-2xl md:text-3xl lg:text-4xl text-white">
-                  {slide.title}
-                </h2>
+                  <h2 className="max-w-[85vw] text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight drop-shadow-md text-white">
+                    {slide.title}
+                  </h2>
 
-                <p className="mt-1.5 max-w-xl text-xs sm:text-sm md:text-base text-gray-200/90 font-normal drop-shadow leading-relaxed">
-                  {slide.subtitle}
-                </p>
-              </div>
-            );
-          })}
+                  <p className="mt-2 max-w-xl text-xs sm:text-sm md:text-base text-gray-200 font-normal drop-shadow leading-relaxed">
+                    {slide.subtitle}
+                  </p>
+
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <a
+                      href="#material-finder"
+                      className="inline-flex items-center justify-center gap-2 bg-white px-5 py-3 text-xs sm:text-sm font-semibold text-primary-darker shadow-lg transition-all hover:bg-gray-100 rounded"
+                    >
+                      Find a Material
+                      <Icon
+                        name="search"
+                        className="h-4 w-4 text-primary-darker"
+                      />
+                    </a>
+                    <Link
+                      href="#contact"
+                      className="inline-flex items-center justify-center gap-2 border border-white/80 bg-black/40 px-5 py-3 text-xs sm:text-sm font-semibold text-white shadow-lg backdrop-blur-md transition-all hover:bg-white hover:text-primary-darker rounded"
+                    >
+                      Enquiry Now
+                      <Icon name="arrow-right" className="h-4 w-4" />
+                    </Link>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
 
-        {/* Action Buttons */}
-        <div className="mt-4 flex max-w-full flex-wrap gap-2 sm:gap-3 md:mt-6 md:gap-4">
-          <a
-            href="#material-finder"
-            className="inline-flex min-w-0 items-center justify-center gap-2 whitespace-nowrap bg-white px-4 py-2.5 text-xs font-semibold text-primary-darker shadow-lg transition-all hover:bg-gray-100 sm:px-6 sm:py-3.5 sm:text-sm"
+        {/* Indicators and Navigation (Slide Controls) */}
+        <div className="mt-6 flex items-center gap-4">
+          <div
+            className="flex items-center gap-2"
+            aria-label="Choose a hero slide"
           >
-            Find a Material
-            <Icon name="search" className="h-4 w-4 text-primary-darker" />
-          </a>
-          <Link
-            href="#contact"
-            className="inline-flex min-w-0 items-center justify-center gap-2 whitespace-nowrap border border-white/80 bg-black/40 px-4 py-2.5 text-xs font-semibold text-white shadow-lg backdrop-blur-md transition-all hover:bg-white hover:text-primary-darker sm:px-6 sm:py-3.5 sm:text-sm"
-          >
-            Enquiry Now
-            <Icon name="arrow-right" className="h-4 w-4" />
-          </Link>
-        </div>
-
-        {/* Indicators and Navigation */}
-        <div className="mt-6 flex items-center gap-4 md:mt-8">
-          <div className="flex items-center gap-2" aria-label="Choose a hero image">
-            {heroImages.map((image, index) => (
+            {newHeroSlides.map((image, index) => (
               <button
                 key={image.src}
                 type="button"
                 onClick={() => setCurrentSlide(index)}
-                aria-label={`Show slide ${index + 1} of ${heroImages.length}`}
+                aria-label={`Show slide ${index + 1} of ${newHeroSlides.length}`}
                 aria-current={currentSlide === index ? "true" : undefined}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
+                className={`h-2 rounded-full transition-all duration-300 ${
                   currentSlide === index
-                    ? "w-8 bg-white shadow-sm"
+                    ? heroDesign === "new"
+                      ? "w-8 bg-[#E10600] shadow-sm"
+                      : "w-8 bg-white shadow-sm"
+                    : heroDesign === "new"
+                    ? "w-3 bg-gray-400/60 hover:bg-gray-600"
                     : "w-3 bg-white/50 hover:bg-white/80"
                 }`}
               />
             ))}
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() =>
-                setCurrentSlide((current) => (current - 1 + heroImages.length) % heroImages.length)
+                setCurrentSlide(
+                  (current) =>
+                    (current - 1 + newHeroSlides.length) % newHeroSlides.length
+                )
               }
               aria-label="Previous slide"
-              className="flex h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white/90 backdrop-blur-sm transition-all hover:bg-white hover:text-gray-900"
+              className={`flex h-8 w-8 items-center justify-center rounded-full border transition-all ${
+                heroDesign === "new"
+                  ? "border-gray-300 bg-white text-gray-700 shadow-sm hover:bg-[#0F3B82] hover:text-white hover:border-[#0F3B82]"
+                  : "border-white/20 bg-black/40 text-white hover:bg-white hover:text-gray-900"
+              }`}
             >
-              <Icon name="arrow-back" className="h-3.5 w-3.5" />
+              <Icon name="arrow-back" className="h-4 w-4" />
             </button>
             <button
               type="button"
-              onClick={() => setCurrentSlide((current) => (current + 1) % heroImages.length)}
+              onClick={() =>
+                setCurrentSlide(
+                  (current) => (current + 1) % newHeroSlides.length
+                )
+              }
               aria-label="Next slide"
-              className="flex h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white/90 backdrop-blur-sm transition-all hover:bg-white hover:text-gray-900"
+              className={`flex h-8 w-8 items-center justify-center rounded-full border transition-all ${
+                heroDesign === "new"
+                  ? "border-gray-300 bg-white text-gray-700 shadow-sm hover:bg-[#0F3B82] hover:text-white hover:border-[#0F3B82]"
+                  : "border-white/20 bg-black/40 text-white hover:bg-white hover:text-gray-900"
+              }`}
             >
-              <Icon name="arrow-forward" className="h-3.5 w-3.5" />
+              <Icon name="arrow-forward" className="h-4 w-4" />
             </button>
           </div>
         </div>
