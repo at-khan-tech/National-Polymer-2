@@ -1,228 +1,190 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "./Icons";
 
-const slides = [
+const heroImages = [
   {
-    title: "Reliable Polymer Supplier",
-    tabSubtitle: "Global Distribution & Plastic Raw Materials",
+    src: "/images/hero/hero1.png",
+    alt: "Petrochemical refining and polymer manufacturing plant",
+    tagline: "Global Polymer Distribution",
+    title: "World-Class Polymer Supply & Trading",
+    subtitle:
+      "Connecting premier global petrochemical producers with leading plastic manufacturers worldwide.",
   },
   {
-    title: "Multinational Polymer Distribution",
-    tabSubtitle: "Sourcing USA, Canada, Australia & Far East",
+    src: "/images/hero/hero2.png",
+    alt: "Multimodal logistics and polymer raw materials distribution",
+    tagline: "Multimodal Supply Chain",
+    title: "Reliable Global Logistics & Express Delivery",
+    subtitle:
+      "Delivering prime, near-prime, and engineering resins with seamless ocean, air, and inland freight.",
   },
   {
-    title: "Professional Support & Solutions",
-    tabSubtitle: "One Window Solution for Plastic Manufacturers",
+    src: "/images/hero/hero3.png",
+    alt: "Deep-sea container shipping terminal and maritime network",
+    tagline: "International Trade Reach",
+    title: "Connecting Continents with High-Grade Polymers",
+    subtitle:
+      "Strategic sourcing from USA, Canada, Australia & Far East to reliably supply global manufacturing hubs.",
   },
   {
-    title: "Prime & Off-Grade Resins",
-    tabSubtitle: "PE, PP, PVC, Recycled Granules & Regrinds",
+    src: "/images/hero/hero4.png",
+    alt: "Advanced polymer compounding and manufacturing facility",
+    tagline: "Industrial Grade Solutions",
+    title: "Tailored Engineering Resins & Raw Materials",
+    subtitle:
+      "High-performance polymer grades formulated for injection molding, extrusion, packaging, and automotive.",
   },
   {
-    title: "Experienced Results Driven Team",
-    tabSubtitle: "Traders, Consultants, QC & Marketers",
+    src: "/images/hero/hero5.png",
+    alt: "Virgin polymer pellets and recycled circular materials",
+    tagline: "Virgin & Circular Polymers",
+    title: "Prime Resins, Recycled Granules & Regrinds",
+    subtitle:
+      "Committed to quality and circularity with sustainable virgin, off-grade, and recycled plastic materials.",
   },
-  {
-    title: "Quality, Trust & Authenticity",
-    tabSubtitle: "Serving Indian Sub-Continent, Africa & Europe",
-  },
-];
-
-const teamPhotos = [
-  "/images/team/team-01.png",
-  "/images/team/team-02.png",
-  "/images/team/team-03.png",
-  "/images/team/team-04.png",
-  "/images/team/team-05.png",
-  "/images/team/team-06.png",
-  "/images/team/team-07.png",
-  "/images/team/team-08.png",
-  "/images/team/team-09.png",
-  "/images/team/team-10.png",
-  "/images/team/team-11.png",
-  "/images/team/team-12.png",
-  "/images/team/team-13.png",
 ];
 
 export const HeroStage: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const slideDuration = 6700; // 6.7 seconds
-    const intervalTime = 50;
-    const step = (intervalTime / slideDuration) * 100;
+    const timer = window.setInterval(() => {
+      setCurrentSlide((current) => (current + 1) % heroImages.length);
+    }, 5000);
 
-    const timer = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          setCurrentSlide((curr) => (curr + 1) % slides.length);
-          return 0;
-        }
-        return prev + step;
-      });
-    }, intervalTime);
-
-    return () => clearInterval(timer);
+    return () => window.clearInterval(timer);
   }, [currentSlide]);
-
-  const handleSelectSlide = (index: number) => {
-    setCurrentSlide(index);
-    setProgress(0);
-  };
 
   return (
     <section
       id="home"
-      className="w-full h-[65vh] sm:h-[75vh] md:h-[95vh] bg-white relative overflow-hidden"
+      className="relative h-[65vh] w-full overflow-hidden bg-black sm:h-[75vh] md:h-[95vh]"
+      aria-label="National Polymers highlights"
     >
-      {/* Background Watermark Ticker "National Polymers" */}
-      <div className="absolute inset-0 pointer-events-none flex items-center overflow-hidden z-0 select-none">
-        <div className="animate-marquee-left flex items-center whitespace-nowrap">
-          <span className="opacity-10 text-gray-500 font-normal text-[14rem] md:text-[28rem] leading-none px-12">
-            National Polymers
-          </span>
-          <span className="opacity-10 text-gray-500 font-normal text-[14rem] md:text-[28rem] leading-none px-12">
-            National Polymers
-          </span>
-          <span className="opacity-10 text-gray-500 font-normal text-[14rem] md:text-[28rem] leading-none px-12">
-            National Polymers
-          </span>
-          <span className="opacity-10 text-gray-500 font-normal text-[14rem] md:text-[28rem] leading-none px-12">
-            National Polymers
-          </span>
-        </div>
+      <div className="absolute inset-0 z-0">
+        {heroImages.map((image, index) => (
+          <div
+            key={image.src}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              currentSlide === index ? "opacity-100" : "opacity-0"
+            }`}
+            aria-hidden="true"
+          >
+            <Image
+              src={image.src}
+              alt={image.alt}
+              fill
+              priority={index === 0}
+              sizes="100vw"
+              className={`object-cover ${
+                currentSlide === index ? "hero-carousel-zoom-out" : ""
+              }`}
+            />
+          </div>
+        ))}
       </div>
 
-      {/* Foreground Team Cut-outs Marquee */}
-      <div className="absolute inset-x-0 bottom-0 top-10 flex items-end overflow-hidden z-10 pointer-events-none">
-        <div className="animate-marquee-right flex items-end -space-x-1 md:-space-x-2 h-full">
-          {[...teamPhotos, ...teamPhotos].map((photoSrc, idx) => (
-            <div
-              key={idx}
-              className="h-[80%] md:h-[92%] relative aspect-[600/949] shrink-0"
-            >
-              <Image
-                src={photoSrc}
-                alt={`National Polymers team member ${((idx % teamPhotos.length) + 1)
-                  .toString()
-                  .padStart(2, "0")}`}
-                fill
-                priority={idx < 5}
-                sizes="(max-width: 768px) 300px, 500px"
-                className="object-contain object-bottom drop-shadow-md"
-              />
-            </div>
-          ))}
-        </div>
+      <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between">
+        <div className="h-1/3 bg-gradient-to-b from-black/70 via-black/40 to-transparent" />
+        <div className="h-2/3 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />
       </div>
 
-      {/* Top & Bottom Vignette Gradients */}
-      <div className="absolute inset-0 z-20 flex flex-col justify-between pointer-events-none">
-        <div className="h-1/3 bg-gradient-to-b from-black/60 to-transparent" />
-        <div className="h-2/3 bg-gradient-to-t from-black via-black/40 to-transparent" />
-      </div>
-
-      {/* Hero Content Overlay */}
-      <div className="relative z-20 h-full w-full px-5 md:px-12 flex flex-col justify-end items-start pb-8 md:pb-12 text-white">
+      <div className="relative z-20 flex h-full w-full flex-col items-start justify-end px-5 pb-8 text-white sm:pb-12 md:px-12 md:pb-14">
         <h1 className="sr-only">
           National Polymers FZ LLC — Global Distribution &amp; Trading in Plastic Raw Materials
         </h1>
 
-        {/* Dynamic Title */}
-        <div className="min-h-[60px] md:min-h-[100px] flex items-end">
-          <p className="font-medium max-w-[90vw] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-[1.05] drop-shadow-md transition-all duration-500 ease-out">
-            {slides[currentSlide].title}
-          </p>
+        {/* Dynamic Slide Overlay Text */}
+        <div className="relative w-full max-w-3xl min-h-[100px] sm:min-h-[120px] md:min-h-[135px]">
+          {heroImages.map((slide, index) => {
+            const isActive = currentSlide === index;
+            return (
+              <div
+                key={slide.src}
+                className={`transition-all duration-700 ease-out ${
+                  isActive
+                    ? "opacity-100 translate-y-0 relative z-10"
+                    : "opacity-0 translate-y-4 absolute inset-0 pointer-events-none z-0"
+                }`}
+              >
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/50 px-2.5 py-0.5 text-[11px] sm:text-xs font-medium uppercase tracking-wider text-primary-lighter backdrop-blur-md mb-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                  {slide.tagline}
+                </div>
+
+                <h2 className="max-w-[85vw] text-xl font-bold leading-tight drop-shadow-md sm:text-2xl md:text-3xl lg:text-4xl text-white">
+                  {slide.title}
+                </h2>
+
+                <p className="mt-1.5 max-w-xl text-xs sm:text-sm md:text-base text-gray-200/90 font-normal drop-shadow leading-relaxed">
+                  {slide.subtitle}
+                </p>
+              </div>
+            );
+          })}
         </div>
 
-        {/* CTA Buttons */}
-        <div className="flex max-w-full flex-wrap gap-2 sm:gap-3 md:gap-4 mt-4 md:mt-6">
+        {/* Action Buttons */}
+        <div className="mt-4 flex max-w-full flex-wrap gap-2 sm:gap-3 md:mt-6 md:gap-4">
           <a
             href="#material-finder"
-            className="inline-flex min-w-0 items-center justify-center gap-2 whitespace-nowrap bg-white px-4 py-2.5 sm:px-6 sm:py-3.5 text-xs sm:text-sm font-semibold text-primary-darker transition-all hover:bg-gray-100 shadow-lg"
+            className="inline-flex min-w-0 items-center justify-center gap-2 whitespace-nowrap bg-white px-4 py-2.5 text-xs font-semibold text-primary-darker shadow-lg transition-all hover:bg-gray-100 sm:px-6 sm:py-3.5 sm:text-sm"
           >
             Find a Material
-            <Icon name="search" className="w-4 h-4 text-primary-darker" />
+            <Icon name="search" className="h-4 w-4 text-primary-darker" />
           </a>
           <Link
             href="#contact"
-            className="inline-flex min-w-0 items-center justify-center gap-2 whitespace-nowrap border border-white bg-black/30 px-4 py-2.5 sm:px-6 sm:py-3.5 text-xs sm:text-sm font-semibold text-white backdrop-blur-md transition-all hover:bg-white hover:text-primary-darker shadow-lg"
+            className="inline-flex min-w-0 items-center justify-center gap-2 whitespace-nowrap border border-white/80 bg-black/40 px-4 py-2.5 text-xs font-semibold text-white shadow-lg backdrop-blur-md transition-all hover:bg-white hover:text-primary-darker sm:px-6 sm:py-3.5 sm:text-sm"
           >
             Enquiry Now
-            <Icon name="arrow-right" className="w-4 h-4" />
+            <Icon name="arrow-right" className="h-4 w-4" />
           </Link>
         </div>
 
-        {/* Bottom Slide Tabs & Circular Animated Progress Indicator */}
-        <div className="w-full mt-6 md:mt-8 pt-4 border-t border-white/20 flex flex-row items-center justify-between gap-4">
-          {slides.map((slide, idx) => {
-            const isActive = idx === currentSlide;
-            return (
+        {/* Indicators and Navigation */}
+        <div className="mt-6 flex items-center gap-4 md:mt-8">
+          <div className="flex items-center gap-2" aria-label="Choose a hero image">
+            {heroImages.map((image, index) => (
               <button
-                key={idx}
-                onClick={() => handleSelectSlide(idx)}
-                className={`flex-1 flex flex-row items-center gap-3 text-left transition-all cursor-pointer ${
-                  isActive
-                    ? "opacity-100"
-                    : "opacity-40 hover:opacity-75 hidden md:flex"
+                key={image.src}
+                type="button"
+                onClick={() => setCurrentSlide(index)}
+                aria-label={`Show slide ${index + 1} of ${heroImages.length}`}
+                aria-current={currentSlide === index ? "true" : undefined}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  currentSlide === index
+                    ? "w-8 bg-white shadow-sm"
+                    : "w-3 bg-white/50 hover:bg-white/80"
                 }`}
-              >
-                {/* SVG Radial Progress Timer (Active tab) */}
-                <div className="w-9 h-9 shrink-0 relative flex items-center justify-center">
-                  <svg
-                    viewBox="0 0 50 50"
-                    className="w-full h-full -rotate-90"
-                    fill="none"
-                  >
-                    <circle
-                      cx="25"
-                      cy="25"
-                      r="20"
-                      stroke="white"
-                      strokeWidth="2"
-                      className="opacity-20"
-                    />
-                    {isActive ? (
-                      <circle
-                        cx="25"
-                        cy="25"
-                        r="20"
-                        stroke="var(--color-primary, #AE872E)"
-                        strokeWidth="3"
-                        strokeDasharray="125.6"
-                        strokeDashoffset={125.6 - (125.6 * progress) / 100}
-                        strokeLinecap="round"
-                        className="transition-all duration-75 ease-linear"
-                      />
-                    ) : (
-                      <circle
-                        cx="25"
-                        cy="25"
-                        r="20"
-                        stroke="white"
-                        strokeWidth="2"
-                        className="opacity-10"
-                      />
-                    )}
-                  </svg>
-                  <span className="absolute text-[11px] font-semibold text-white">
-                    0{idx + 1}
-                  </span>
-                </div>
+              />
+            ))}
+          </div>
 
-                <div className="min-w-0">
-                  <h4 className="line-clamp-1 text-xs md:text-sm font-medium text-white">
-                    {slide.tabSubtitle}
-                  </h4>
-                </div>
-              </button>
-            );
-          })}
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() =>
+                setCurrentSlide((current) => (current - 1 + heroImages.length) % heroImages.length)
+              }
+              aria-label="Previous slide"
+              className="flex h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white/90 backdrop-blur-sm transition-all hover:bg-white hover:text-gray-900"
+            >
+              <Icon name="arrow-back" className="h-3.5 w-3.5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setCurrentSlide((current) => (current + 1) % heroImages.length)}
+              aria-label="Next slide"
+              className="flex h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white/90 backdrop-blur-sm transition-all hover:bg-white hover:text-gray-900"
+            >
+              <Icon name="arrow-forward" className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </div>
       </div>
     </section>
