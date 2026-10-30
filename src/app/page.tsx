@@ -1,6 +1,7 @@
 import React from "react";
 import { Header } from "@/components/Header";
 import { HeroStage } from "@/components/HeroStage";
+import { HeroStatsBar } from "@/components/HeroStatsBar";
 import { AboutShowcase } from "@/components/AboutShowcase";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
 import { WorldwideCapacity } from "@/components/WorldwideCapacity";
@@ -25,6 +26,9 @@ export default function Home() {
       <main className="flex-1 w-full flex flex-col justify-start items-center">
         {/* 1. Banner (Slider / Image) */}
         <HeroStage />
+
+        {/* Company Quick Stats Strip */}
+        <HeroStatsBar />
 
         {/* 2. About Company & 21 Years Badge */}
         <AboutShowcase />
