@@ -14,7 +14,7 @@ const strengths = [
 ];
 
 const supplyTags = [
-  { label: "Global Sourcing", color: "#E10600" },
+  { label: "Global Sourcing", color: "#E95220" },
   { label: "Polymer Grades", color: "#FF6B00" },
   { label: "Industrial Markets", color: "#0F3B82" },
 ];
@@ -30,7 +30,7 @@ export const AboutShowcase: React.FC = () => {
           <div data-aos="3d-tilt-left" data-aos-duration="900" className="relative order-2 lg:order-1">
             {/* Decorations */}
             <div className="absolute -bottom-5 -left-5 w-3/4 h-3/4 rounded-3xl bg-[#EEF2FF] -z-10" aria-hidden="true" />
-            <div className="absolute -top-4 -right-4 w-1/2 h-1/2 rounded-2xl border-2 border-[#E10600]/15 -z-10" aria-hidden="true" />
+            <div className="absolute -top-4 -right-4 w-1/2 h-1/2 rounded-2xl border-2 border-[#E95220]/15 -z-10" aria-hidden="true" />
 
             {/* Main image */}
             <div className="relative rounded-3xl overflow-hidden shadow-xl img-glint aspect-[4/3]">
@@ -48,9 +48,9 @@ export const AboutShowcase: React.FC = () => {
             <div className="absolute -bottom-6 right-4 sm:right-8 z-10 float-up">
               <div className="relative bg-white rounded-2xl shadow-xl border border-gray-100 px-5 py-4 flex flex-col items-center
                 hover:shadow-2xl transition-shadow duration-300 cursor-default">
-                <div className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl bg-gradient-to-r from-[#E10600] to-[#FF6B00]" />
+                <div className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl bg-gradient-to-r from-[#E95220] to-[#FF6B00]" />
                 <span className="font-montserrat text-5xl font-black text-[#0F3B82] leading-none">21</span>
-                <span className="text-[11px] font-bold uppercase tracking-widest text-[#E10600] mt-0.5">Years</span>
+                <span className="text-[11px] font-bold uppercase tracking-widest text-[#E95220] mt-0.5">Years</span>
                 <span className="text-[10px] text-gray-400 tracking-wide">Experience</span>
               </div>
             </div>
@@ -66,7 +66,7 @@ export const AboutShowcase: React.FC = () => {
             {/* Dot grid */}
             <svg className="absolute -bottom-2 right-2 opacity-25 pointer-events-none" width="80" height="80" viewBox="0 0 80 80" aria-hidden="true">
               {[0, 1, 2, 3].map(r => [0, 1, 2, 3].map(c => (
-                <circle key={`${r}-${c}`} cx={c * 20 + 10} cy={r * 20 + 10} r="2.5" fill="#E10600" />
+                <circle key={`${r}-${c}`} cx={c * 20 + 10} cy={r * 20 + 10} r="2.5" fill="#E95220" />
               )))}
             </svg>
           </div>
@@ -76,8 +76,8 @@ export const AboutShowcase: React.FC = () => {
             className="order-1 lg:order-2 flex flex-col">
             {/* Eyebrow */}
             <div className="flex items-center gap-3 mb-5">
-              <div className="h-px w-10 bg-gradient-to-r from-[#E10600] to-[#FF6B00]" />
-              <span className="text-[11px] font-bold uppercase tracking-[3px] text-[#E10600]">
+              <div className="h-px w-10 bg-gradient-to-r from-[#E95220] to-[#FF6B00]" />
+              <span className="text-[11px] font-bold uppercase tracking-[3px] text-[#E95220]">
                 About National Polymers
               </span>
             </div>
@@ -86,11 +86,11 @@ export const AboutShowcase: React.FC = () => {
             <h2 className="font-montserrat text-[30px] sm:text-[38px] lg:text-[44px] font-extrabold leading-[1.1] tracking-tight text-[#0F3B82]">
               Connecting{" "}
               <span className="relative inline-block">
-                <span className="text-[#E10600]">Global Polymer</span>
+                <span className="text-[#E95220]">Global Polymer</span>
                 {/* Animated wave underline */}
                 <svg className="absolute -bottom-2 left-0 w-full overflow-visible" height="8" viewBox="0 0 200 8" preserveAspectRatio="none" aria-hidden="true">
                   <path className="wave-draw" d="M0 5 Q25 1 50 5 Q75 9 100 5 Q125 1 150 5 Q175 9 200 5"
-                    stroke="#E10600" strokeWidth="2.5" fill="none" opacity="0.45" />
+                    stroke="#E95220" strokeWidth="2.5" fill="none" opacity="0.45" />
                 </svg>
               </span>{" "}
               Supply

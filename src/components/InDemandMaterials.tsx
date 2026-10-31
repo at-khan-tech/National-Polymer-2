@@ -109,48 +109,76 @@ export const InDemandMaterials: React.FC = () => {
           </Link>
         </div>
 
-        {/* 6-Card Grid with 3D Depth Entrance */}
+        {/* 6-Card Grid with 3D Depth Entrance (X, Y, Z slide animations) */}
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 perspective-1200">
-          {products.map((item, idx) => (
-            <article
-              key={idx}
-              data-aos="3d-depth"
-              data-aos-delay={item.delay}
-              className="group flex h-full flex-col overflow-hidden border border-gray-200 bg-white text-gray-900 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-            >
-              <div className="relative h-52 w-full overflow-hidden bg-gray-100">
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  fill
-                  className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
-                />
-              </div>
-
-              <div className="flex flex-1 flex-col items-center justify-center p-7 text-center">
-                <p className="mb-3 w-fit bg-primary/15 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-primary-darker">
-                  {item.badge}
-                </p>
-                <h3 className="text-2xl font-normal text-gray-900">{item.name}</h3>
-                <p className="mt-3 text-sm leading-6 text-gray-600 flex-1">
-                  {item.desc}
-                </p>
-                <p className="mt-4 w-full border-t border-gray-200 pt-4 text-xs font-medium uppercase tracking-[0.12em] text-primary-darker">
-                  {item.tags}
-                </p>
-                <Link
-                  href={item.href}
-                  className="mt-5 inline-flex w-fit items-center gap-2 text-sm font-semibold text-primary-darker transition-colors hover:text-primary"
-                >
-                  Enquire This Grade
-                  <Icon
-                    name="arrow-right"
-                    className="w-5 h-5 transition-transform group-hover:translate-x-1"
+          {products.map((item, idx) => {
+            const aosType =
+              idx % 3 === 0
+                ? "card-3d-left"
+                : idx % 3 === 1
+                ? "card-3d-depth"
+                : "card-3d-right";
+            return (
+              <article
+                key={idx}
+                data-aos={aosType}
+                data-aos-delay={(idx % 3) * 120}
+                className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white text-gray-900 shadow-sm transition-all duration-400 hover-card-3d hover:border-primary/50"
+              >
+                {/* Image Section with 3D Slide & Flip Glass Overlay */}
+                <div className="relative h-56 w-full overflow-hidden bg-gray-100">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    fill
+                    className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
                   />
-                </Link>
-              </div>
-            </article>
-          ))}
+
+                  {/* 3D Slide & Flip Glass Overlay on Product Card Hover */}
+                  <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 bg-gradient-to-t from-[#0F3B82]/95 via-[#0F3B82]/80 to-transparent backdrop-blur-[3px] opacity-0 group-hover:opacity-100 translate-y-6 group-hover:translate-y-0 [transform:perspective(600px)_rotateX(15deg)] group-hover:[transform:perspective(600px)_rotateX(0deg)] transition-all duration-400 ease-out text-white text-left">
+                    <span className="text-[10px] font-bold uppercase tracking-[1.5px] text-[#FF6B00]">
+                      Certified Specifications
+                    </span>
+                    <p className="mt-1 text-xs text-white/95 font-medium leading-snug">
+                      {item.tags}
+                    </p>
+                    <Link
+                      href={item.href}
+                      className="mt-3 inline-flex items-center gap-1.5 rounded-[6px] bg-[#E95220] px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm transition-transform hover:scale-105 active:scale-95 w-fit"
+                    >
+                      <span>Instant Quotation</span>
+                      <Icon name="arrow-right" className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                </div>
+
+                <div className="flex flex-1 flex-col items-center justify-center p-7 text-center">
+                  <p className="mb-3 w-fit bg-primary/15 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-primary-darker transition-colors duration-300 group-hover:bg-[#0F3B82] group-hover:text-white rounded-sm">
+                    {item.badge}
+                  </p>
+                  <h3 className="text-2xl font-normal text-gray-900 group-hover:text-primary transition-colors duration-200">
+                    {item.name}
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-gray-600 flex-1">
+                    {item.desc}
+                  </p>
+                  <p className="mt-4 w-full border-t border-gray-200 pt-4 text-xs font-medium uppercase tracking-[0.12em] text-primary-darker">
+                    {item.tags}
+                  </p>
+                  <Link
+                    href={item.href}
+                    className="mt-5 inline-flex w-fit items-center gap-2 text-sm font-semibold text-primary-darker transition-all hover:text-primary group-hover:translate-x-1"
+                  >
+                    Enquire This Grade
+                    <Icon
+                      name="arrow-right"
+                      className="w-5 h-5 transition-transform group-hover:translate-x-1"
+                    />
+                  </Link>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

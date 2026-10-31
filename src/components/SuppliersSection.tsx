@@ -33,10 +33,10 @@ export const SuppliersSection: React.FC = () => {
   return (
     <section className="w-full bg-white py-14 sm:py-16 md:py-20 border-t border-gray-100">
       <div className="container mx-auto px-5 sm:px-6 lg:px-8">
-        {/* 1. Dubai Trading Desk Callout Box */}
+        {/* 1. Dubai Trading Desk Callout Box with 3D Flip Entrance */}
         <div
-          data-aos="fade-up"
-          className="flex flex-col items-center gap-5 border border-gray-200 bg-gray-50/90 p-6 md:p-8 text-center md:flex-row md:justify-between md:text-left rounded-xl shadow-xs"
+          data-aos="card-3d-flip"
+          className="flex flex-col items-center gap-5 border border-gray-200 bg-gray-50/90 p-6 md:p-8 text-center md:flex-row md:justify-between md:text-left rounded-xl shadow-xs transition-all duration-400 hover-card-3d hover:border-primary/40"
         >
           <div>
             <h3 className="text-xl sm:text-2xl font-normal text-gray-900">
@@ -48,7 +48,7 @@ export const SuppliersSection: React.FC = () => {
           </div>
           <Link
             href="#contact"
-            className="inline-flex w-fit shrink-0 items-center gap-2 bg-primary-darker px-6 py-3.5 text-sm font-bold text-white transition-colors hover:bg-primary rounded-lg shadow-xs"
+            className="inline-flex w-fit shrink-0 items-center gap-2 bg-primary-darker px-6 py-3.5 text-sm font-bold text-white transition-all hover:bg-primary rounded-lg shadow-xs hover:scale-105 active:scale-95"
           >
             Enquiry Now
             <Icon name="arrow-right" className="w-5 h-5" />
@@ -75,7 +75,7 @@ export const SuppliersSection: React.FC = () => {
               {[...suppliers, ...suppliers].map((supplier, idx) => (
                 <div
                   key={`${supplier.id}-${idx}`}
-                  className="flex h-20 w-36 sm:h-24 sm:w-44 shrink-0 items-center justify-center rounded-xl border border-gray-200/70 bg-white p-4 shadow-2xs transition-all duration-300 hover:border-primary/50 hover:shadow-md hover:scale-105"
+                  className="flex h-20 w-36 sm:h-24 sm:w-44 shrink-0 items-center justify-center rounded-xl border border-gray-200/70 bg-white p-4 shadow-2xs transition-all duration-400 hover:border-primary/50 hover:shadow-xl hover:-translate-y-2 hover:scale-105 [transform-style:preserve-3d] hover:[transform:perspective(600px)_rotateX(6deg)]"
                 >
                   <div className="relative h-full w-full">
                     <Image
@@ -95,4 +95,3 @@ export const SuppliersSection: React.FC = () => {
     </section>
   );
 };
-
