@@ -3,123 +3,160 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Icon } from "./Icons";
+
+const strengths = [
+  { label: "Direct Producer Access", icon: "🔗" },
+  { label: "Containerized Logistics", icon: "🚢" },
+  { label: "Prime & Off-Grade Supply", icon: "🏭" },
+  { label: "21+ Years Experience", icon: "⭐" },
+  { label: "Global Trade Network", icon: "🌐" },
+  { label: "Quality Guaranteed", icon: "✓" },
+];
+
+const supplyTags = [
+  { label: "Global Sourcing", color: "#E10600" },
+  { label: "Polymer Grades", color: "#FF6B00" },
+  { label: "Industrial Markets", color: "#0F3B82" },
+];
 
 export const AboutShowcase: React.FC = () => {
   return (
-    <section
-      id="about"
-      aria-label="About National Polymers"
-      className="w-full bg-white py-16 sm:py-20 lg:py-24"
-    >
-      <div className="container mx-auto px-5 sm:px-6 lg:px-8 max-w-[1320px]">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-16 items-center perspective-1200">
-          {/* ================= LEFT COLUMN: COMPANY STORY ================= */}
-          <div
-            data-aos="3d-tilt-left"
-            data-aos-duration="850"
-            className="lg:col-span-5 xl:col-span-5 flex flex-col items-start text-left"
-          >
-            {/* Eyebrow Label with Subtle Brand Accent */}
-            <div className="inline-flex flex-col items-start mb-4">
-              <span className="text-[11px] sm:text-[12px] font-bold uppercase tracking-[2px] text-[#E10600]">
-                About National Polymers
-              </span>
-              {/* Subtle Red-to-Orange Logo-Inspired Accent Line */}
-              <div
-                className="mt-1.5 h-[2.5px] w-10 rounded-full bg-gradient-to-r from-[#E10600] to-[#FF6B00]"
-                aria-hidden="true"
+    <section id="about" aria-label="About National Polymers"
+      className="w-full bg-white py-20 sm:py-24 lg:py-28 overflow-hidden">
+      <div className="container mx-auto px-5 sm:px-6 lg:px-8 max-w-[1360px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 xl:gap-24 items-center">
+
+          {/* ═════ LEFT: Image ═════ */}
+          <div data-aos="3d-tilt-left" data-aos-duration="900" className="relative order-2 lg:order-1">
+            {/* Decorations */}
+            <div className="absolute -bottom-5 -left-5 w-3/4 h-3/4 rounded-3xl bg-[#EEF2FF] -z-10" aria-hidden="true" />
+            <div className="absolute -top-4 -right-4 w-1/2 h-1/2 rounded-2xl border-2 border-[#E10600]/15 -z-10" aria-hidden="true" />
+
+            {/* Main image */}
+            <div className="relative rounded-3xl overflow-hidden shadow-xl img-glint aspect-[4/3]">
+              <Image
+                src="/images/experience.png"
+                alt="National Polymers international corporate headquarters"
+                fill sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover object-center transition-transform duration-700 hover:scale-[1.04]"
               />
+              <div className="absolute bottom-0 left-0 right-0 h-20
+                bg-gradient-to-t from-white/30 to-transparent pointer-events-none" />
             </div>
 
-            {/* Main Headline */}
-            <h2 className="font-montserrat text-[32px] sm:text-[40px] lg:text-[46px] xl:text-[50px] font-extrabold leading-[1.12] tracking-[-1px] text-[#0F3B82]">
-              Connecting{" "}
-              <span className="text-[#E10600]">Global Polymer</span> Supply
-            </h2>
+            {/* "21 Years" floating badge — gentle float animation */}
+            <div className="absolute -bottom-6 right-4 sm:right-8 z-10 float-up">
+              <div className="relative bg-white rounded-2xl shadow-xl border border-gray-100 px-5 py-4 flex flex-col items-center
+                hover:shadow-2xl transition-shadow duration-300 cursor-default">
+                <div className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl bg-gradient-to-r from-[#E10600] to-[#FF6B00]" />
+                <span className="font-montserrat text-5xl font-black text-[#0F3B82] leading-none">21</span>
+                <span className="text-[11px] font-bold uppercase tracking-widest text-[#E10600] mt-0.5">Years</span>
+                <span className="text-[10px] text-gray-400 tracking-wide">Experience</span>
+              </div>
+            </div>
 
-            {/* Supporting Headline */}
-            <p className="mt-3 text-[18px] sm:text-[20px] font-medium text-[#0F3B82] tracking-tight">
+            {/* "Dubai HQ" badge */}
+            <div className="absolute -top-4 left-4 sm:left-6 z-10 bg-[#0F3B82] text-white rounded-2xl shadow-lg px-4 py-3
+              hover:scale-105 transition-transform duration-300 cursor-default">
+              <p className="text-[9px] uppercase tracking-widest text-white/50 mb-0.5">Headquartered</p>
+              <p className="text-sm font-bold">Dubai, UAE</p>
+              <p className="text-[10px] text-white/50 mt-0.5">Global Trade Hub</p>
+            </div>
+
+            {/* Dot grid */}
+            <svg className="absolute -bottom-2 right-2 opacity-25 pointer-events-none" width="80" height="80" viewBox="0 0 80 80" aria-hidden="true">
+              {[0, 1, 2, 3].map(r => [0, 1, 2, 3].map(c => (
+                <circle key={`${r}-${c}`} cx={c * 20 + 10} cy={r * 20 + 10} r="2.5" fill="#E10600" />
+              )))}
+            </svg>
+          </div>
+
+          {/* ═════ RIGHT: Text ═════ */}
+          <div data-aos="3d-tilt-right" data-aos-delay="150" data-aos-duration="900"
+            className="order-1 lg:order-2 flex flex-col">
+            {/* Eyebrow */}
+            <div className="flex items-center gap-3 mb-5">
+              <div className="h-px w-10 bg-gradient-to-r from-[#E10600] to-[#FF6B00]" />
+              <span className="text-[11px] font-bold uppercase tracking-[3px] text-[#E10600]">
+                About National Polymers
+              </span>
+            </div>
+
+            {/* Headline */}
+            <h2 className="font-montserrat text-[30px] sm:text-[38px] lg:text-[44px] font-extrabold leading-[1.1] tracking-tight text-[#0F3B82]">
+              Connecting{" "}
+              <span className="relative inline-block">
+                <span className="text-[#E10600]">Global Polymer</span>
+                {/* Animated wave underline */}
+                <svg className="absolute -bottom-2 left-0 w-full overflow-visible" height="8" viewBox="0 0 200 8" preserveAspectRatio="none" aria-hidden="true">
+                  <path className="wave-draw" d="M0 5 Q25 1 50 5 Q75 9 100 5 Q125 1 150 5 Q175 9 200 5"
+                    stroke="#E10600" strokeWidth="2.5" fill="none" opacity="0.45" />
+                </svg>
+              </span>{" "}
+              Supply
+            </h2>
+            <p className="mt-3 text-[17px] font-medium text-[#0F3B82]/55 tracking-tight">
               Materials. Markets. Opportunities.
             </p>
 
-            {/* Concise Approved Company Description in Two Paragraphs */}
-            <div className="mt-5 space-y-4 max-w-[540px] text-[15px] sm:text-[16px] text-[#5B6470] leading-[1.8] font-normal">
+            {/* Body */}
+            <div className="mt-6 space-y-4 text-[14.5px] sm:text-[15px] text-gray-500 leading-[1.85]">
               <p>
-                National Polymers LLC FZ is an international distribution and
-                trading company specializing in polymer raw materials. We supply
-                prime, near-prime, and off-grade resins, alongside high-grade
-                recycled polymers, granules, regrinds, and circular materials
-                tailored for film extrusion, blow molding, injection molding,
-                and pipe compounding.
+                National Polymers LLC FZ is an international distribution and trading company specializing
+                in polymer raw materials. We supply prime, near-prime, and off-grade resins, alongside
+                high-grade recycled polymers, granules, regrinds, and circular materials tailored for film
+                extrusion, blow molding, injection molding, and pipe compounding.
               </p>
               <p>
-                Headquartered at Dubai&apos;s global commercial crossroads, we
-                source directly from major petrochemical producers across the
-                USA, Canada, Australia, and Far East hubs, providing dependable,
-                containerized supply chains to manufacturing converters across
-                the Indian Subcontinent, Africa, Europe, and Latin America.
+                Headquartered at Dubai&apos;s global commercial crossroads, we source directly from major
+                petrochemical producers across the USA, Canada, Australia, and Far East hubs, providing
+                dependable, containerized supply chains to manufacturing converters across the Indian
+                Subcontinent, Africa, Europe, and Latin America.
               </p>
             </div>
 
-            {/* Prominent About Us CTA Button */}
-            <div className="mt-8 pt-1">
-              <Link
-                href="/about"
-                className="inline-flex items-center justify-center gap-2 rounded-[8px] bg-[#0F3B82] px-6 py-3.5 text-[15px] font-semibold text-white shadow-sm transition-all duration-300 hover:bg-[#0c2e66] hover:shadow-md active:scale-[0.98]"
-              >
+            {/* Strengths grid — spring scale on hover */}
+            <div className="mt-7 grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+              {strengths.map((s, i) => (
+                <div key={s.label} data-aos="pop-in" data-aos-delay={i * 55}
+                  className="group flex items-center gap-2 bg-[#F7F9FC] hover:bg-[#0F3B82]
+                    rounded-xl px-3.5 py-2.5 transition-all duration-300 cursor-default
+                    hover:shadow-md hover:-translate-y-0.5">
+                  <span className="text-sm select-none transition-transform duration-300 group-hover:scale-125">{s.icon}</span>
+                  <span className="text-[11.5px] font-semibold text-[#0F3B82] group-hover:text-white transition-colors duration-300 leading-snug">
+                    {s.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Supply chain tags */}
+            <div className="mt-5 flex flex-wrap gap-2">
+              {supplyTags.map(t => (
+                <span key={t.label}
+                  className="pill-hover inline-flex items-center gap-1.5 border border-gray-200 rounded-full px-4 py-1.5
+                    text-[11px] font-bold uppercase tracking-wider bg-white shadow-sm hover:shadow-md"
+                  style={{ color: t.color }}>
+                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: t.color }} />
+                  {t.label}
+                </span>
+              ))}
+            </div>
+
+            {/* CTA */}
+            <div className="mt-8">
+              <Link href="/about"
+                className="group btn-scale inline-flex items-center gap-3 rounded-2xl bg-[#0F3B82] px-7 py-4
+                  text-[14px] font-bold text-white shadow-md shadow-[#0F3B82]/15 hover:bg-[#0c2e66] hover:shadow-lg">
                 <span>Discover Our Company</span>
-                <Icon name="arrow-right" className="h-4 w-4" />
+                <span className="w-7 h-7 rounded-full bg-white/15 grid place-items-center
+                  group-hover:bg-white/25 transition-colors transition-transform group-hover:translate-x-1">
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                </span>
               </Link>
             </div>
           </div>
 
-          {/* ================= RIGHT COLUMN: INDUSTRIAL VISUAL & SUPPLY CHAIN STRIP ================= */}
-          <div
-            data-aos="3d-tilt-right"
-            data-aos-delay="150"
-            data-aos-duration="850"
-            className="lg:col-span-7 xl:col-span-7 flex flex-col w-full"
-          >
-            {/* Visual Container */}
-            <div className="w-full overflow-hidden rounded-[12px] border border-gray-200/80 bg-[#F7F9FC] shadow-sm">
-              {/* Premium Landscape Image (5:4 Aspect Ratio, Bright & Natural) */}
-              <div className="relative w-full aspect-[5/4] overflow-hidden bg-gray-100">
-                <Image
-                  src="/images/experience.png"
-                  alt="National Polymers international corporate headquarters and trading operations"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 55vw"
-                  className="object-cover object-center transition-transform duration-700 ease-out hover:scale-[1.02]"
-                  priority={false}
-                />
-              </div>
-
-              {/* Polymer Supply Chain Strip Directly Beneath the Image */}
-              <div className="w-full bg-[#F7F9FC] border-t border-gray-200/90 py-3.5 px-4 sm:px-6">
-                <div className="grid grid-cols-3 divide-x divide-gray-300/80 text-center">
-                  <div className="px-2 flex flex-col sm:flex-row items-center justify-center gap-1.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#E10600] shrink-0 hidden sm:inline-block" />
-                    <span className="text-[11px] sm:text-[12px] font-semibold tracking-[0.5px] uppercase text-[#0F3B82]">
-                      Global Sourcing
-                    </span>
-                  </div>
-                  <div className="px-2 flex flex-col sm:flex-row items-center justify-center gap-1.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#FF6B00] shrink-0 hidden sm:inline-block" />
-                    <span className="text-[11px] sm:text-[12px] font-semibold tracking-[0.5px] uppercase text-[#0F3B82]">
-                      Polymer Grades
-                    </span>
-                  </div>
-                  <div className="px-2 flex flex-col sm:flex-row items-center justify-center gap-1.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#0F3B82] shrink-0 hidden sm:inline-block" />
-                    <span className="text-[11px] sm:text-[12px] font-semibold tracking-[0.5px] uppercase text-[#0F3B82]">
-                      Industrial Markets
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>

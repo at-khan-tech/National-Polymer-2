@@ -71,7 +71,7 @@ export const WhyChooseUs: React.FC = () => {
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <span
             data-aos="fade-up"
-            className="text-[11px] sm:text-[12px] font-bold uppercase tracking-[2px] text-[#E10600] block"
+            className="text-[11px] sm:text-[12px] font-bold uppercase tracking-[2px] text-[#E95220] block"
           >
             Our Core Strengths
           </span>
@@ -116,7 +116,7 @@ export const WhyChooseUs: React.FC = () => {
 
               {/* Floating Logo Emblem Badge */}
               <div className="-mt-7 ml-6 relative z-10 w-14 h-14 rounded-full bg-white shadow-md border border-gray-100 flex items-center justify-center p-1.5">
-                <div className="w-10 h-10 rounded-full bg-[#E10600] flex items-center justify-center text-white shadow-xs transition-transform duration-300 group-hover:scale-105">
+                <div className="w-10 h-10 rounded-full bg-[#E95220] flex items-center justify-center text-white shadow-xs transition-transform duration-300 group-hover:scale-105">
                   <Icon name={card.icon} className="w-5 h-5 text-white" />
                 </div>
               </div>
@@ -124,7 +124,7 @@ export const WhyChooseUs: React.FC = () => {
               {/* Body Content */}
               <div className="px-6 pt-3 pb-6 flex flex-col flex-1 justify-between">
                 <div>
-                  <h3 className="font-montserrat text-lg sm:text-[19px] font-bold leading-snug text-[#0F3B82] group-hover:text-[#E10600] transition-colors duration-200">
+                  <h3 className="font-montserrat text-lg sm:text-[19px] font-bold leading-snug text-[#0F3B82] group-hover:text-[#E95220] transition-colors duration-200">
                     {card.title}
                   </h3>
                   <p className="mt-2.5 text-xs sm:text-sm text-[#5B6470] leading-relaxed">
@@ -135,7 +135,7 @@ export const WhyChooseUs: React.FC = () => {
                 {/* Bottom Bar: Red Line, Faint 01 Number Watermark & Arrow Button */}
                 <div className="mt-6 pt-2 flex items-center justify-between relative">
                   {/* Short Red Accent Line */}
-                  <div className="h-[3px] w-10 bg-[#E10600] rounded-full" />
+                  <div className="h-[3px] w-10 bg-[#E95220] rounded-full" />
 
                   {/* Large Watermark Number */}
                   <span

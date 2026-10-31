@@ -8,6 +8,7 @@ import { WorldwideCapacity } from "@/components/WorldwideCapacity";
 import { InDemandMaterials } from "@/components/InDemandMaterials";
 import { GradeSystem } from "@/components/GradeSystem";
 import { MaterialFinder } from "@/components/MaterialFinder";
+import { SuppliersSection } from "@/components/SuppliersSection";
 import { Testimonials } from "@/components/Testimonials";
 import { LatestInsights } from "@/components/LatestInsights";
 import { LatestNews } from "@/components/LatestNews";
@@ -43,15 +44,14 @@ export default function Home() {
         {/* <GradeSystem /> */}
 
         {/* Worldwide Capacity & Strategy Stats */}
-        <WorldwideCapacity />
 
         {/* Interactive Material Finder Guide */}
         <MaterialFinder />
 
-        {/* 5. Client Testimonials */}
-        <Testimonials />
+        {/* 5. Dubai Trading Desk Callout & Our Suppliers Carousel */}
+        <SuppliersSection />
 
-
+        {/* Client Testimonials / Highlights */}
       </main>
 
       {/* Complete Footer */}

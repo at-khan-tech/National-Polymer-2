@@ -46,7 +46,7 @@ export const PRODUCTS_DATA: ProductDetail[] = [
       "Medical devices & laboratory disposables",
     ],
     packaging: ["25 kg PP Valve/PE Bags", "1000 kg FIBC Jumbo Bags", "Bulk Container Liners"],
-    imageUrl: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproduct_img1.jpg&w=1024&q=80",
+    imageUrl: "/images/Product/p1.png",
   },
   {
     slug: "pe",
@@ -82,7 +82,7 @@ export const PRODUCTS_DATA: ProductDetail[] = [
       "Wire & cable insulation jackets",
     ],
     packaging: ["25 kg standard PE bags", "Sea container bulk bags", "1100 kg wooden pallets"],
-    imageUrl: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproduct_img2.jpg&w=1024&q=80",
+    imageUrl: "/images/Product/p2.png",
   },
   {
     slug: "pvc",
@@ -115,7 +115,7 @@ export const PRODUCTS_DATA: ProductDetail[] = [
       "Medical blood bags & IV tubing",
     ],
     packaging: ["25 kg Kraft Paper Bags with PE liner", "1000 kg Big Bags"],
-    imageUrl: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproduct_img3.jpg&w=1024&q=80",
+    imageUrl: "/images/Product/p3.png",
   },
   {
     slug: "pet",
@@ -147,7 +147,7 @@ export const PRODUCTS_DATA: ProductDetail[] = [
       "Thermoformed clamshells and fruit trays",
     ],
     packaging: ["1050 kg / 1100 kg Jumbo Bags", "Silotainer bulk delivery"],
-    imageUrl: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproduct_img4.jpg&w=1024&q=80",
+    imageUrl: "/images/Product/p4.png",
   },
   {
     slug: "ps",
@@ -180,7 +180,7 @@ export const PRODUCTS_DATA: ProductDetail[] = [
       "Laboratoryware & medical consumables",
     ],
     packaging: ["25 kg PE Bags", "1000 kg Jumbo Bags"],
-    imageUrl: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproduct_img1.jpg&w=1024&q=80",
+    imageUrl: "/images/Product/p1.png",
   },
   {
     slug: "engineering-plastics",
@@ -213,7 +213,7 @@ export const PRODUCTS_DATA: ProductDetail[] = [
       "Aviation & defense hardware components",
     ],
     packaging: ["25 kg Aluminium Moisture-Barrier Bags", "Palletized units"],
-    imageUrl: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproduct_img2.jpg&w=1024&q=80",
+    imageUrl: "/images/Product/p2.png",
   },
   {
     slug: "masterbatch-additives",
@@ -245,7 +245,7 @@ export const PRODUCTS_DATA: ProductDetail[] = [
       "Cable jacketing & pipe extrusion",
     ],
     packaging: ["25 kg moisture-sealed PE bags"],
-    imageUrl: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproduct_img3.jpg&w=1024&q=80",
+    imageUrl: "/images/Product/p3.png",
   },
   {
     slug: "recycled",
@@ -279,7 +279,7 @@ export const PRODUCTS_DATA: ProductDetail[] = [
       "Fiberfill, carpet yarn and PET strapping",
     ],
     packaging: ["25 kg PP Woven Bags", "1000 kg Jumbo Bags with liners"],
-    imageUrl: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproduct_img4.jpg&w=1024&q=80",
+    imageUrl: "/images/Product/p4.png",
   },
   {
     slug: "near-prime",
@@ -310,7 +310,7 @@ export const PRODUCTS_DATA: ProductDetail[] = [
       "Non-critical injection and blow moulded items",
     ],
     packaging: ["25 kg original manufacturer bags", "Sea containers (24-26 MT)"],
-    imageUrl: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproduct_img1.jpg&w=1024&q=80",
+    imageUrl: "/images/Product/p1.png",
   },
   {
     slug: "off-grade",
@@ -340,6 +340,6 @@ export const PRODUCTS_DATA: ProductDetail[] = [
       "Drainage tiles and underground cable conduits",
     ],
     packaging: ["Big Bags", "Loose bulk in 40ft HC containers", "Gaylord boxes"],
-    imageUrl: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproduct_img2.jpg&w=1024&q=80",
+    imageUrl: "/images/Product/p2.png",
   },
 ];

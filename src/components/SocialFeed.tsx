@@ -7,22 +7,22 @@ export const SocialFeed: React.FC = () => {
     {
       title: "Container Loading - Jebel Ali Port, Dubai",
       tag: "#NationalPolymers #ResinExport #HDPE",
-      imageUrl: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproduct_img1.jpg&w=1024&q=80",
+      imageUrl: "/images/Product/p1.png",
     },
     {
       title: "Lab Melt Flow Index Testing & COA Verification",
       tag: "#PolymerTesting #QA #ASTM",
-      imageUrl: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproduct_img2.jpg&w=1024&q=80",
+      imageUrl: "/images/Product/p2.png",
     },
     {
       title: "Recycled PCR Granules - Hot Washed Pellets",
       tag: "#CircularEconomy #rHDPE #Recycling",
-      imageUrl: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproduct_img3.jpg&w=1024&q=80",
+      imageUrl: "/images/Product/p3.png",
     },
     {
       title: "Global Petrochemical Industry Delegation",
       tag: "#ArabPlast #Dubai #PlasticsTrading",
-      imageUrl: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproduct_img4.jpg&w=1024&q=80",
+      imageUrl: "/images/Product/p4.png",
     },
   ];
 

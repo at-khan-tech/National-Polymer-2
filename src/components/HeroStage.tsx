@@ -24,7 +24,7 @@ const classicHeroSlides = [
       "Delivering prime, near-prime, and engineering resins with seamless ocean, air, and inland freight.",
   },
   {
-    src: "/images/hero/hero3.png",
+    src: "/images/hero/hero3.png?v=2",
     alt: "Deep-sea container shipping terminal and maritime network",
     tagline: "International Trade Reach",
     title: "Connecting Continents with High-Grade Polymers",
@@ -56,7 +56,7 @@ const newHeroSlides = [
     alt: "Petrochemical refining and polymer manufacturing plant",
     headlineLines: [
       { text: "Connecting", color: "text-[#0F3B82]" },
-      { text: "Global Polymer", color: "text-[#E10600]" },
+      { text: "Global Polymer", color: "text-[#E95220]" },
       { text: "Supply with", color: "text-[#0F3B82]" },
       { text: "Industrial Demand", color: "text-[#0F3B82]" },
     ],
@@ -71,7 +71,7 @@ const newHeroSlides = [
     alt: "Multimodal logistics and polymer raw materials distribution",
     headlineLines: [
       { text: "Premium", color: "text-[#0F3B82]" },
-      { text: "Polymer Materials", color: "text-[#E10600]" },
+      { text: "Polymer Materials", color: "text-[#E95220]" },
       { text: "for Diverse Applications", color: "text-[#0F3B82]" },
     ],
     headlineClass:
@@ -82,11 +82,11 @@ const newHeroSlides = [
     secondaryCta: { label: "Request a Quote", href: "/enquiry" },
   },
   {
-    src: "/images/hero/hero3.png",
+    src: "/images/hero/hero3.png?v=2",
     alt: "Deep-sea container shipping terminal and maritime network",
     headlineLines: [
       { text: "Global Sourcing.", color: "text-[#0F3B82]" },
-      { text: "Reliable Supply Chain.", color: "text-[#E10600]" },
+      { text: "Reliable Supply Chain.", color: "text-[#E95220]" },
     ],
     headlineClass:
       "text-[26px] sm:text-[34px] md:text-[40px] lg:text-[44px] leading-[1.14] tracking-[-0.6px]",
@@ -100,7 +100,7 @@ const newHeroSlides = [
     headlineLines: [
       { text: "Modern", color: "text-[#0F3B82]" },
       { text: "Processing.", color: "text-[#0F3B82]" },
-      { text: "Consistent Quality.", color: "text-[#E10600]" },
+      { text: "Consistent Quality.", color: "text-[#E95220]" },
     ],
     headlineClass:
       "text-[25px] sm:text-[32px] md:text-[38px] lg:text-[42px] leading-[1.14] tracking-[-0.5px]",
@@ -114,7 +114,7 @@ const newHeroSlides = [
     alt: "Virgin polymer pellets and recycled circular materials",
     headlineLines: [
       { text: "Material Quality", color: "text-[#0F3B82]" },
-      { text: "You Can Rely On", color: "text-[#E10600]" },
+      { text: "You Can Rely On", color: "text-[#E95220]" },
     ],
     headlineClass:
       "text-[25px] sm:text-[32px] md:text-[38px] lg:text-[42px] leading-[1.14] tracking-[-0.5px]",
@@ -163,7 +163,7 @@ export const HeroStage: React.FC = () => {
           onClick={() => setHeroDesign("new")}
           className={`rounded-full px-3.5 py-1.5 text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
             heroDesign === "new"
-              ? "bg-[#E10600] text-white shadow-xs"
+              ? "bg-[#E95220] text-white shadow-xs"
               : "text-gray-600 hover:text-gray-900"
           }`}
           title="Switch to new light & brand colors hero design"
@@ -254,7 +254,7 @@ export const HeroStage: React.FC = () => {
                     {/* Primary Button */}
                     <Link
                       href={slide.primaryCta.href}
-                      className="inline-flex items-center justify-center rounded-[8px] bg-[#E10600] px-6 py-3.5 text-[15px] font-semibold text-white shadow-md transition-all hover:bg-[#b91c1c] hover:shadow-lg active:scale-95"
+                      className="inline-flex items-center justify-center rounded-[8px] bg-[#E95220] px-6 py-3.5 text-[15px] font-semibold text-white shadow-md transition-all hover:bg-[#b11a00] hover:shadow-lg active:scale-95"
                     >
                       {slide.primaryCta.label}
                     </Link>
@@ -337,7 +337,7 @@ export const HeroStage: React.FC = () => {
                 className={`h-2 rounded-full transition-all duration-300 ${
                   currentSlide === index
                     ? heroDesign === "new"
-                      ? "w-8 bg-[#E10600] shadow-sm"
+                      ? "w-8 bg-[#E95220] shadow-sm"
                       : "w-8 bg-white shadow-sm"
                     : heroDesign === "new"
                     ? "w-3 bg-gray-400/60 hover:bg-gray-600"

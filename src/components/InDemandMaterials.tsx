@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,7 +21,7 @@ const products: ProductCard[] = [
     name: "LDPE & Film Bales",
     desc: "Low-density polyethylene film grades, virgin pellets and high-clarity LDPE film bales sourced globally.",
     tags: "Film · Flexible Packaging · Extrusion",
-    image: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproducts%2Fpriority%2Fldpe.webp&w=640&q=70",
+    image: "/images/Product/p1.png",
     href: "#contact",
     delay: 0,
   },
@@ -28,7 +30,7 @@ const products: ProductCard[] = [
     name: "HDPE (HDPE 100 & Blue)",
     desc: "High-density grades combining tensile strength, chemical resistance and blow moulding/pipe reliability.",
     tags: "Blow Moulding · Pipes · Drums · Bales",
-    image: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproducts%2Fpriority%2Fhdpe.webp&w=640&q=70",
+    image: "/images/Product/p2.png",
     href: "#contact",
     delay: 80,
   },
@@ -37,7 +39,7 @@ const products: ProductCard[] = [
     name: "LLDPE Prime & C4",
     desc: "Linear low-density polyethylene grades engineered for maximum puncture resistance and stretch films.",
     tags: "Stretch Film · Liners · Packaging",
-    image: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproducts%2Fpriority%2Flldpe.webp&w=640&q=70",
+    image: "/images/Product/p3.png",
     href: "#contact",
     delay: 160,
   },
@@ -46,7 +48,7 @@ const products: ProductCard[] = [
     name: "Polypropylene (PP, PPCP & PPRC)",
     desc: "Versatile PP, PPCP White, and PP Rafia granules for woven bags, automotive components and consumer products.",
     tags: "Injection Moulding · Rafia · Thermoforming",
-    image: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproducts%2Fpriority%2Fpolypropylene.webp&w=640&q=70",
+    image: "/images/Product/p4.png",
     href: "#contact",
     delay: 240,
   },
@@ -55,7 +57,7 @@ const products: ProductCard[] = [
     name: "PVC (Resins & Regrinds)",
     desc: "Suspension PVC resin and clean PVC regrinds for drainage pipes, electrical profiles, fittings and cables.",
     tags: "Pipes · Profiles · Regrinds · Construction",
-    image: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproducts%2Fpriority%2Fpvc.webp&w=640&q=70",
+    image: "/images/Product/p5.png",
     href: "#contact",
     delay: 320,
   },
@@ -64,7 +66,7 @@ const products: ProductCard[] = [
     name: "Recycled Granules & Regrind",
     desc: "Cost-effective, washed and filtered recycled granules, floor sweeping, plastic scraps, lumps, and plant wastes.",
     tags: "Reprocessed · Lumps · Regrinds · Scrap",
-    image: "https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fproducts%2Fpriority%2Fablunol.webp&w=640&q=70",
+    image: "/images/Product/p6.png",
     href: "#contact",
     delay: 400,
   },
@@ -149,25 +151,6 @@ export const InDemandMaterials: React.FC = () => {
               </div>
             </article>
           ))}
-        </div>
-
-        {/* Bottom Callout Box */}
-        <div className="mt-10 flex flex-col items-center gap-5 border border-gray-200 bg-gray-50 p-6 text-center md:flex-row md:justify-between md:text-left rounded">
-          <div>
-            <h3 className="text-xl font-normal text-gray-900">
-              Need a specific grade, floor sweeping, regrind, or container volume?
-            </h3>
-            <p className="mt-1 text-sm text-gray-600">
-              Tell our Dubai trading desk what your manufacturing facility requires.
-            </p>
-          </div>
-          <Link
-            href="#contact"
-            className="inline-flex w-fit shrink-0 items-center gap-2 bg-primary-darker px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-primary"
-          >
-            Enquiry Now
-            <Icon name="arrow-right" className="w-5 h-5" />
-          </Link>
         </div>
       </div>
     </section>

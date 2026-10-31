@@ -65,14 +65,14 @@ export const HeroStatsBar: React.FC = () => {
                 key={stat.id}
                 data-aos="fade-up"
                 data-aos-delay={index * 100}
-                className={`group relative flex flex-col justify-center items-start py-8 sm:py-10 lg:py-12 px-6 sm:px-8 lg:px-10 transition-colors duration-300 hover:bg-slate-50/40 overflow-hidden ${borderClasses}`}
+                className={`group relative flex flex-col justify-center items-center text-center py-8 sm:py-10 lg:py-12 px-4 sm:px-6 lg:px-8 transition-all duration-300 hover:bg-primary cursor-default overflow-hidden ${borderClasses}`}
               >
                 {/* Logo Watermark centered directly behind each individual stat text */}
                 <div
                   className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center p-2 select-none overflow-hidden"
                   aria-hidden="true"
                 >
-                  <div className="relative h-20 w-36 sm:h-24 sm:w-44 md:h-26 md:w-48 lg:h-28 lg:w-52 opacity-[0.08] group-hover:opacity-[0.14] transition-opacity duration-300">
+                  <div className="relative h-20 w-36 sm:h-24 sm:w-44 md:h-26 md:w-48 lg:h-28 lg:w-52 opacity-20 group-hover:opacity-25 group-hover:brightness-0 group-hover:invert transition-all duration-300">
                     <Image
                       src="/images/logobg.png"
                       alt=""
@@ -85,10 +85,10 @@ export const HeroStatsBar: React.FC = () => {
                 </div>
 
                 {/* Stat Content Layer (z-10 above the logo watermark) */}
-                <div className="relative z-10 flex flex-col items-start w-full">
-                  {/* Number with smooth count-up animation */}
-                  <div className="flex items-baseline">
-                    <span className="font-montserrat text-3xl sm:text-4xl lg:text-[44px] font-bold tracking-tight text-gray-950 leading-none transition-colors duration-300 group-hover:text-primary">
+                <div className="relative z-10 flex flex-col items-center justify-center text-center w-full">
+                  {/* Number with smooth count-up animation - Theme Orange, white on card hover */}
+                  <div className="flex items-baseline justify-center">
+                    <span className="font-montserrat text-3xl sm:text-4xl lg:text-[44px] font-bold tracking-tight text-primary group-hover:text-white leading-none transition-colors duration-300">
                       <CountUp
                         end={stat.value}
                         suffix={stat.suffix}
@@ -97,14 +97,14 @@ export const HeroStatsBar: React.FC = () => {
                     </span>
                   </div>
 
-                  {/* Real Website Text Label */}
-                  <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm font-normal text-gray-500 leading-snug tracking-normal transition-colors duration-300 group-hover:text-gray-700">
+                  {/* Real Website Text Label - Dark Theme Blue, white on card hover */}
+                  <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm font-semibold text-navy group-hover:text-white leading-snug tracking-normal transition-colors duration-300 text-center">
                     {stat.label}
                   </p>
                 </div>
 
-                {/* Subtle primary accent bar on hover */}
-                <div className="absolute bottom-0 left-6 sm:left-8 lg:left-10 right-6 sm:right-8 lg:right-10 h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left z-10" />
+                {/* Subtle indicator bar on hover */}
+                <div className="absolute bottom-0 left-6 sm:left-8 lg:left-10 right-6 sm:right-8 lg:right-10 h-[2px] bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center z-10" />
               </div>
             );
           })}
