@@ -16,32 +16,18 @@
   --color-scrollbar-hover: #b11a00;
 }
 
-.theme-polymer {
-  --color-primary: #e5252a;
-  --color-primary-darker: #b91c1c;
-  --color-primary-lighter: #fee2e2;
-  --color-primary-soft: #fff1f2;
-  --color-accent: #00b4d8;
-  --color-accent-light: #f0fdfa;
-  --color-navy: #0b132b;
-  --color-navy-dark: #070d1e;
-  --color-hover-card: #e5252a;
-  --color-scrollbar-thumb: #e5252a;
-  --color-scrollbar-hover: #b91c1c;
-}
-
-.theme-blue {
-  --color-primary: #1d4ed8;
-  --color-primary-darker: #1e3a8a;
-  --color-primary-lighter: #dbeafe;
-  --color-primary-soft: #eff6ff;
-  --color-accent: #06b6d4;
-  --color-accent-light: #f0f9ff;
-  --color-navy: #0a192f;
-  --color-navy-dark: #060d1a;
-  --color-hover-card: #1d4ed8;
-  --color-scrollbar-thumb: #1d4ed8;
-  --color-scrollbar-hover: #1e3a8a;
+.theme-indigo {
+  --color-primary: #384eda;
+  --color-primary-darker: #2638b0;
+  --color-primary-lighter: #eaefff;
+  --color-primary-soft: #f7f9ff;
+  --color-accent: #e95220;
+  --color-accent-light: #fff5f2;
+  --color-navy: #18235c;
+  --color-navy-dark: #0e163d;
+  --color-hover-card: #384eda;
+  --color-scrollbar-thumb: #384eda;
+  --color-scrollbar-hover: #2638b0;
 }
 
 /* Custom Scrollbar */

@@ -28,22 +28,18 @@ export const ThemeSwitcher: React.FC = () => {
   const handleCopyCodes = () => {
     let text = "";
     if (theme === "gold") {
-      text = `National Polymers - Corporate Theme:
+      text = `National Polymers - Corporate Orange Theme:
 Primary: #E95220
 Primary Darker: #B11A00
 Corporate Dark: #0F3B82`;
-    } else if (theme === "polymer") {
-      text = `National Polymers - Logo Brand Theme (Crimson & Cyan):
-Primary (Red): #E5252A
-Primary Darker: #B91C1C
-Accent (Cyan): #00B4D8
-Corporate Midnight: #0B132B`;
-    } else if (theme === "blue") {
-      text = `National Polymers - Ocean Sapphire Blue Theme:
-Primary (Sapphire Blue): #1D4ED8
-Primary Darker: #1E3A8A
-Accent (Teal Cyan): #06B6D4
-Corporate Navy: #0A192F`;
+    } else if (theme === "indigo") {
+      text = `National Polymers - Royal Indigo & White Theme:
+Primary (Indigo): #384EDA
+Primary Darker: #2638B0
+Soft White Shade: #F7F9FF
+Ice White Shade: #EAEFFF
+Minimal Accent: #E95220
+Corporate Navy: #18235C`;
     } else {
       text = `National Polymers - Custom Palette:
 Primary: ${customPalette.primary}
@@ -96,7 +92,7 @@ Navy: ${customPalette.navy}`;
                   : "text-gray-600 hover:text-gray-900"
               }`}
             >
-              Preset Themes (3)
+              Preset Themes (2)
             </button>
             <button
               type="button"
@@ -133,7 +129,7 @@ Navy: ${customPalette.navy}`;
                       />
                       <span
                         className="inline-block w-4 h-4 rounded-full border border-white shadow-sm"
-                        style={{ backgroundColor: "#2F46D8" }}
+                        style={{ backgroundColor: "#0F3B82" }}
                       />
                       <span
                         className="inline-block w-4 h-4 rounded-full border border-white shadow-sm"
@@ -155,13 +151,13 @@ Navy: ${customPalette.navy}`;
                 </p>
               </button>
 
-              {/* Option 2: Logo Brand (Red & Cyan) */}
+              {/* Option 2: Royal Indigo & White (#384EDA) */}
               <button
                 type="button"
-                onClick={() => setTheme("polymer")}
+                onClick={() => setTheme("indigo")}
                 className={`w-full text-left p-3 rounded-xl border transition-all cursor-pointer ${
-                  theme === "polymer"
-                    ? "border-red-600 bg-red-50/70 ring-2 ring-red-500/20 shadow-sm"
+                  theme === "indigo"
+                    ? "border-indigo-600 bg-indigo-50/70 ring-2 ring-indigo-500/20 shadow-sm"
                     : "border-gray-200 hover:border-gray-300 bg-white"
                 }`}
               >
@@ -170,70 +166,28 @@ Navy: ${customPalette.navy}`;
                     <div className="flex -space-x-1">
                       <span
                         className="inline-block w-4 h-4 rounded-full border border-white shadow-sm"
-                        style={{ backgroundColor: "#E5252A" }}
+                        style={{ backgroundColor: "#384EDA" }}
                       />
                       <span
-                        className="inline-block w-4 h-4 rounded-full border border-white shadow-sm"
-                        style={{ backgroundColor: "#00B4D8" }}
+                        className="inline-block w-4 h-4 rounded-full border border-gray-300 shadow-sm bg-white"
                       />
                       <span
-                        className="inline-block w-4 h-4 rounded-full border border-white shadow-sm"
-                        style={{ backgroundColor: "#0B132B" }}
+                        className="inline-block w-3.5 h-3.5 rounded-full border border-white shadow-sm"
+                        style={{ backgroundColor: "#E95220" }}
                       />
                     </div>
                     <span className="font-semibold text-xs text-gray-900">
-                      2. Logo Brand (Red &amp; Cyan)
+                      2. Royal Indigo &amp; White (#384EDA)
                     </span>
                   </div>
-                  {theme === "polymer" && (
-                    <span className="text-[10px] font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded-full">
+                  {theme === "indigo" && (
+                    <span className="text-[10px] font-bold text-indigo-700 bg-indigo-100 px-2 py-0.5 rounded-full">
                       Active
                     </span>
                   )}
                 </div>
                 <p className="text-[11px] text-gray-500 mt-1 pl-6">
-                  Official logo colors: Crimson Red + Ocean Cyan
-                </p>
-              </button>
-
-              {/* Option 3: Ocean Sapphire Blue */}
-              <button
-                type="button"
-                onClick={() => setTheme("blue")}
-                className={`w-full text-left p-3 rounded-xl border transition-all cursor-pointer ${
-                  theme === "blue"
-                    ? "border-blue-600 bg-blue-50/70 ring-2 ring-blue-500/20 shadow-sm"
-                    : "border-gray-200 hover:border-gray-300 bg-white"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <div className="flex -space-x-1">
-                      <span
-                        className="inline-block w-4 h-4 rounded-full border border-white shadow-sm"
-                        style={{ backgroundColor: "#1D4ED8" }}
-                      />
-                      <span
-                        className="inline-block w-4 h-4 rounded-full border border-white shadow-sm"
-                        style={{ backgroundColor: "#06B6D4" }}
-                      />
-                      <span
-                        className="inline-block w-4 h-4 rounded-full border border-white shadow-sm"
-                        style={{ backgroundColor: "#0A192F" }}
-                      />
-                    </div>
-                    <span className="font-semibold text-xs text-gray-900">
-                      3. Ocean Sapphire Blue (New)
-                    </span>
-                  </div>
-                  {theme === "blue" && (
-                    <span className="text-[10px] font-bold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full">
-                      Active
-                    </span>
-                  )}
-                </div>
-                <p className="text-[11px] text-gray-500 mt-1 pl-6">
-                  Replaces red with Sapphire Blue (#1D4ED8) + Aqua Accent
+                  Primary #384EDA · Clean White Shades · Minimal #E95220 Accent
                 </p>
               </button>
             </div>
@@ -389,16 +343,11 @@ Navy: ${customPalette.navy}`;
               <span className="inline-block w-3.5 h-3.5 rounded-full bg-[#0F3B82] ring-2 ring-gray-900" />
             </>
           )}
-          {theme === "polymer" && (
+          {theme === "indigo" && (
             <>
-              <span className="inline-block w-3.5 h-3.5 rounded-full bg-[#E5252A] ring-2 ring-gray-900" />
-              <span className="inline-block w-3.5 h-3.5 rounded-full bg-[#00B4D8] ring-2 ring-gray-900" />
-            </>
-          )}
-          {theme === "blue" && (
-            <>
-              <span className="inline-block w-3.5 h-3.5 rounded-full bg-[#1D4ED8] ring-2 ring-gray-900" />
-              <span className="inline-block w-3.5 h-3.5 rounded-full bg-[#06B6D4] ring-2 ring-gray-900" />
+              <span className="inline-block w-3.5 h-3.5 rounded-full bg-[#384EDA] ring-2 ring-gray-900" />
+              <span className="inline-block w-3.5 h-3.5 rounded-full bg-white ring-2 ring-gray-900" />
+              <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#E95220] ring-2 ring-gray-900" />
             </>
           )}
           {theme === "custom" && (
@@ -416,9 +365,8 @@ Navy: ${customPalette.navy}`;
         </span>
 
         <span className="text-xs font-semibold tracking-wide">
-          {theme === "gold" && "Theme: Corporate"}
-          {theme === "polymer" && "Theme: Logo Brand"}
-          {theme === "blue" && "Theme: Ocean Blue"}
+          {theme === "gold" && "Theme: Corporate Orange"}
+          {theme === "indigo" && "Theme: Royal Indigo & White"}
           {theme === "custom" && "Theme: Custom Studio"}
         </span>
 

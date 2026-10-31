@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-export type ThemeMode = "gold" | "polymer" | "blue" | "custom";
+export type ThemeMode = "gold" | "indigo" | "custom";
 
 export interface CustomPalette {
   primary: string;
@@ -82,10 +82,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
-      const urlTheme = urlParams.get("theme") as ThemeMode | null;
-      const savedTheme = (urlTheme || localStorage.getItem("np_theme")) as ThemeMode | null;
-      if (savedTheme && ["gold", "polymer", "blue", "custom"].includes(savedTheme)) {
-        setThemeState(savedTheme);
+      const rawTheme = urlParams.get("theme") || localStorage.getItem("np_theme");
+      if (rawTheme === "gold" || rawTheme === "indigo" || rawTheme === "custom") {
+        setThemeState(rawTheme);
+      } else if (rawTheme === "blue" || rawTheme === "polymer") {
+        setThemeState("indigo");
       }
 
       const savedPalette = localStorage.getItem("np_custom_palette");
@@ -103,7 +104,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const root = document.documentElement;
 
     // Remove all preset classes first
-    root.classList.remove("theme-gold", "theme-polymer", "theme-blue", "theme-custom");
+    root.classList.remove("theme-gold", "theme-indigo", "theme-polymer", "theme-blue", "theme-custom");
 
     const cssVars = [
       "--color-primary",
@@ -140,10 +141,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       // Clear any custom inline style overrides so preset CSS classes work cleanly
       cssVars.forEach((v) => root.style.removeProperty(v));
 
-      if (theme === "polymer") {
-        root.classList.add("theme-polymer");
-      } else if (theme === "blue") {
-        root.classList.add("theme-blue");
+      if (theme === "indigo") {
+        root.classList.add("theme-indigo");
       } else {
         root.classList.add("theme-gold");
       }
@@ -159,11 +158,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const toggleTheme = () => {
-    setThemeState((prev) => {
-      if (prev === "gold") return "polymer";
-      if (prev === "polymer") return "blue";
-      return "gold";
-    });
+    setThemeState((prev) => (prev === "gold" ? "indigo" : "gold"));
   };
 
   const updateCustomColor = (key: keyof CustomPalette, value: string) => {
