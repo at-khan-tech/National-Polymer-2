@@ -119,11 +119,11 @@ export const AboutShowcase: React.FC = () => {
             <div className="mt-7 grid grid-cols-2 sm:grid-cols-3 gap-2.5">
               {strengths.map((s, i) => (
                 <div key={s.label} data-aos="pop-in" data-aos-delay={i * 55}
-                  className="group flex items-center gap-2 bg-[#F7F9FC] hover:bg-[#0F3B82]
+                  className="group flex items-center gap-2 bg-[#F7F9FC] hover:bg-orange-50/70 border border-transparent hover:border-[#E95220]/30
                     rounded-xl px-3.5 py-2.5 transition-all duration-300 cursor-default
                     hover:shadow-md hover:-translate-y-0.5">
                   <span className="text-sm select-none transition-transform duration-300 group-hover:scale-125">{s.icon}</span>
-                  <span className="text-[11.5px] font-semibold text-[#0F3B82] group-hover:text-white transition-colors duration-300 leading-snug">
+                  <span className="text-[11.5px] font-semibold text-[#0F3B82] group-hover:text-[#E95220] transition-colors duration-300 leading-snug">
                     {s.label}
                   </span>
                 </div>

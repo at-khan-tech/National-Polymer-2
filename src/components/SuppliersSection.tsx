@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "./Icons";
+import { CardBorderBeam } from "./CardBorderBeam";
 
 interface SupplierLogo {
   id: number;
@@ -33,11 +34,12 @@ export const SuppliersSection: React.FC = () => {
   return (
     <section className="w-full bg-white py-14 sm:py-16 md:py-20 border-t border-gray-100">
       <div className="container mx-auto px-5 sm:px-6 lg:px-8">
-        {/* 1. Dubai Trading Desk Callout Box with 3D Flip Entrance */}
+        {/* 1. Dubai Trading Desk Callout Box with 3D Flip Entrance & 3-sec Border Beam */}
         <div
           data-aos="card-3d-flip"
-          className="flex flex-col items-center gap-5 border border-gray-200 bg-gray-50/90 p-6 md:p-8 text-center md:flex-row md:justify-between md:text-left rounded-xl shadow-xs transition-all duration-400 hover-card-3d hover:border-primary/40"
+          className="group relative flex flex-col items-center gap-5 border border-gray-200 bg-gray-50/90 p-6 md:p-8 text-center md:flex-row md:justify-between md:text-left rounded-xl shadow-xs transition-all duration-400 hover-card-3d overflow-hidden"
         >
+          <CardBorderBeam durationSeconds={3} />
           <div>
             <h3 className="text-xl sm:text-2xl font-normal text-gray-900">
               Need a specific grade, floor sweeping, regrind, or container volume?
@@ -48,7 +50,7 @@ export const SuppliersSection: React.FC = () => {
           </div>
           <Link
             href="#contact"
-            className="inline-flex w-fit shrink-0 items-center gap-2 bg-primary-darker px-6 py-3.5 text-sm font-bold text-white transition-all hover:bg-primary rounded-lg shadow-xs hover:scale-105 active:scale-95"
+            className="inline-flex w-fit shrink-0 items-center gap-2 bg-[#E95220] px-6 py-3.5 text-sm font-bold text-white transition-all hover:bg-primary-darker rounded-lg shadow-xs hover:scale-105 active:scale-95"
           >
             Enquiry Now
             <Icon name="arrow-right" className="w-5 h-5" />
