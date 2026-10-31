@@ -210,9 +210,9 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
 
           {/* Gradients for Hub glow */}
           <radialGradient id="hub-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#e95220" stopOpacity="0.35" />
-            <stop offset="60%" stopColor="#e95220" stopOpacity="0.12" />
-            <stop offset="100%" stopColor="#e95220" stopOpacity="0" />
+            <stop offset="0%" stopColor="var(--color-primary)" stopOpacity="0.35" />
+            <stop offset="60%" stopColor="var(--color-primary)" stopOpacity="0.12" />
+            <stop offset="100%" stopColor="var(--color-primary)" stopOpacity="0" />
           </radialGradient>
 
           {/* Subtle drop shadow for node markers */}
@@ -264,7 +264,7 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
             key={`sourcing-${s.name}`}
             d={arc(s, hub)}
             fill="none"
-            stroke="#0F3B82"
+            stroke="var(--color-navy)"
             strokeWidth="1.6"
             strokeDasharray="5 5"
             className="animate-dash opacity-75 hover:opacity-100 transition-opacity"
@@ -277,7 +277,7 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
             key={`market-${m.name}`}
             d={arc(hub, m)}
             fill="none"
-            stroke="#E95220"
+            stroke="var(--color-primary)"
             strokeWidth="1.8"
             strokeDasharray="5 5"
             className="animate-dash opacity-85 hover:opacity-100 transition-opacity"
@@ -304,7 +304,7 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
                 cx={x}
                 cy={y}
                 r="4.5"
-                fill="#0F3B82"
+                fill="var(--color-navy)"
                 stroke="#ffffff"
                 strokeWidth="1.6"
                 filter="url(#node-shadow)"
@@ -313,7 +313,7 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
                 <text
                   x={x + 9}
                   y={y + 4}
-                  className="fill-[#0F3B82] text-[11px] font-bold tracking-tight pointer-events-none select-none drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]"
+                  className="fill-[var(--color-navy)] text-[11px] font-bold tracking-tight pointer-events-none select-none drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]"
                 >
                   {s.name}
                 </text>
@@ -342,7 +342,7 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
                 cx={x}
                 cy={y}
                 r="4.5"
-                fill="#E95220"
+                fill="var(--color-primary)"
                 stroke="#ffffff"
                 strokeWidth="1.6"
                 filter="url(#node-shadow)"
@@ -352,14 +352,14 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
                 cy={y}
                 r="4"
                 fill="none"
-                stroke="#E95220"
+                stroke="var(--color-primary)"
                 className="animate-pulse-ring"
               />
               {!compact && (
                 <text
                   x={x + 9}
                   y={y + 14}
-                  className="fill-[#E95220] text-[11px] font-bold tracking-tight pointer-events-none select-none drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]"
+                  className="fill-[var(--color-primary)] text-[11px] font-bold tracking-tight pointer-events-none select-none drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]"
                 >
                   {m.name}
                 </text>
@@ -389,7 +389,7 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
             cy={hy}
             r="8"
             fill="none"
-            stroke="#E95220"
+            stroke="var(--color-primary)"
             className="animate-pulse-ring"
           />
 
@@ -398,8 +398,8 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
             cx={hx}
             cy={hy}
             r="6.5"
-            fill="#E95220"
-            stroke="#0F3B82"
+            fill="var(--color-primary)"
+            stroke="var(--color-navy)"
             strokeWidth="2.5"
             filter="url(#node-shadow)"
           />
@@ -421,10 +421,10 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
             <span
               className={`h-2.5 w-2.5 rounded-full ${
                 activeTooltip.type === "hub"
-                  ? "bg-[#E95220] ring-2 ring-[#0F3B82]"
+                  ? "bg-primary ring-2 ring-navy"
                   : activeTooltip.type === "sourcing"
-                  ? "bg-[#0F3B82]"
-                  : "bg-[#E95220]"
+                  ? "bg-navy"
+                  : "bg-primary"
               }`}
             />
             <span className="text-xs font-bold text-gray-900">
@@ -453,15 +453,15 @@ export function MapLegend() {
   return (
     <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm">
       <span className="flex items-center gap-2">
-        <span className="h-3 w-3 rounded-full bg-[#0F3B82] ring-2 ring-white shadow-xs" />
+        <span className="h-3 w-3 rounded-full bg-navy ring-2 ring-white shadow-xs" />
         <span className="font-semibold text-gray-800">Sourcing Corridors</span>
       </span>
       <span className="flex items-center gap-2">
-        <span className="h-3 w-3 rounded-full bg-[#E95220] ring-2 ring-white shadow-xs" />
+        <span className="h-3 w-3 rounded-full bg-primary ring-2 ring-white shadow-xs" />
         <span className="font-semibold text-gray-800">Customer Markets</span>
       </span>
       <span className="flex items-center gap-2">
-        <span className="h-3.5 w-3.5 rounded-full border-2 border-gray-950 bg-[#E95220] ring-2 ring-orange-200 shadow-xs" />
+        <span className="h-3.5 w-3.5 rounded-full border-2 border-gray-950 bg-primary ring-2 ring-orange-200 shadow-xs" />
         <span className="font-bold text-gray-950">Trading Desk (Dubai HQ)</span>
       </span>
     </div>
@@ -506,8 +506,8 @@ export const GlobalTradingMapSection: React.FC = () => {
       <div className="mt-6 pt-6 border-t border-gray-200/70 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
         <div className="rounded-xl bg-white/90 border border-blue-100 p-4 shadow-xs">
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-[#0F3B82]" />
-            <p className="font-bold text-[#0F3B82]">Sourcing Corridors</p>
+            <span className="h-2 w-2 rounded-full bg-navy" />
+            <p className="font-bold text-navy">Sourcing Corridors</p>
           </div>
           <p className="mt-1.5 text-slate-600 leading-relaxed">
             USA Gulf Coast, Alberta (Canada), Western Europe, and East Asian
@@ -516,8 +516,8 @@ export const GlobalTradingMapSection: React.FC = () => {
         </div>
         <div className="rounded-xl bg-white/90 border border-orange-100 p-4 shadow-xs">
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-[#E95220]" />
-            <p className="font-bold text-[#E95220]">Destination Markets</p>
+            <span className="h-2 w-2 rounded-full bg-primary" />
+            <p className="font-bold text-primary">Destination Markets</p>
           </div>
           <p className="mt-1.5 text-slate-600 leading-relaxed">
             Indian Subcontinent, East &amp; West Africa, Middle East GCC, and
@@ -526,7 +526,7 @@ export const GlobalTradingMapSection: React.FC = () => {
         </div>
         <div className="rounded-xl bg-white/90 border border-slate-200 p-4 shadow-xs">
           <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full border border-gray-950 bg-[#E95220]" />
+            <span className="h-2.5 w-2.5 rounded-full border border-gray-950 bg-primary" />
             <p className="font-bold text-gray-900">Trading Hub Advantage</p>
           </div>
           <p className="mt-1.5 text-slate-600 leading-relaxed">

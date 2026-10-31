@@ -55,10 +55,10 @@ const newHeroSlides = [
     src: "/images/hero/hero1.png",
     alt: "Petrochemical refining and polymer manufacturing plant",
     headlineLines: [
-      { text: "Connecting", color: "text-[#0F3B82]" },
-      { text: "Global Polymer", color: "text-[#E95220]" },
-      { text: "Supply with", color: "text-[#0F3B82]" },
-      { text: "Industrial Demand", color: "text-[#0F3B82]" },
+      { text: "Connecting", color: "text-navy" },
+      { text: "Global Polymer", color: "text-primary" },
+      { text: "Supply with", color: "text-navy" },
+      { text: "Industrial Demand", color: "text-navy" },
     ],
     headlineClass:
       "text-[26px] sm:text-[34px] md:text-[40px] lg:text-[46px] leading-[1.12] tracking-[-0.6px]",
@@ -70,9 +70,9 @@ const newHeroSlides = [
     src: "/images/hero/hero2.png",
     alt: "Multimodal logistics and polymer raw materials distribution",
     headlineLines: [
-      { text: "Premium", color: "text-[#0F3B82]" },
-      { text: "Polymer Materials", color: "text-[#E95220]" },
-      { text: "for Diverse Applications", color: "text-[#0F3B82]" },
+      { text: "Premium", color: "text-navy" },
+      { text: "Polymer Materials", color: "text-primary" },
+      { text: "for Diverse Applications", color: "text-navy" },
     ],
     headlineClass:
       "text-[25px] sm:text-[32px] md:text-[38px] lg:text-[42px] leading-[1.14] tracking-[-0.5px]",
@@ -85,8 +85,8 @@ const newHeroSlides = [
     src: "/images/hero/hero3.png?v=2",
     alt: "Deep-sea container shipping terminal and maritime network",
     headlineLines: [
-      { text: "Global Sourcing.", color: "text-[#0F3B82]" },
-      { text: "Reliable Supply Chain.", color: "text-[#E95220]" },
+      { text: "Global Sourcing.", color: "text-navy" },
+      { text: "Reliable Supply Chain.", color: "text-primary" },
     ],
     headlineClass:
       "text-[26px] sm:text-[34px] md:text-[40px] lg:text-[44px] leading-[1.14] tracking-[-0.6px]",
@@ -98,9 +98,9 @@ const newHeroSlides = [
     src: "/images/hero/hero4.png",
     alt: "Advanced polymer compounding and manufacturing facility",
     headlineLines: [
-      { text: "Modern", color: "text-[#0F3B82]" },
-      { text: "Processing.", color: "text-[#0F3B82]" },
-      { text: "Consistent Quality.", color: "text-[#E95220]" },
+      { text: "Modern", color: "text-navy" },
+      { text: "Processing.", color: "text-navy" },
+      { text: "Consistent Quality.", color: "text-primary" },
     ],
     headlineClass:
       "text-[25px] sm:text-[32px] md:text-[38px] lg:text-[42px] leading-[1.14] tracking-[-0.5px]",
@@ -113,8 +113,8 @@ const newHeroSlides = [
     src: "/images/hero/hero5.png",
     alt: "Virgin polymer pellets and recycled circular materials",
     headlineLines: [
-      { text: "Material Quality", color: "text-[#0F3B82]" },
-      { text: "You Can Rely On", color: "text-[#E95220]" },
+      { text: "Material Quality", color: "text-navy" },
+      { text: "You Can Rely On", color: "text-primary" },
     ],
     headlineClass:
       "text-[25px] sm:text-[32px] md:text-[38px] lg:text-[42px] leading-[1.14] tracking-[-0.5px]",
@@ -151,7 +151,7 @@ export const HeroStage: React.FC = () => {
           onClick={() => setHeroDesign("classic")}
           className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${
             heroDesign === "classic"
-              ? "bg-[#0F3B82] text-white shadow-xs"
+              ? "bg-navy text-white shadow-xs"
               : "text-gray-600 hover:text-gray-900"
           }`}
           title="Switch to previous dark hero design"
@@ -163,7 +163,7 @@ export const HeroStage: React.FC = () => {
           onClick={() => setHeroDesign("new")}
           className={`rounded-full px-3.5 py-1.5 text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
             heroDesign === "new"
-              ? "bg-[#E95220] text-white shadow-xs"
+              ? "bg-primary text-white shadow-xs"
               : "text-gray-600 hover:text-gray-900"
           }`}
           title="Switch to new light & brand colors hero design"
@@ -254,7 +254,7 @@ export const HeroStage: React.FC = () => {
                     {/* Primary Button */}
                     <Link
                       href={slide.primaryCta.href}
-                      className="inline-flex items-center justify-center rounded-[8px] bg-[#E95220] px-6 py-3.5 text-[15px] font-semibold text-white shadow-md transition-all hover:bg-[#b11a00] hover:shadow-lg active:scale-95"
+                      className="inline-flex items-center justify-center rounded-[8px] bg-primary px-6 py-3.5 text-[15px] font-semibold text-white shadow-md transition-all hover:bg-primary-darker hover:shadow-lg active:scale-95"
                     >
                       {slide.primaryCta.label}
                     </Link>
@@ -262,7 +262,7 @@ export const HeroStage: React.FC = () => {
                     {/* Secondary Button */}
                     <Link
                       href={slide.secondaryCta.href}
-                      className="inline-flex items-center justify-center rounded-[8px] border-2 border-[#0F3B82] bg-white px-6 py-3.5 text-[15px] font-semibold text-[#0F3B82] shadow-sm transition-all hover:bg-[#0F3B82] hover:text-white hover:shadow-md active:scale-95"
+                      className="inline-flex items-center justify-center rounded-[8px] border-2 border-navy bg-white px-6 py-3.5 text-[15px] font-semibold text-navy shadow-sm transition-all hover:bg-navy hover:text-white hover:shadow-md active:scale-95"
                     >
                       {slide.secondaryCta.label}
                     </Link>
@@ -337,7 +337,7 @@ export const HeroStage: React.FC = () => {
                 className={`h-2 rounded-full transition-all duration-300 ${
                   currentSlide === index
                     ? heroDesign === "new"
-                      ? "w-8 bg-[#E95220] shadow-sm"
+                      ? "w-8 bg-primary shadow-sm"
                       : "w-8 bg-white shadow-sm"
                     : heroDesign === "new"
                     ? "w-3 bg-gray-400/60 hover:bg-gray-600"

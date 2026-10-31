@@ -50,7 +50,7 @@ export const SuppliersSection: React.FC = () => {
           </div>
           <Link
             href="#contact"
-            className="inline-flex w-fit shrink-0 items-center gap-2 bg-[#E95220] px-6 py-3.5 text-sm font-bold text-white transition-all hover:bg-primary-darker rounded-lg shadow-xs hover:scale-105 active:scale-95"
+            className="inline-flex w-fit shrink-0 items-center gap-2 bg-primary px-6 py-3.5 text-sm font-bold text-white transition-all hover:bg-primary-darker rounded-lg shadow-xs hover:scale-105 active:scale-95"
           >
             Enquiry Now
             <Icon name="arrow-right" className="w-5 h-5" />

@@ -140,7 +140,7 @@ export const InDemandMaterials: React.FC = () => {
                 </div>
 
                 <div className="flex flex-1 flex-col items-center justify-center p-7 text-center">
-                  <p className="mb-3 w-fit bg-orange-50 border border-orange-200/60 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#E95220] rounded-sm">
+                  <p className="mb-3 w-fit bg-primary-soft border border-primary/25 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-primary rounded-sm">
                     {item.badge}
                   </p>
                   <h3 className="text-2xl font-normal text-gray-900 group-hover:text-primary transition-colors duration-200">

@@ -72,14 +72,14 @@ export const WhyChooseUs: React.FC = () => {
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <span
             data-aos="fade-up"
-            className="text-[11px] sm:text-[12px] font-bold uppercase tracking-[2px] text-[#E95220] block"
+            className="text-[11px] sm:text-[12px] font-bold uppercase tracking-[2px] text-primary block"
           >
             Our Core Strengths
           </span>
           <h2
             data-aos="fade-up"
             data-aos-delay="50"
-            className="font-montserrat text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0F3B82] leading-tight tracking-tight"
+            className="font-montserrat text-3xl sm:text-4xl md:text-5xl font-extrabold text-navy leading-tight tracking-tight"
           >
             Why Choose National Polymers FZ LLC?
           </h2>
@@ -126,7 +126,7 @@ export const WhyChooseUs: React.FC = () => {
 
                 {/* Floating Logo Emblem Badge with 3D Pop & Rotation */}
                 <div className="-mt-7 ml-6 relative z-10 w-14 h-14 rounded-full bg-white shadow-md border border-gray-100 flex items-center justify-center p-1.5 transition-transform duration-300 group-hover:scale-110 group-hover:shadow-lg">
-                  <div className="w-10 h-10 rounded-full bg-[#E95220] flex items-center justify-center text-white shadow-xs transition-transform duration-300 group-hover:rotate-12">
+                  <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white shadow-xs transition-transform duration-300 group-hover:rotate-12">
                     <Icon name={card.icon} className="w-5 h-5 text-white" />
                   </div>
                 </div>
@@ -134,7 +134,7 @@ export const WhyChooseUs: React.FC = () => {
                 {/* Body Content */}
                 <div className="px-6 pt-3 pb-6 flex flex-col flex-1 justify-between">
                   <div>
-                    <h3 className="font-montserrat text-lg sm:text-[19px] font-bold leading-snug text-[#0F3B82] group-hover:text-[#E95220] transition-colors duration-200">
+                    <h3 className="font-montserrat text-lg sm:text-[19px] font-bold leading-snug text-navy group-hover:text-primary transition-colors duration-200">
                       {card.title}
                     </h3>
                     <p className="mt-2.5 text-xs sm:text-sm text-[#5B6470] leading-relaxed">
@@ -145,7 +145,7 @@ export const WhyChooseUs: React.FC = () => {
                   {/* Bottom Bar: Animated Line, 3D Watermark & Arrow */}
                   <div className="mt-6 pt-2 flex items-center justify-between relative">
                     {/* Short Accent Line extending on hover */}
-                    <div className="h-[3px] w-10 group-hover:w-16 bg-gradient-to-r from-[#E95220] to-[#FF6B00] rounded-full transition-all duration-300" />
+                    <div className="h-[3px] w-10 group-hover:w-16 bg-gradient-to-r from-primary to-primary-darker rounded-full transition-all duration-300" />
 
                     {/* Large Watermark Number with 3D Float */}
                     <span
@@ -159,7 +159,7 @@ export const WhyChooseUs: React.FC = () => {
                     <Link
                       href={card.link}
                       aria-label={`Learn more about ${card.title}`}
-                      className="relative z-10 w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-700 bg-white group-hover:bg-[#E95220] group-hover:text-white group-hover:border-[#E95220] group-hover:scale-110 group-hover:shadow-md transition-all duration-300 shadow-2xs"
+                      className="relative z-10 w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-700 bg-white group-hover:bg-primary group-hover:text-white group-hover:border-primary group-hover:scale-110 group-hover:shadow-md transition-all duration-300 shadow-2xs"
                     >
                       <Icon
                         name="arrow-right"

@@ -106,7 +106,7 @@ export const SmoothScrollProvider: React.FC<{
         aria-hidden="true"
       >
         <div
-          className="h-full bg-gradient-to-r from-[#E95220] via-[#FF6B00] to-[#0F3B82] scroll-progress-glow transition-all duration-75 origin-left"
+          className="h-full bg-gradient-to-r from-primary via-primary-darker to-navy scroll-progress-glow transition-all duration-75 origin-left"
           style={{ width: `${scrollProgress}%` }}
         />
       </div>
@@ -125,7 +125,7 @@ export const SmoothScrollProvider: React.FC<{
           type="button"
           onClick={scrollToTop}
           aria-label="Scroll to top of page"
-          className="group relative flex h-12 w-12 items-center justify-center rounded-full bg-white/95 text-[#0F3B82] shadow-xl backdrop-blur-md border border-gray-200 transition-transform duration-300 hover:scale-110 active:scale-95"
+          className="group relative flex h-12 w-12 items-center justify-center rounded-full bg-white/95 text-navy shadow-xl backdrop-blur-md border border-gray-200 transition-transform duration-300 hover:scale-110 active:scale-95"
         >
           {/* Circular SVG Progress Ring */}
           <svg className="absolute inset-0 h-full w-full -rotate-90 p-0.5" viewBox="0 0 48 48">
@@ -141,7 +141,7 @@ export const SmoothScrollProvider: React.FC<{
               cx="24"
               cy="24"
               r="20"
-              stroke="#E95220"
+              stroke="var(--color-primary)"
               strokeWidth="2.5"
               strokeDasharray={125.6}
               strokeDashoffset={125.6 - (125.6 * scrollProgress) / 100}
@@ -153,7 +153,7 @@ export const SmoothScrollProvider: React.FC<{
 
           {/* Up Arrow Icon */}
           <div className="relative z-10 transition-transform duration-300 group-hover:-translate-y-0.5">
-            <Icon name="arrow-back" className="h-4 w-4 rotate-90 text-[#0F3B82] group-hover:text-[#E95220] transition-colors" />
+            <Icon name="arrow-back" className="h-4 w-4 rotate-90 text-navy group-hover:text-primary transition-colors" />
           </div>
         </button>
       </div>

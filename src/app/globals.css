@@ -386,7 +386,7 @@ html.lenis body {
   overflow: hidden;
   opacity: 0;
   transition: opacity 0.2s ease;
-  filter: drop-shadow(0 0 6px rgba(233, 82, 32, 0.6));
+  filter: drop-shadow(0 0 6px var(--color-primary));
 }
 
 .card-border-runner-beam {
@@ -399,10 +399,10 @@ html.lenis body {
     from 0deg,
     transparent 0deg,
     transparent 240deg,
-    #E95220 295deg,
-    #FF7A00 325deg,
+    var(--color-primary) 295deg,
+    var(--color-primary-lighter) 325deg,
     #FFFFFF 345deg,
-    #E95220 355deg,
+    var(--color-primary) 355deg,
     transparent 360deg
   );
   transform-origin: center center;

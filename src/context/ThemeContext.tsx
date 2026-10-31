@@ -18,8 +18,8 @@ export const defaultCustomPalette: CustomPalette = {
   primaryDarker: "#b11a00",
   primaryLighter: "#fde8e1",
   primarySoft: "#fff5f1",
-  accent: "#2f46d8",
-  navy: "#2f46d8",
+  accent: "#0f3b82",
+  navy: "#0f3b82",
 };
 
 interface ThemeContextType {
@@ -112,6 +112,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       "--color-primary-soft",
       "--color-accent",
       "--color-navy",
+      "--color-navy-dark",
       "--color-hover-card",
       "--color-scrollbar-thumb",
       "--color-scrollbar-hover",
@@ -126,6 +127,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       root.style.setProperty("--color-primary-soft", customPalette.primarySoft);
       root.style.setProperty("--color-accent", customPalette.accent);
       root.style.setProperty("--color-navy", customPalette.navy);
+      root.style.setProperty("--color-navy-dark", shadeColor(customPalette.navy, -22));
       root.style.setProperty("--color-hover-card", customPalette.primary);
       root.style.setProperty("--color-scrollbar-thumb", customPalette.primary);
       root.style.setProperty("--color-scrollbar-hover", customPalette.primaryDarker);

@@ -31,7 +31,7 @@ export const ThemeSwitcher: React.FC = () => {
       text = `National Polymers - Corporate Theme:
 Primary: #E95220
 Primary Darker: #B11A00
-Corporate Dark: #2F46D8`;
+Corporate Dark: #0F3B82`;
     } else if (theme === "polymer") {
       text = `National Polymers - Logo Brand Theme (Crimson & Cyan):
 Primary (Red): #E5252A
@@ -151,7 +151,7 @@ Navy: ${customPalette.navy}`;
                   )}
                 </div>
                 <p className="text-[11px] text-gray-500 mt-1 pl-6">
-                  Primary #E95220 · Hover #B11A00 · Corporate Dark #2F46D8
+                  Primary #E95220 · Hover #B11A00 · Corporate Dark #0F3B82
                 </p>
               </button>
 
@@ -333,7 +333,12 @@ Navy: ${customPalette.navy}`;
                     <button
                       key={swatch.name}
                       type="button"
-                      onClick={() => autoGeneratePaletteFromPrimary(swatch.primary)}
+                      onClick={() => {
+                        autoGeneratePaletteFromPrimary(swatch.primary);
+                        if (swatch.navy) {
+                          updateCustomColor("navy", swatch.navy);
+                        }
+                      }}
                       className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-2.5 py-1 text-[11px] hover:border-gray-400 transition-colors shadow-2xs cursor-pointer"
                     >
                       <span
@@ -381,7 +386,7 @@ Navy: ${customPalette.navy}`;
           {theme === "gold" && (
             <>
               <span className="inline-block w-3.5 h-3.5 rounded-full bg-[#E95220] ring-2 ring-gray-900" />
-              <span className="inline-block w-3.5 h-3.5 rounded-full bg-[#2F46D8] ring-2 ring-gray-900" />
+              <span className="inline-block w-3.5 h-3.5 rounded-full bg-[#0F3B82] ring-2 ring-gray-900" />
             </>
           )}
           {theme === "polymer" && (
