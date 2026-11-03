@@ -1,15 +1,18 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Icon } from "@/components/Icons";
 import { getAllProducts } from "@/lib/content-store";
+import { GradeCatalogExplorer } from "@/components/GradeCatalogExplorer";
+import { MAJOR_BRANDS } from "@/data/gradesCatalog";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProductsPage() {
   const products = await getAllProducts();
+
   return (
     <>
       <Header />
@@ -20,92 +23,172 @@ export default async function ProductsPage() {
             <div className="flex items-center gap-2 text-xs text-primary-lighter uppercase tracking-wider mb-2">
               <Link href="/" className="hover:underline">Home</Link>
               <span>/</span>
-              <span className="text-white font-semibold">Products Catalog</span>
+              <span className="text-white font-semibold">Products &amp; Grades Catalog</span>
             </div>
             <h1 className="text-3xl md:text-5xl font-light text-white tracking-tight">
-              Plastic Raw Materials &amp; Polymer Resins
+              Plastic Raw Materials &amp; Polymer Grades
             </h1>
-            <p className="mt-4 max-w-2xl text-sm md:text-base text-white/80 leading-relaxed">
-              Prime, Near-Prime, Off-Grade, and Recycled resins sourced from premier petrochemical refiners across North America, Australia, and the Far East.
+            <p className="mt-4 max-w-3xl text-sm md:text-base text-white/80 leading-relaxed text-justify">
+              Direct containerized distribution of certified Prime, Near-Prime, Off-Grade, and Recycled polymer resins. Sourced directly from global petrochemical refiners across Saudi Arabia, South Korea, Egypt, the USA, and Asia.
             </p>
           </div>
         </section>
 
-        {/* 10 Products Grid */}
         <div className="container mx-auto px-5 sm:px-6 lg:px-8 max-w-6xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {products.map((product) => (
-              <div
-                key={product.slug}
-                className="group flex flex-col justify-between overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/50"
-              >
-                <div>
-                  {/* Image header */}
-                  <div className="relative h-56 w-full overflow-hidden bg-gray-100">
-                    <Image
-                      src={product.imageUrl}
-                      alt={product.name}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <span className="rounded-full bg-white/95 backdrop-blur-sm px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary shadow-sm">
-                        {product.category}
+          {/* ─── MAJOR MANUFACTURER BRANDS BAR (Clickable) ─── */}
+          <section className="mb-12 bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-5">
+              <div>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-primary block">
+                  Global Refiners &amp; Producer Allocations
+                </span>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mt-0.5">
+                  Major Manufacturer Grades
+                </h2>
+              </div>
+              <p className="text-xs text-gray-500">
+                Click any brand below to view candidate grades &amp; request factory pricing:
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+              {MAJOR_BRANDS.map((brand) => (
+                <Link
+                  key={brand.id}
+                  href={`/products?brand=${encodeURIComponent(brand.name)}#grades-explorer`}
+                  className="p-3.5 rounded-xl border border-gray-200 hover:border-primary bg-gray-50 hover:bg-white text-left transition-all hover:shadow-md group flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="font-extrabold text-sm sm:text-base text-navy group-hover:text-primary transition-colors">
+                        {brand.name}
+                      </span>
+                      <span className="text-[10px] text-gray-400 font-medium">
+                        {brand.origin.split(" ")[0]}
                       </span>
                     </div>
+                    <p className="text-[11px] text-gray-500 mt-1 line-clamp-1">
+                      {brand.categories.join(", ")}
+                    </p>
                   </div>
+                  <span className="text-[10px] text-primary font-semibold mt-2 block group-hover:translate-x-0.5 transition-transform">
+                    Explore Grades &rarr;
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </section>
 
-                  {/* Body Content */}
-                  <div className="p-6">
-                    <h2 className="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors">
-                      {product.name}
-                    </h2>
-                    <p className="mt-1 text-xs font-medium text-gray-500">
-                      {product.tagline}
-                    </p>
-                    <p className="mt-3 text-xs sm:text-sm text-gray-600 line-clamp-3 leading-relaxed">
-                      {product.description}
-                    </p>
+          {/* ─── LIVE GRADE SEARCH & FILTER EXPLORER ─── */}
+          <section id="grades-explorer" className="mb-16 scroll-mt-28">
+            <div className="mb-6">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-primary block">
+                Technical Resin Finder
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mt-0.5">
+                Manufacturer-Wise Candidate Grades Catalog
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                Filter by brand (SABIC, APC, SK, SIDPEC, Formosa), grade code, application, or MFI / Density test parameters:
+              </p>
+            </div>
 
-                    {/* Popular grades pills */}
-                    <div className="mt-4 pt-4 border-t border-gray-100">
-                      <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider block mb-2">
-                        Available Grades:
-                      </span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {product.subTypes.slice(0, 3).map((sub, i) => (
-                          <span
-                            key={i}
-                            className="rounded bg-gray-100 px-2 py-1 text-[11px] font-medium text-gray-700"
-                          >
-                            {sub.name}
-                          </span>
-                        ))}
+            <Suspense
+              fallback={
+                <div className="p-10 text-center bg-white rounded-2xl border border-gray-200">
+                  <p className="text-sm text-gray-500">Loading candidate grades catalog...</p>
+                </div>
+              }
+            >
+              <GradeCatalogExplorer />
+            </Suspense>
+          </section>
+
+          {/* ─── 10 CORE POLYMER FAMILIES ─── */}
+          <section className="pt-6 border-t border-gray-200">
+            <div className="mb-8">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-primary block">
+                Polymer Family Classifications
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mt-0.5">
+                Core Material Families &amp; Processing Specifications
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {products.map((product) => (
+                <div
+                  key={product.slug}
+                  className="group flex flex-col justify-between overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/50"
+                >
+                  <div>
+                    {/* Image header */}
+                    <div className="relative h-56 w-full overflow-hidden bg-gray-100">
+                      <Image
+                        src={product.imageUrl}
+                        alt={product.name}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute top-4 left-4">
+                        <span className="rounded-full bg-white/95 backdrop-blur-sm px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary shadow-sm">
+                          {product.category}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Body Content */}
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors">
+                        {product.name}
+                      </h3>
+                      <p className="mt-1 text-xs font-medium text-gray-500">
+                        {product.tagline}
+                      </p>
+                      <p className="mt-3 text-xs sm:text-sm text-gray-600 line-clamp-3 leading-relaxed text-justify">
+                        {product.description}
+                      </p>
+
+                      {/* Popular grades pills */}
+                      <div className="mt-4 pt-4 border-t border-gray-100">
+                        <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider block mb-2">
+                          Standard Processing Grades:
+                        </span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {product.subTypes.slice(0, 4).map((sub, i) => (
+                            <span
+                              key={i}
+                              className="rounded bg-gray-100 px-2 py-1 text-[11px] font-medium text-gray-700"
+                            >
+                              {sub.name}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Footer Action Buttons */}
-                <div className="p-6 pt-0 flex items-center justify-between gap-3">
-                  <Link
-                    href={`/products/${product.slug}`}
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-primary group-hover:translate-x-0.5 transition-transform"
-                  >
-                    <span>View Technical Specs &amp; COA</span>
-                    <Icon name="arrow-forward" className="w-3.5 h-3.5" />
-                  </Link>
+                  {/* Footer Action Buttons */}
+                  <div className="p-6 pt-0 flex items-center justify-between gap-3">
+                    <Link
+                      href={`/products/${product.slug}`}
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-primary group-hover:translate-x-0.5 transition-transform"
+                    >
+                      <span>View Technical Specs &amp; COA</span>
+                      <Icon name="arrow-forward" className="w-3.5 h-3.5" />
+                    </Link>
 
-                  <Link
-                    href={`/enquiry?product=${product.slug}`}
-                    className="rounded bg-gray-900 hover:bg-primary px-3.5 py-2 text-xs font-semibold text-white transition-colors"
-                  >
-                    RFQ Quote
-                  </Link>
+                    <Link
+                      href={`/enquiry?product=${product.slug}`}
+                      className="rounded bg-gray-900 hover:bg-primary px-3.5 py-2 text-xs font-semibold text-white transition-colors"
+                    >
+                      RFQ Quote
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </section>
         </div>
       </main>
       <Footer />
