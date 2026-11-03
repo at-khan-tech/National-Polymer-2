@@ -73,7 +73,7 @@ export const AboutShowcase: React.FC = () => {
             <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[4/3] sm:aspect-[16/11] lg:aspect-auto lg:h-[490px] xl:h-[510px] w-full bg-slate-950 group">
               <video
                 ref={videoRef}
-                src="/video/hero.mp4"
+                src="/video/about.mp4"
                 poster="/images/experience.png"
                 autoPlay
                 loop

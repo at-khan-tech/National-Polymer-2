@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Icon } from "@/components/Icons";
+import { AboutVideoPlayer } from "@/components/AboutVideoPlayer";
 
 export default function AboutPage() {
   return (
@@ -22,13 +23,13 @@ export default function AboutPage() {
               21 Years of Excellence in <br className="hidden sm:inline" />
               <span className="text-primary font-normal">Global Polymer Distribution</span>
             </h1>
-            <p className="mt-5 max-w-3xl text-sm md:text-lg text-white/80 leading-relaxed">
+            <p className="mt-5 max-w-3xl text-sm md:text-lg text-white/80 leading-relaxed text-justify">
               National Polymers LLC FZ is an international polymer trading firm based in Dubai, UAE, connecting premier petrochemical refiners from North America, Europe, Australia, and Asia with manufacturing converters across the globe.
             </p>
           </div>
         </section>
 
-        {/* 1. About Company In Detail */}
+        {/* 1. About Company In Detail with Corporate Video */}
         <section id="about-detail" className="py-16 md:py-24 border-b border-gray-100">
           <div className="container mx-auto px-5 sm:px-6 lg:px-8 max-w-6xl">
             <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
@@ -39,7 +40,7 @@ export default function AboutPage() {
                 <h2 className="text-3xl md:text-4xl font-light text-gray-900 leading-tight">
                   About National Polymers LLC FZ
                 </h2>
-                <div className="mt-6 space-y-4 text-sm sm:text-base text-gray-700 leading-relaxed">
+                <div className="mt-6 space-y-4 text-sm sm:text-base text-gray-700 leading-relaxed text-justify">
                   <p>
                     Established with a vision for transparency, supply continuity, and technical competence, National Polymers has evolved into a trusted supply chain partner for hundreds of plastic processors worldwide.
                   </p>
@@ -52,14 +53,8 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border border-gray-200">
-                <Image
-                  src="https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fwhy_choose_us_img1.jpg&w=1024&q=80"
-                  alt="National Polymers Global Headquarters"
-                  fill
-                  className="object-cover"
-                />
-              </div>
+              {/* Corporate Video Showcase on About Page */}
+              <AboutVideoPlayer />
             </div>
           </div>
         </section>
@@ -82,7 +77,7 @@ export default function AboutPage() {
                   <Icon name="verified" className="w-6 h-6" />
                 </span>
                 <h3 className="text-xl font-bold text-gray-900">Our Vision</h3>
-                <p className="mt-3 text-xs sm:text-sm text-gray-600 leading-relaxed">
+                <p className="mt-3 text-xs sm:text-sm text-gray-600 leading-relaxed text-justify">
                   To be the world’s most trusted and agile polymer trading network, setting the benchmark for ethical trading, price transparency, and circular plastic stewardship.
                 </p>
               </div>
@@ -92,7 +87,7 @@ export default function AboutPage() {
                   <Icon name="public" className="w-6 h-6" />
                 </span>
                 <h3 className="text-xl font-bold text-gray-900">Our Mission</h3>
-                <p className="mt-3 text-xs sm:text-sm text-gray-600 leading-relaxed">
+                <p className="mt-3 text-xs sm:text-sm text-gray-600 leading-relaxed text-justify">
                   To empower plastic converters with uninterrupted resin supply, alternative cost-saving formulations, and reliable container shipping while driving circular plastic integration.
                 </p>
               </div>
@@ -102,7 +97,7 @@ export default function AboutPage() {
                   <Icon name="science" className="w-6 h-6" />
                 </span>
                 <h3 className="text-xl font-bold text-gray-900">Core Values</h3>
-                <p className="mt-3 text-xs sm:text-sm text-gray-600 leading-relaxed">
+                <p className="mt-3 text-xs sm:text-sm text-gray-600 leading-relaxed text-justify">
                   Integrity in contract fulfillment, transparency in grade classifications, uncompromised quality testing, and relentless dedication to long-term partner relationships.
                 </p>
               </div>
@@ -130,7 +125,7 @@ export default function AboutPage() {
                 <div key={idx} className="p-6 rounded-2xl bg-gray-50 border border-gray-200 hover:border-primary transition-all">
                   <span className="text-primary font-bold text-lg">0{idx + 1}</span>
                   <h3 className="mt-3 text-base font-bold text-gray-900">{item.title}</h3>
-                  <p className="mt-2 text-xs text-gray-600 leading-relaxed">{item.desc}</p>
+                  <p className="mt-2 text-xs text-gray-600 leading-relaxed text-justify">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -148,7 +143,7 @@ export default function AboutPage() {
                 <h2 className="text-3xl md:text-5xl font-light text-white leading-tight">
                   Seamless Global Supply Network
                 </h2>
-                <p className="mt-4 text-sm sm:text-base text-white/80 leading-relaxed">
+                <p className="mt-4 text-sm sm:text-base text-white/80 leading-relaxed text-justify">
                   Headquartered in Dubai—the international trade crossroads—we orchestrate seamless multi-modal logistics connecting major export loading terminals with over 40 destination container ports.
                 </p>
                 <div className="mt-8 grid grid-cols-3 gap-6 text-center border-t border-white/20 pt-6">
@@ -201,7 +196,7 @@ export default function AboutPage() {
             <h2 className="text-3xl md:text-4xl font-light text-gray-900 mb-6">
               Our Suppliers &amp; Petrochemical Partners
             </h2>
-            <p className="max-w-3xl text-sm sm:text-base text-gray-600 mb-10 leading-relaxed">
+            <p className="max-w-3xl text-sm sm:text-base text-gray-600 mb-10 leading-relaxed text-justify">
               We work closely with world-class petrochemical refiners, crack plant operators, and certified recyclers in the USA, Canada, Belgium, Saudi Arabia, UAE, and Taiwan.
             </p>
 
@@ -230,19 +225,19 @@ export default function AboutPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               <div className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm">
                 <h3 className="text-base font-bold text-gray-900">Lab COA Testing</h3>
-                <p className="mt-2 text-xs text-gray-600 leading-relaxed">
+                <p className="mt-2 text-xs text-gray-600 leading-relaxed text-justify">
                   Every batch is cross-tested for Melt Index (ASTM D1238), Density (ASTM D1505), and moisture content before bill of lading issuance.
                 </p>
               </div>
               <div className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm">
                 <h3 className="text-base font-bold text-gray-900">Regulatory Adherence</h3>
-                <p className="mt-2 text-xs text-gray-600 leading-relaxed">
+                <p className="mt-2 text-xs text-gray-600 leading-relaxed text-justify">
                   Compliant with FDA 21 CFR 177.1520 (food contact), EU REACH, and RoHS environmental directives.
                 </p>
               </div>
               <div className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm">
                 <h3 className="text-base font-bold text-gray-900">Pre-Shipment Inspections</h3>
-                <p className="mt-2 text-xs text-gray-600 leading-relaxed">
+                <p className="mt-2 text-xs text-gray-600 leading-relaxed text-justify">
                   Container condition audits, seal checks, and pallet strapping verification conducted at port departure.
                 </p>
               </div>
@@ -261,7 +256,7 @@ export default function AboutPage() {
                 <h2 className="text-3xl md:text-4xl font-light text-gray-900 leading-tight">
                   Driving the Circular Polymer Economy
                 </h2>
-                <p className="mt-4 text-sm sm:text-base text-gray-700 leading-relaxed">
+                <p className="mt-4 text-sm sm:text-base text-gray-700 leading-relaxed text-justify">
                   Plastic waste is a resource. National Polymers processes and distributes over 30,000 metric tons of PCR and PIR recycled materials annually, preventing landfill disposal and reducing petrochemical carbon intensity for our converter clients.
                 </p>
                 <div className="mt-6 flex flex-wrap gap-4">
@@ -274,9 +269,9 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              <div className="relative aspect-video rounded-2xl overflow-hidden shadow-xl border border-gray-200">
+              <div className="relative aspect-video rounded-2xl overflow-hidden shadow-xl border border-gray-200 bg-gray-100">
                 <Image
-                  src="https://www.multitradegroup.com/_vercel/image?url=%2Fimages%2Fwhy_choose_us_img3.jpg&w=1024&q=80"
+                  src="/images/why/why3.png"
                   alt="Recycled Polymers and Sustainability"
                   fill
                   className="object-cover"
@@ -308,7 +303,7 @@ export default function AboutPage() {
                   </div>
                   <h3 className="text-lg font-bold text-gray-900">{member.name}</h3>
                   <span className="text-xs font-semibold text-primary block mt-1">{member.role}</span>
-                  <p className="mt-3 text-xs text-gray-600 leading-relaxed">{member.bio}</p>
+                  <p className="mt-3 text-xs text-gray-600 leading-relaxed text-justify">{member.bio}</p>
                 </div>
               ))}
             </div>
