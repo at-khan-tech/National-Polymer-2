@@ -4,7 +4,6 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "./Icons";
-import { CardBorderBeam } from "./CardBorderBeam";
 
 interface SupplierLogo {
   id: number;
@@ -34,17 +33,16 @@ export const SuppliersSection: React.FC = () => {
   return (
     <section className="w-full bg-white py-14 sm:py-16 md:py-20 border-t border-gray-100">
       <div className="container mx-auto px-5 sm:px-6 lg:px-8">
-        {/* 1. Dubai Trading Desk Callout Box with 3D Flip Entrance & 3-sec Border Beam */}
+        {/* 1. Dubai Trading Desk Callout Box */}
         <div
           data-aos="card-3d-flip"
           className="group relative flex flex-col items-center gap-5 border border-gray-200 bg-gray-50/90 p-6 md:p-8 text-center md:flex-row md:justify-between md:text-left rounded-xl shadow-xs transition-all duration-400 hover-card-3d overflow-hidden"
         >
-          <CardBorderBeam durationSeconds={3} />
           <div>
             <h3 className="text-xl sm:text-2xl font-normal text-gray-900">
               Need a specific grade, floor sweeping, regrind, or container volume?
             </h3>
-            <p className="mt-1.5 text-sm text-gray-600">
+            <p className="mt-1.5 text-sm text-gray-600 text-justify">
               Tell our Dubai trading desk what your manufacturing facility requires.
             </p>
           </div>

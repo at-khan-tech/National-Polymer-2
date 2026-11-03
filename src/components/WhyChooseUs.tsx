@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "./Icons";
 import { GlobalTradingMapSection } from "./WorldMap";
-import { CardBorderBeam } from "./CardBorderBeam";
 
 interface WhyCard {
   id: string;
@@ -86,7 +85,7 @@ export const WhyChooseUs: React.FC = () => {
           <p
             data-aos="fade-up"
             data-aos-delay="100"
-            className="text-sm sm:text-base text-[#5B6470] max-w-2xl mx-auto leading-relaxed pt-1"
+            className="text-sm sm:text-base text-[#5B6470] max-w-2xl mx-auto leading-relaxed pt-1 text-justify"
           >
             Delivering global polymer distribution excellence through direct
             producer allocations, transparent trade execution, and reliable
@@ -110,9 +109,6 @@ export const WhyChooseUs: React.FC = () => {
                 data-aos-delay={index * 120}
                 className="group relative flex flex-col bg-white rounded-2xl border border-gray-100 shadow-sm transition-all duration-400 overflow-hidden hover-card-3d"
               >
-                {/* 3-Second Fast Running Border Beam on Hover */}
-                <CardBorderBeam durationSeconds={3} />
-
                 {/* Top Image Section (Clean, no background tint on hover) */}
                 <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-gray-100">
                   <Image
@@ -137,7 +133,7 @@ export const WhyChooseUs: React.FC = () => {
                     <h3 className="font-montserrat text-lg sm:text-[19px] font-bold leading-snug text-navy group-hover:text-primary transition-colors duration-200">
                       {card.title}
                     </h3>
-                    <p className="mt-2.5 text-xs sm:text-sm text-[#5B6470] leading-relaxed">
+                    <p className="mt-2.5 text-xs sm:text-sm text-[#5B6470] leading-relaxed text-justify">
                       {card.description}
                     </p>
                   </div>

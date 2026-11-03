@@ -283,8 +283,6 @@ html.lenis body {
   animation: float3D 6s ease-in-out infinite;
 }
 
-
-
 .perspective-1500 {
   perspective: 1500px;
 }
@@ -358,63 +356,11 @@ html.lenis body {
   box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.08), 0 8px 20px -6px rgba(233, 82, 32, 0.16);
 }
 
-/* ================= 3-SECOND FAST RUNNING BORDER BEAM ON HOVER ================= */
-.card-border-runner {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 2.5px;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-  z-index: 25;
-  overflow: hidden;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  filter: drop-shadow(0 0 6px var(--color-primary));
-}
-
-.card-border-runner-beam {
-  position: absolute;
-  top: -125%;
-  left: -125%;
-  width: 350%;
-  height: 350%;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    transparent 240deg,
-    var(--color-primary) 295deg,
-    var(--color-primary-lighter) 325deg,
-    #FFFFFF 345deg,
-    var(--color-primary) 355deg,
-    transparent 360deg
-  );
-  transform-origin: center center;
-  will-change: transform, opacity;
-}
-
-/* On card hover, light up and run fast for 3 seconds */
-.group:hover .card-border-runner {
-  opacity: 1;
-}
-
-.group:hover .card-border-runner-beam {
-  animation: border-beam-fast-spin 3s linear 1 forwards;
-}
-
-@keyframes border-beam-fast-spin {
-  0% {
-    transform: rotate(0deg);
-    opacity: 1;
-  }
-  88% {
-    transform: rotate(950deg);
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(1080deg);
-    opacity: 0;
-  }
+/* ================= GLOBAL JUSTIFIED TEXT ================= */
+p,
+article p,
+section p,
+main p {
+  text-align: justify;
+  text-justify: inter-word;
 }

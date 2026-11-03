@@ -4,7 +4,6 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "./Icons";
-import { CardBorderBeam } from "./CardBorderBeam";
 
 interface ProductCard {
   badge: string;
@@ -96,7 +95,7 @@ export const InDemandMaterials: React.FC = () => {
             >
               Prime, Off-Grade &amp; Recycled Polymers
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-gray-600">
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-gray-600 text-justify">
               Supplying certified prime resins, near-prime off-spec lots, and high-quality recycled
               granules backed by responsive UAE logistics and worldwide shipping.
             </p>
@@ -126,9 +125,6 @@ export const InDemandMaterials: React.FC = () => {
                 data-aos-delay={(idx % 3) * 120}
                 className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white text-gray-900 shadow-sm transition-all duration-400 hover-card-3d"
               >
-                {/* 3-Second Fast Running Border Beam on Hover */}
-                <CardBorderBeam durationSeconds={3} />
-
                 {/* Clean Image Section (No blue overlay, subtle scale on hover) */}
                 <div className="relative h-56 w-full overflow-hidden bg-gray-100">
                   <Image
@@ -146,7 +142,7 @@ export const InDemandMaterials: React.FC = () => {
                   <h3 className="text-2xl font-normal text-gray-900 group-hover:text-primary transition-colors duration-200">
                     {item.name}
                   </h3>
-                  <p className="mt-3 text-sm leading-6 text-gray-600 flex-1">
+                  <p className="mt-3 text-sm leading-6 text-gray-600 flex-1 text-justify">
                     {item.desc}
                   </p>
                   <p className="mt-4 w-full border-t border-gray-200 pt-4 text-xs font-medium uppercase tracking-[0.12em] text-primary-darker">

@@ -8,26 +8,8 @@ interface CardBorderBeamProps {
 }
 
 /**
- * CardBorderBeam
- * Renders an animated glowing border ray that rapidly traces around the rounded card perimeter
- * for 3 seconds on hover, with zero background color distortion and complete transparency in the center.
+ * CardBorderBeam disabled per user instruction.
  */
-export const CardBorderBeam: React.FC<CardBorderBeamProps> = ({
-  className = "",
-  durationSeconds = 3,
-}) => {
-  return (
-    <div
-      aria-hidden="true"
-      className={`card-border-runner pointer-events-none ${className}`}
-    >
-      <div
-        className="card-border-runner-beam"
-        style={{
-          animationDuration: `${durationSeconds}s`,
-        }}
-      />
-    </div>
-  );
+export const CardBorderBeam: React.FC<CardBorderBeamProps> = () => {
+  return null;
 };
-
