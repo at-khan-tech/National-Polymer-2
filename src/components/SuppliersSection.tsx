@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "./Icons";
@@ -39,122 +39,195 @@ const getOriginDisplay = (origin: string) => {
   return origin;
 };
 
-const HexagonBrandCard: React.FC<{ brand: BrandInfo; index: number }> = ({ brand, index }) => {
-  // Alternate double-bond accent position across cards for authentic benzene ring resonance
-  const isAlt = index % 2 === 1;
+interface ClusterProps {
+  title: string;
+  phaseCode: string;
+  formula: string;
+  brands: [BrandInfo, BrandInfo, BrandInfo];
+  clusterIndex: number;
+}
+
+const ChemicalCluster: React.FC<ClusterProps> = ({ title, phaseCode, formula, brands }) => {
+  const [hoveredHex, setHoveredHex] = useState<number | null>(null);
+
+  // SVG Coordinates for 3 interlocking hexagons (exact benzene triplet sharing edges)
+  // Hex 1: Top-Left (Center 86, 76)
+  // Hex 2: Bottom-Left (Center 86, 208) - shares bottom edge of Hex 1
+  // Hex 3: Right (Center 200, 142) - nestled between Hex 1 & Hex 2 sharing sloped edges
+  const hexPoints = [
+    "48,10 124,10 162,76 124,142 48,142 10,76",
+    "48,142 124,142 162,208 124,274 48,274 10,208",
+    "162,76 238,76 276,142 238,208 162,208 124,142",
+  ];
+
+  // Overlay positions for HTML interactive link cards inside each hexagon
+  const overlayStyles: React.CSSProperties[] = [
+    { left: "3.4%", top: "3.5%", width: "52.4%", height: "46.5%" },
+    { left: "3.4%", top: "50%", width: "52.4%", height: "46.5%" },
+    { left: "42.7%", top: "26.8%", width: "52.4%", height: "46.5%" },
+  ];
 
   return (
-    <Link
-      href={`/products?brand=${encodeURIComponent(brand.name)}#grades-explorer`}
-      className="group relative flex flex-col items-center justify-between w-full h-full p-3 sm:p-4 md:p-5 select-none focus:outline-none transition-transform duration-300 hover:-translate-y-1.5 active:scale-95"
-      aria-label={`View ${brand.name} candidate grades`}
-    >
-      {/* Chemical Hexagon Vector Background with Benzene Bond Accents */}
-      <svg
-        viewBox="0 0 280 260"
-        className="absolute inset-0 w-full h-full pointer-events-none drop-shadow-[0_3px_8px_rgba(15,23,42,0.06)] group-hover:drop-shadow-[0_12px_24px_rgba(249,115,22,0.22)] transition-all duration-300"
-        preserveAspectRatio="none"
-      >
-        <defs>
-          <linearGradient id={`hex-glow-${brand.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#ffffff" />
-            <stop offset="100%" stopColor="#fff7ed" />
-          </linearGradient>
-        </defs>
-
-        {/* Outer Hexagon Polygon (Polymer benzene ring) */}
-        <polygon
-          points="70,8 210,8 272,130 210,252 70,252 8,130"
-          className="fill-white group-hover:fill-[url(#hex-glow-${brand.id})] stroke-slate-200 group-hover:stroke-primary transition-all duration-300"
-          strokeWidth="2.5"
-          strokeLinejoin="round"
-        />
-
-        {/* Chemical Double Bond Inner Accent Lines (mirroring user's uploaded drawing) */}
-        {!isAlt ? (
-          <>
-            {/* Top-left double bond */}
-            <path
-              d="M 24,126 L 76,22 L 140,22"
-              fill="none"
-              className="stroke-slate-300/80 group-hover:stroke-primary/70 transition-all duration-300"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-            />
-            {/* Bottom-right double bond */}
-            <path
-              d="M 256,134 L 204,238 L 140,238"
-              fill="none"
-              className="stroke-slate-200 group-hover:stroke-primary/40 transition-all duration-300"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </>
-        ) : (
-          <>
-            {/* Top-right double bond */}
-            <path
-              d="M 140,22 L 204,22 L 256,126"
-              fill="none"
-              className="stroke-slate-300/80 group-hover:stroke-primary/70 transition-all duration-300"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-            />
-            {/* Bottom-left double bond */}
-            <path
-              d="M 24,134 L 76,238 L 140,238"
-              fill="none"
-              className="stroke-slate-200 group-hover:stroke-primary/40 transition-all duration-300"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </>
-        )}
-      </svg>
-
-      {/* Internal Content (Z-10 over SVG) */}
-      <div className="relative z-10 flex flex-col items-center justify-between w-full h-full py-1 text-center">
-        {/* Top: Origin Pill */}
-        <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100/90 group-hover:bg-primary/10 transition-colors">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-          <span className="text-[9px] sm:text-[10px] font-semibold text-slate-700 group-hover:text-primary transition-colors tracking-wide">
-            {getOriginDisplay(brand.origin)}
-          </span>
+    <div className="flex flex-col items-center w-full max-w-[340px] mx-auto select-none">
+      {/* Phase Label & Chemical Formula Header */}
+      <div className="w-full text-center mb-2 px-1">
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-900 text-white font-mono text-[10px] font-bold tracking-wider mb-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+          <span>{phaseCode}</span>
         </div>
-
-        {/* Middle: Refinery Official Logo */}
-        <div className="relative w-full h-10 sm:h-12 md:h-13 my-0.5 flex items-center justify-center px-3 sm:px-4">
-          <Image
-            src={brand.logoUrl}
-            alt={`${brand.name} logo`}
-            fill
-            sizes="(max-width: 640px) 140px, (max-width: 1024px) 180px, 220px"
-            className="object-contain filter group-hover:scale-108 transition-transform duration-300 drop-shadow-2xs"
-          />
-        </div>
-
-        {/* Bottom: Name, Categories & View Action */}
-        <div className="w-full flex flex-col items-center">
-          <h3 className="font-extrabold text-xs sm:text-sm text-slate-900 group-hover:text-primary transition-colors line-clamp-1 leading-tight">
-            {brand.name}
-          </h3>
-          <p className="text-[9px] sm:text-[10px] text-slate-500 font-medium line-clamp-1 mt-0.5">
-            {brand.categories.join(" · ")}
-          </p>
-          <div className="mt-1 flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-primary group-hover:gap-1.5 transition-all">
-            <span>View Grades</span>
-            <span className="inline-block transition-transform duration-200 group-hover:translate-x-0.5">→</span>
-          </div>
-        </div>
+        <h4 className="text-xs sm:text-[13px] font-bold text-slate-800 line-clamp-1">{title}</h4>
+        <p className="text-[10px] font-mono font-medium text-slate-500 mt-0.5">{formula}</p>
       </div>
-    </Link>
+
+      {/* 3-Hexagon Bonding Canvas (Exact Chemical Cluster from user's sketch) */}
+      <div className="relative w-full aspect-[290/284]">
+        {/* SVG Base with Bold Dark Borders & Double Bond Lines */}
+        <svg
+          viewBox="0 0 290 284"
+          className="absolute inset-0 w-full h-full pointer-events-none drop-shadow-md"
+          preserveAspectRatio="none"
+        >
+          {/* Hexagon 1: Top-Left */}
+          <polygon
+            points={hexPoints[0]}
+            className={`transition-all duration-300 ${
+              hoveredHex === 0
+                ? "fill-orange-50/90 stroke-primary"
+                : "fill-white stroke-slate-900"
+            }`}
+            strokeWidth="3.5"
+            strokeLinejoin="round"
+          />
+          {/* Hexagon 1 Inner Double Bond (top-left & top edges from sketch) */}
+          <path
+            d="M 24,72 L 54,22 L 114,22"
+            fill="none"
+            className={`transition-all duration-300 ${
+              hoveredHex === 0 ? "stroke-primary" : "stroke-slate-900"
+            }`}
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+
+          {/* Hexagon 2: Bottom-Left (shares horizontal edge with Hex 1) */}
+          <polygon
+            points={hexPoints[1]}
+            className={`transition-all duration-300 ${
+              hoveredHex === 1
+                ? "fill-orange-50/90 stroke-primary"
+                : "fill-white stroke-slate-900"
+            }`}
+            strokeWidth="3.5"
+            strokeLinejoin="round"
+          />
+          {/* Hexagon 2 Inner Double Bond (bottom-left & bottom edges) */}
+          <path
+            d="M 24,212 L 54,262 L 114,262"
+            fill="none"
+            className={`transition-all duration-300 ${
+              hoveredHex === 1 ? "stroke-primary" : "stroke-slate-900"
+            }`}
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+
+          {/* Hexagon 3: Right (nestled into the notch sharing sloped edges) */}
+          <polygon
+            points={hexPoints[2]}
+            className={`transition-all duration-300 ${
+              hoveredHex === 2
+                ? "fill-orange-50/90 stroke-primary"
+                : "fill-white stroke-slate-900"
+            }`}
+            strokeWidth="3.5"
+            strokeLinejoin="round"
+          />
+          {/* Hexagon 3 Inner Double Bond (top-right & right edges from sketch) */}
+          <path
+            d="M 174,86 L 230,86 L 264,140"
+            fill="none"
+            className={`transition-all duration-300 ${
+              hoveredHex === 2 ? "stroke-primary" : "stroke-slate-900"
+            }`}
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+
+          {/* Covalent Atom Nodes (Interlocking vertices with Carbon ● markers) */}
+          <circle cx="162" cy="76" r="3.5" fill="#ea580c" />
+          <circle cx="124" cy="142" r="4.5" fill="#ea580c" stroke="#0f172a" strokeWidth="1.5" />
+          <circle cx="162" cy="208" r="3.5" fill="#ea580c" />
+        </svg>
+
+        {/* 3 Interactive Brand Links positioned right inside their respective hexagons */}
+        {brands.map((brand, idx) => (
+          <Link
+            key={brand.id}
+            href={`/products?brand=${encodeURIComponent(brand.name)}#grades-explorer`}
+            onMouseEnter={() => setHoveredHex(idx)}
+            onMouseLeave={() => setHoveredHex(null)}
+            className="group absolute flex flex-col items-center justify-between p-2 sm:p-2.5 text-center focus:outline-none transition-transform duration-200 active:scale-95"
+            style={overlayStyles[idx]}
+            aria-label={`View ${brand.name} candidate grades`}
+          >
+            {/* Origin Pill */}
+            <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 group-hover:bg-primary/10 transition-colors">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span className="text-[8px] sm:text-[9px] font-bold text-slate-700 group-hover:text-primary transition-colors tracking-tight line-clamp-1">
+                {getOriginDisplay(brand.origin)}
+              </span>
+            </div>
+
+            {/* Refinery Logo */}
+            <div className="relative w-full h-8 sm:h-9 my-0.5 flex items-center justify-center px-2">
+              <Image
+                src={brand.logoUrl}
+                alt={`${brand.name} logo`}
+                fill
+                sizes="(max-width: 640px) 120px, 150px"
+                className="object-contain filter group-hover:scale-108 transition-transform duration-300"
+              />
+            </div>
+
+            {/* Brand Name & Action */}
+            <div className="w-full flex flex-col items-center">
+              <h5 className="font-black text-[11px] sm:text-xs text-slate-900 group-hover:text-primary transition-colors line-clamp-1 leading-tight">
+                {brand.name}
+              </h5>
+              <p className="text-[8px] sm:text-[9px] text-slate-500 font-medium line-clamp-1">
+                {brand.categories.join(" · ")}
+              </p>
+              <div className="mt-0.5 flex items-center gap-0.5 text-[8px] sm:text-[9px] font-bold text-primary group-hover:gap-1 transition-all">
+                <span>View Grades</span>
+                <span className="inline-block transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 };
 
 export const SuppliersSection: React.FC = () => {
-  // Split 9 brands: Row 1 has 5, Row 2 has 4 nestled between them
-  const row1 = MAJOR_BRANDS.slice(0, 5);
-  const row2 = MAJOR_BRANDS.slice(5, 9);
+  // 9 Brands split into 3 Chemical Clusters matching user's 3-Hexagon Sketch
+  const cluster1Brands: [BrandInfo, BrandInfo, BrandInfo] = [
+    MAJOR_BRANDS[1], // SABIC (Hex 1)
+    MAJOR_BRANDS[0], // APC (Hex 2)
+    MAJOR_BRANDS[5], // SIPCHEM (Hex 3)
+  ];
+
+  const cluster2Brands: [BrandInfo, BrandInfo, BrandInfo] = [
+    MAJOR_BRANDS[6], // TASNEE (Hex 1)
+    MAJOR_BRANDS[2], // SK Geo Centric (Hex 2)
+    MAJOR_BRANDS[4], // Formosa Plastics USA (Hex 3)
+  ];
+
+  const cluster3Brands: [BrandInfo, BrandInfo, BrandInfo] = [
+    MAJOR_BRANDS[7], // NATPET (Hex 1)
+    MAJOR_BRANDS[8], // Nghi Son (NSRP) (Hex 2)
+    MAJOR_BRANDS[3], // SIDPEC (Hex 3)
+  ];
 
   return (
     <section className="w-full bg-white py-12 sm:py-16 md:py-20 border-t border-gray-100 overflow-hidden">
@@ -181,58 +254,174 @@ export const SuppliersSection: React.FC = () => {
           </Link>
         </div>
 
-        {/* 2. Major Petrochemical Producers & Clickable Brands Hexagonal Honeycomb */}
+        {/* 2. Chemical Reaction Equation & Molecular Bonding Diagram */}
         <div data-aos="fade-up" className="mt-12 sm:mt-16 pt-8 sm:pt-12 border-t border-gray-200/80 w-full">
-          {/* Section Header with Decorative Chemical 3-Hexagon Cluster Icon */}
-          <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary-darker text-[11px] font-bold uppercase tracking-wider mb-3">
-              {/* Exact 3-hexagon chemical cluster icon mirroring user's sketch */}
-              <svg className="w-4 h-4 shrink-0 text-primary" viewBox="0 0 120 120" fill="none">
-                <polygon points="25,10 55,10 70,36 55,62 25,62 10,36" stroke="currentColor" strokeWidth="5" strokeLinejoin="round" />
-                <path d="M 16,35 L 28,15 L 45,15" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
-                <polygon points="25,62 55,62 70,88 55,114 25,114 10,88" stroke="currentColor" strokeWidth="5" strokeLinejoin="round" />
-                <path d="M 64,88 L 52,108 L 35,108" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
-                <polygon points="70,36 100,36 115,62 100,88 70,88 55,62" stroke="currentColor" strokeWidth="5" strokeLinejoin="round" />
-                <path d="M 109,62 L 97,42 L 80,42" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
-              </svg>
-              <span>Major Manufacturer Allocations</span>
+          {/* Section Header */}
+          <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-8">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-900 text-white text-[11px] font-mono font-bold uppercase tracking-wider mb-3 shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+              <span>Polymerization Reaction &amp; Bonding Equation Diagram</span>
             </div>
-            <h2 className="text-xl sm:text-3xl lg:text-4xl font-light text-gray-900 tracking-tight leading-tight">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-gray-900 tracking-tight leading-tight">
               Global Producer Partners &amp; Candidate Brands
             </h2>
-            <p className="mt-2 text-xs sm:text-sm text-gray-500 max-w-2xl mx-auto">
-              Direct refinery allocations in certified polymer honeycomb units. Click on any producer to browse verified candidate grades, technical data sheets (TDS), and container volume availability.
+            <p className="mt-2 text-xs sm:text-sm text-gray-600 max-w-2xl mx-auto">
+              Interconnected molecular polymer network illustrating chemical olefin synthesis, catalytic copolymerization, and terminal refinery resin allocations.
             </p>
           </div>
 
-          {/* 2A. Interlocking Polymer Honeycomb Layout on Desktop (lg+) */}
-          <div className="hidden lg:block w-full max-w-5xl mx-auto mb-12">
-            {/* Row 1: 5 Hexagons */}
-            <div className="flex justify-center items-center gap-4 xl:gap-5">
-              {row1.map((brand, idx) => (
-                <div key={brand.id} className="w-[195px] xl:w-[215px] aspect-[280/260] shrink-0">
-                  <HexagonBrandCard brand={brand} index={idx} />
-                </div>
-              ))}
-            </div>
-
-            {/* Row 2: 4 Hexagons nestled right into the interlocking gaps */}
-            <div className="flex justify-center items-center gap-4 xl:gap-5 -mt-6 xl:-mt-8">
-              {row2.map((brand, idx) => (
-                <div key={brand.id} className="w-[195px] xl:w-[215px] aspect-[280/260] shrink-0">
-                  <HexagonBrandCard brand={brand} index={idx + 5} />
-                </div>
-              ))}
+          {/* Chemical Reaction Equation Banner */}
+          <div className="w-full max-w-4xl mx-auto mb-8 sm:mb-10 p-3 sm:p-4 rounded-xl border-2 border-slate-800 bg-slate-900 text-white font-mono shadow-md">
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-center">
+              <span className="px-2 py-0.5 rounded bg-primary text-white font-bold uppercase text-[9px] sm:text-[10px]">
+                Reaction Formula
+              </span>
+              <span className="text-amber-300 font-bold">n [C₂H₄] + m [C₃H₆]</span>
+              <span className="text-primary font-bold">──[ Ziegler-Natta / Metallocene ]──▶</span>
+              <span className="text-sky-300 font-bold">—[—CH₂—CH₂—]ₙ—[—CH₂—CH(CH₃)—]ₘ—</span>
+              <span className="text-emerald-400 font-bold">──▶ 9 Verified Producer Allocations</span>
             </div>
           </div>
 
-          {/* 2B. Responsive Hexagon Grid on Mobile & Tablet (< lg) */}
-          <div className="grid lg:hidden grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-5 mb-10 max-w-2xl mx-auto">
-            {MAJOR_BRANDS.map((brand, idx) => (
-              <div key={brand.id} className="w-full aspect-[280/260] max-w-[220px] mx-auto">
-                <HexagonBrandCard brand={brand} index={idx} />
+          {/* Chemical Laboratory Blueprint Canvas */}
+          <div
+            className="relative w-full rounded-3xl border-2 border-slate-300 bg-slate-50/70 p-4 sm:p-6 lg:p-8 mb-12 shadow-inner"
+            style={{
+              backgroundImage: "radial-gradient(#94a3b8 1.2px, transparent 1.2px)",
+              backgroundSize: "22px 22px",
+            }}
+          >
+            {/* Technical Blueprint Corner Crosshairs */}
+            <div className="absolute top-2 left-2 text-slate-400 font-mono text-[10px] select-none">+ 00.00</div>
+            <div className="absolute top-2 right-2 text-slate-400 font-mono text-[10px] select-none">+ 01.00</div>
+            <div className="absolute bottom-2 left-2 text-slate-400 font-mono text-[10px] select-none">MOL_BOND_NET</div>
+            <div className="absolute bottom-2 right-2 text-slate-400 font-mono text-[10px] select-none">sp² RESONANCE</div>
+
+            {/* Desktop View: Horizontal Chemical Reaction Equation with Bridges */}
+            <div className="hidden lg:flex items-center justify-between gap-2 xl:gap-4 w-full">
+              {/* Cluster 1: Monomers & Base Polyolefins */}
+              <div className="flex-1">
+                <ChemicalCluster
+                  title="Base Olefin Monomers"
+                  phaseCode="STAGE I: FEEDSTOCK"
+                  formula="n [C₂H₄] + m [C₃H₆] Monomer Core"
+                  brands={cluster1Brands}
+                  clusterIndex={0}
+                />
               </div>
-            ))}
+
+              {/* Reaction Bridge 1: Catalytic Polymerization Operator */}
+              <div className="flex flex-col items-center justify-center shrink-0 w-28 xl:w-32 text-center px-1 font-mono">
+                <span className="text-[10px] xl:text-[11px] font-bold text-slate-900 uppercase tracking-wider mb-0.5">
+                  + Catalyst
+                </span>
+                <span className="text-[9px] text-slate-600 bg-white/80 px-2 py-0.5 rounded border border-slate-300 mb-1">
+                  TiCl₄ / AlEt₃
+                </span>
+                {/* Bold Reaction Arrow */}
+                <div className="relative w-full flex items-center justify-center my-1">
+                  <div className="w-full h-1 bg-slate-900"></div>
+                  <div className="w-0 h-0 border-y-[6px] border-y-transparent border-l-[10px] border-l-slate-900 shrink-0"></div>
+                </div>
+                <span className="text-[9px] font-bold text-primary mt-1">
+                  Δ 180°C - 240°C
+                </span>
+                <span className="text-[8px] text-slate-500">
+                  Gas-Phase 35 bar
+                </span>
+              </div>
+
+              {/* Cluster 2: Catalytic Copolymerization */}
+              <div className="flex-1">
+                <ChemicalCluster
+                  title="Catalytic Copolymerization"
+                  phaseCode="STAGE II: POLYMERIZATION"
+                  formula="—[—CH₂—CH₂—]ₙ— [PE/PP/EVA]"
+                  brands={cluster2Brands}
+                  clusterIndex={1}
+                />
+              </div>
+
+              {/* Reaction Bridge 2: Compounding & Extrusion Operator */}
+              <div className="flex flex-col items-center justify-center shrink-0 w-28 xl:w-32 text-center px-1 font-mono">
+                <span className="text-[10px] xl:text-[11px] font-bold text-slate-900 uppercase tracking-wider mb-0.5">
+                  Pelletization
+                </span>
+                <span className="text-[9px] text-slate-600 bg-white/80 px-2 py-0.5 rounded border border-slate-300 mb-1">
+                  Clarifiers &amp; AO
+                </span>
+                {/* Bold Reaction Arrow */}
+                <div className="relative w-full flex items-center justify-center my-1">
+                  <div className="w-full h-1 bg-slate-900"></div>
+                  <div className="w-0 h-0 border-y-[6px] border-y-transparent border-l-[10px] border-l-slate-900 shrink-0"></div>
+                </div>
+                <span className="text-[9px] font-bold text-primary mt-1">
+                  [— M —]ₙ Yield
+                </span>
+                <span className="text-[8px] text-slate-500">
+                  Grade Extrusion
+                </span>
+              </div>
+
+              {/* Cluster 3: Terminal Specialized Resins */}
+              <div className="flex-1">
+                <ChemicalCluster
+                  title="Terminal Specialty Formulations"
+                  phaseCode="STAGE III: REFINED RESINS"
+                  formula="Homopolymer &amp; Copolymers"
+                  brands={cluster3Brands}
+                  clusterIndex={2}
+                />
+              </div>
+            </div>
+
+            {/* Mobile & Tablet View: Vertical Reaction Flow Pathway */}
+            <div className="flex lg:hidden flex-col items-center gap-6 w-full">
+              {/* Cluster 1 */}
+              <ChemicalCluster
+                title="Base Olefin Monomers"
+                phaseCode="STAGE I: FEEDSTOCK"
+                formula="n [C₂H₄] + m [C₃H₆] Monomer Core"
+                brands={cluster1Brands}
+                clusterIndex={0}
+              />
+
+              {/* Vertical Reaction Arrow 1 */}
+              <div className="flex flex-col items-center justify-center text-center font-mono py-1">
+                <span className="text-[10px] font-bold text-slate-900 uppercase">
+                  + Ziegler-Natta Catalyst (Δ 200°C)
+                </span>
+                <div className="w-1 h-7 bg-slate-900 my-1"></div>
+                <div className="w-0 h-0 border-x-[6px] border-x-transparent border-t-[9px] border-t-slate-900"></div>
+              </div>
+
+              {/* Cluster 2 */}
+              <ChemicalCluster
+                title="Catalytic Copolymerization"
+                phaseCode="STAGE II: POLYMERIZATION"
+                formula="—[—CH₂—CH₂—]ₙ— [PE/PP/EVA]"
+                brands={cluster2Brands}
+                clusterIndex={1}
+              />
+
+              {/* Vertical Reaction Arrow 2 */}
+              <div className="flex flex-col items-center justify-center text-center font-mono py-1">
+                <span className="text-[10px] font-bold text-slate-900 uppercase">
+                  Compounding, Extrusion &amp; Clarification
+                </span>
+                <div className="w-1 h-7 bg-slate-900 my-1"></div>
+                <div className="w-0 h-0 border-x-[6px] border-x-transparent border-t-[9px] border-t-slate-900"></div>
+              </div>
+
+              {/* Cluster 3 */}
+              <ChemicalCluster
+                title="Terminal Specialty Formulations"
+                phaseCode="STAGE III: REFINED RESINS"
+                formula="Homopolymer &amp; Copolymers"
+                brands={cluster3Brands}
+                clusterIndex={2}
+              />
+            </div>
           </div>
 
           {/* Continuous Infinite Smooth Auto-Scrolling Marquee Slider */}
