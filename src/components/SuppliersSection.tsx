@@ -63,7 +63,7 @@ const TripletUnit: React.FC<TripletUnitProps> = ({ brands }) => {
   ];
 
   return (
-    <div className="relative w-full aspect-[350/340] max-w-[380px] sm:max-w-[440px] lg:max-w-[370px] xl:max-w-[420px] 2xl:max-w-[450px] mx-auto select-none shrink-0">
+    <div className="relative w-full aspect-[350/340] max-w-[400px] sm:max-w-[480px] lg:max-w-[390px] xl:max-w-[450px] 2xl:max-w-[490px] mx-auto select-none shrink-0">
       {/* SVG Canvas for 3 Hexagons with Bold Borders, Chemical Accents & Orange Contact Nodes */}
       <svg
         viewBox="0 0 350 340"
@@ -172,14 +172,14 @@ const TripletUnit: React.FC<TripletUnitProps> = ({ brands }) => {
             </span>
           </div>
 
-          {/* Large, Clear Refinery Logo */}
-          <div className="relative w-full h-10 sm:h-12 md:h-13 xl:h-14 my-0.5 sm:my-1 flex items-center justify-center px-1 sm:px-2">
+          {/* 2X Super-Sized High-Visibility Refinery Logo */}
+          <div className="relative w-full h-14 sm:h-18 md:h-20 xl:h-22 my-1 flex items-center justify-center px-1">
             <Image
               src={brand.logoUrl}
               alt={`${brand.name} logo`}
               fill
-              sizes="(max-width: 640px) 140px, (max-width: 1024px) 180px, 220px"
-              className="object-contain filter group-hover:scale-108 transition-transform duration-300 drop-shadow-2xs"
+              sizes="(max-width: 640px) 180px, (max-width: 1024px) 240px, 300px"
+              className="object-contain filter group-hover:scale-110 transition-transform duration-300 drop-shadow-xs"
             />
           </div>
 

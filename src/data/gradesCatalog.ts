@@ -94,7 +94,7 @@ export const MAJOR_BRANDS: BrandInfo[] = [
     categories: ["HDPE", "LDPE", "LLDPE"],
     status: "Available on request (Manufacturer catalogue verified)",
     description: "Major Saudi private sector industrialist supplying certified PE100 pipe grades and flexible packaging polyethylene.",
-    logoUrl: "/images/logos/tasnee.jpg",
+    logoUrl: "/images/logos/TASNEE.png",
   },
   {
     id: "natpet",
@@ -114,7 +114,7 @@ export const MAJOR_BRANDS: BrandInfo[] = [
     categories: ["PP"],
     status: "Available on request (Manufacturer catalogue verified)",
     description: "Key Southeast Asian refining hub providing consistent PP homopolymers and film resins.",
-    logoUrl: "/images/logos/nsrp.jpg",
+    logoUrl: "/images/logos/NSRP.png",
   },
 ];
 
