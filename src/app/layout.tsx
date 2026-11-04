@@ -4,7 +4,6 @@ import "./globals.css";
 import { AOSProvider } from "@/components/AOSProvider";
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
 import { ThemeProvider } from "@/context/ThemeContext";
-import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 const montserrat = Montserrat({
@@ -38,7 +37,6 @@ export default function RootLayout({
           <SmoothScrollProvider>
             <AOSProvider>
               {children}
-              <ThemeSwitcher />
               <WhatsAppButton />
             </AOSProvider>
           </SmoothScrollProvider>

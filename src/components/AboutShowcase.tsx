@@ -253,11 +253,11 @@ export const AboutShowcase: React.FC = () => {
               ))}
             </div>
 
-            {/* CTA */}
+            {/* CTA — Theme Color Orange */}
             <div className="mt-6">
               <Link
                 href="/about"
-                className="group btn-scale inline-flex items-center gap-2.5 rounded-xl bg-navy px-6 py-3.5 text-sm font-bold text-white shadow-md shadow-navy/20 hover:bg-navy-dark hover:shadow-lg transition-all"
+                className="group btn-scale inline-flex items-center gap-2.5 rounded-xl bg-primary px-6 py-3.5 text-sm font-bold text-white shadow-md shadow-primary/25 hover:bg-primary-darker hover:shadow-lg transition-all"
               >
                 <span>Discover Our Company</span>
                 <span className="w-6 h-6 rounded-full bg-white/15 grid place-items-center group-hover:bg-white/25 transition-transform group-hover:translate-x-1">
