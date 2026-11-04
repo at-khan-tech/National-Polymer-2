@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { AOSProvider } from "@/components/AOSProvider";
@@ -12,6 +12,13 @@ const montserrat = Montserrat({
   display: "swap",
   weight: ["300", "400", "500", "600", "700"],
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#e95220",
+};
 
 export const metadata: Metadata = {
   title: "Polymer & Plastic Resin Distributor | National Polymers FZ LLC",
@@ -32,7 +39,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={montserrat.variable}>
-      <body className="font-montserrat antialiased bg-white text-gray-900 overflow-x-hidden selection:bg-primary selection:text-white">
+      <body className="font-montserrat antialiased bg-white text-gray-900 overflow-x-hidden min-h-screen w-full relative selection:bg-primary selection:text-white">
         <ThemeProvider>
           <SmoothScrollProvider>
             <AOSProvider>

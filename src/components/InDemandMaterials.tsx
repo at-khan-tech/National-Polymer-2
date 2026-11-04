@@ -12,6 +12,7 @@ interface ProductCard {
   tags: string;
   image: string;
   href: string;
+  enquiryHref: string;
   delay: number;
 }
 
@@ -22,7 +23,8 @@ const products: ProductCard[] = [
     desc: "Low-density polyethylene film grades, virgin pellets and high-clarity LDPE film bales sourced globally.",
     tags: "Film · Flexible Packaging · Extrusion",
     image: "/images/Product/p1.png",
-    href: "#contact",
+    href: "/products?category=LDPE#grades-explorer",
+    enquiryHref: "/enquiry?product=pe&grade=LDPE%20Film%20Grade",
     delay: 0,
   },
   {
@@ -31,7 +33,8 @@ const products: ProductCard[] = [
     desc: "High-density grades combining tensile strength, chemical resistance and blow moulding/pipe reliability.",
     tags: "Blow Moulding · Pipes · Drums · Bales",
     image: "/images/Product/p2.png",
-    href: "#contact",
+    href: "/products?category=HDPE#grades-explorer",
+    enquiryHref: "/enquiry?product=pe&grade=HDPE%20Blow%20Moulding",
     delay: 80,
   },
   {
@@ -40,7 +43,8 @@ const products: ProductCard[] = [
     desc: "Linear low-density polyethylene grades engineered for maximum puncture resistance and stretch films.",
     tags: "Stretch Film · Liners · Packaging",
     image: "/images/Product/p3.png",
-    href: "#contact",
+    href: "/products?category=LLDPE#grades-explorer",
+    enquiryHref: "/enquiry?product=pe&grade=LLDPE%20Film%20C4",
     delay: 160,
   },
   {
@@ -49,7 +53,8 @@ const products: ProductCard[] = [
     desc: "Versatile PP, PPCP White, and PP Rafia granules for woven bags, automotive components and consumer products.",
     tags: "Injection Moulding · Rafia · Thermoforming",
     image: "/images/Product/p4.png",
-    href: "#contact",
+    href: "/products?category=PP#grades-explorer",
+    enquiryHref: "/enquiry?product=pp&grade=PP%20Homopolymer",
     delay: 240,
   },
   {
@@ -58,7 +63,8 @@ const products: ProductCard[] = [
     desc: "Suspension PVC resin and clean PVC regrinds for drainage pipes, electrical profiles, fittings and cables.",
     tags: "Pipes · Profiles · Regrinds · Construction",
     image: "/images/Product/p5.png",
-    href: "#contact",
+    href: "/products/pvc",
+    enquiryHref: "/enquiry?product=pvc&grade=Suspension%20PVC%20K67",
     delay: 320,
   },
   {
@@ -67,7 +73,8 @@ const products: ProductCard[] = [
     desc: "Cost-effective, washed and filtered recycled granules, floor sweeping, plastic scraps, lumps, and plant wastes.",
     tags: "Reprocessed · Lumps · Regrinds · Scrap",
     image: "/images/Product/p6.png",
-    href: "#contact",
+    href: "/products/recycled",
+    enquiryHref: "/enquiry?product=recycled&grade=Post-Consumer%20Recycled%20Granules",
     delay: 400,
   },
 ];
@@ -76,41 +83,41 @@ export const InDemandMaterials: React.FC = () => {
   return (
     <section
       id="products"
-      className="w-full bg-white py-16 text-gray-900 md:py-20"
+      className="w-full bg-white py-12 sm:py-16 md:py-20 text-gray-900 overflow-hidden"
       aria-labelledby="top-selling-products-title"
     >
-      <div className="container mx-auto px-5 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div
           data-aos="fade-up"
-          className="flex flex-col items-center gap-6 text-center max-w-3xl mx-auto"
+          className="flex flex-col items-center gap-4 sm:gap-6 text-center max-w-3xl mx-auto"
         >
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary-darker">
+            <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.2em] sm:tracking-[0.24em] text-primary-darker">
               National Polymers Core Portfolio
             </p>
             <h2
               id="top-selling-products-title"
-              className="mt-3 text-3xl md:text-5xl font-light text-gray-900 leading-tight"
+              className="mt-2.5 sm:mt-3 text-2xl sm:text-4xl md:text-5xl font-light text-gray-900 leading-tight tracking-tight"
             >
               Prime, Off-Grade &amp; Recycled Polymers
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-gray-600 text-justify">
+            <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-xs sm:text-base leading-relaxed text-gray-600">
               Supplying certified prime resins, near-prime off-spec lots, and high-quality recycled
               granules backed by responsive UAE logistics and worldwide shipping.
             </p>
           </div>
           <Link
-            href="#contact"
-            className="inline-flex w-fit items-center gap-2 border border-primary-darker px-5 py-3 text-sm font-semibold text-primary-darker transition-colors hover:bg-primary-darker hover:text-white"
+            href="/products#grades-explorer"
+            className="inline-flex w-full sm:w-fit justify-center items-center gap-2 border border-primary-darker px-5 py-3 text-xs sm:text-sm font-semibold text-primary-darker transition-colors hover:bg-primary-darker hover:text-white rounded-md"
           >
-            Request Quotation / Specifications
-            <Icon name="arrow-right" className="w-5 h-5" />
+            Browse All Polymer Grades &amp; TDS
+            <Icon name="arrow-right" className="w-4 h-4 sm:w-5 sm:h-5" />
           </Link>
         </div>
 
-        {/* 6-Card Grid with 3D Depth Entrance (X, Y, Z slide animations) */}
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 perspective-1200">
+        {/* 6-Card Grid */}
+        <div className="mt-8 sm:mt-12 grid gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 perspective-1200">
           {products.map((item, idx) => {
             const aosType =
               idx % 3 === 0
@@ -120,44 +127,69 @@ export const InDemandMaterials: React.FC = () => {
                 : "card-3d-right";
             return (
               <article
-                key={idx}
+                key={item.name}
                 data-aos={aosType}
-                data-aos-delay={(idx % 3) * 120}
-                className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white text-gray-900 shadow-sm transition-all duration-400 hover-card-3d"
+                data-aos-delay={(idx % 3) * 100}
+                className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white text-gray-900 shadow-sm transition-all duration-300 hover-card-3d hover:border-primary/40"
               >
-                {/* Clean Image Section (No blue overlay, subtle scale on hover) */}
-                <div className="relative h-56 w-full overflow-hidden bg-gray-100">
+                {/* Clickable Image Section */}
+                <Link
+                  href={item.href}
+                  className="relative h-48 sm:h-56 w-full overflow-hidden bg-gray-100 block cursor-pointer"
+                  title={`View ${item.name} related products and candidate grades`}
+                >
                   <Image
                     src={item.image}
                     alt={item.name}
                     fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
                   />
-                </div>
+                  <div className="absolute top-3.5 left-3.5 z-10">
+                    <span className="bg-white/95 backdrop-blur-xs border border-primary/25 px-2.5 py-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-primary rounded-md shadow-xs">
+                      {item.badge}
+                    </span>
+                  </div>
+                </Link>
 
-                <div className="flex flex-1 flex-col items-center justify-center p-7 text-center">
-                  <p className="mb-3 w-fit bg-primary-soft border border-primary/25 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-primary rounded-sm">
-                    {item.badge}
-                  </p>
-                  <h3 className="text-2xl font-normal text-gray-900 group-hover:text-primary transition-colors duration-200">
-                    {item.name}
-                  </h3>
-                  <p className="mt-3 text-sm leading-6 text-gray-600 flex-1 text-justify">
-                    {item.desc}
-                  </p>
-                  <p className="mt-4 w-full border-t border-gray-200 pt-4 text-xs font-medium uppercase tracking-[0.12em] text-primary-darker">
-                    {item.tags}
-                  </p>
+                {/* Card Body */}
+                <div className="flex flex-1 flex-col p-5 sm:p-6 text-left">
+                  {/* Clickable Title */}
                   <Link
                     href={item.href}
-                    className="mt-5 inline-flex w-fit items-center gap-2 text-sm font-semibold text-primary-darker transition-all hover:text-primary group-hover:translate-x-1"
+                    className="focus-primary group/title block"
+                    title={`View ${item.name} related products`}
                   >
-                    Enquire This Grade
-                    <Icon
-                      name="arrow-right"
-                      className="w-5 h-5 transition-transform group-hover:translate-x-1"
-                    />
+                    <h3 className="text-lg sm:text-xl font-bold text-navy group-hover/title:text-primary transition-colors leading-snug">
+                      {item.name}
+                    </h3>
                   </Link>
+
+                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-gray-600 flex-1">
+                    {item.desc}
+                  </p>
+
+                  <p className="mt-3 w-full border-t border-gray-100 pt-3 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-primary-darker no-justify">
+                    {item.tags}
+                  </p>
+
+                  {/* Dual Action Buttons: View Related Grades + Quick Quote */}
+                  <div className="mt-4 pt-3 border-t border-gray-100 flex flex-col xs:flex-row items-stretch xs:items-center justify-between gap-2.5">
+                    <Link
+                      href={item.href}
+                      className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary hover:bg-primary-darker text-white px-3.5 py-2 text-xs font-bold transition-all shadow-xs active:scale-95"
+                    >
+                      <span>Explore Grades</span>
+                      <Icon name="arrow-right" className="w-3.5 h-3.5" />
+                    </Link>
+
+                    <Link
+                      href={item.enquiryHref}
+                      className="inline-flex items-center justify-center rounded-lg border border-gray-300 hover:border-primary text-gray-700 hover:text-primary px-3 py-2 text-xs font-semibold transition-colors active:scale-95"
+                    >
+                      <span>RFQ Quote</span>
+                    </Link>
+                  </div>
                 </div>
               </article>
             );

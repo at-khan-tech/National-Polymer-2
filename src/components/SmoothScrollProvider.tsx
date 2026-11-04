@@ -21,7 +21,7 @@ export const SmoothScrollProvider: React.FC<{
       return;
     }
 
-    // Initialize Lenis with elite smooth momentum settings
+    // Initialize Lenis with smooth momentum settings
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -46,7 +46,7 @@ export const SmoothScrollProvider: React.FC<{
     lenis.on("scroll", (e: { progress: number; scroll: number }) => {
       const progressPercent = Math.min(Math.max(e.progress * 100, 0), 100);
       setScrollProgress(progressPercent);
-      setShowScrollTop(e.scroll > 400);
+      setShowScrollTop(e.scroll > 350);
 
       // Multi-dimensional parallax speed calculation
       const parallaxElements = document.querySelectorAll<HTMLElement>(
@@ -100,9 +100,9 @@ export const SmoothScrollProvider: React.FC<{
 
   return (
     <>
-      {/* 1. Multi-Dimensional High-Quality Scroll Progress Bar */}
+      {/* Scroll Progress Bar */}
       <div
-        className="fixed top-0 left-0 right-0 h-[3.5px] z-[9999] pointer-events-none"
+        className="fixed top-0 left-0 right-0 h-[3px] z-[9999] pointer-events-none"
         aria-hidden="true"
       >
         <div
@@ -113,9 +113,9 @@ export const SmoothScrollProvider: React.FC<{
 
       {children}
 
-      {/* 2. Floating Circular Progress & Smooth Back-To-Top Widget */}
+      {/* Floating Back-To-Top Widget — Positioned neatly above the WhatsApp button */}
       <div
-        className={`fixed bottom-6 right-6 z-40 transition-all duration-500 ease-out ${
+        className={`fixed bottom-[74px] right-3.5 sm:bottom-22 sm:right-6 z-40 transition-all duration-500 ease-out ${
           showScrollTop
             ? "opacity-100 translate-y-0 scale-100"
             : "opacity-0 translate-y-6 scale-90 pointer-events-none"
@@ -125,7 +125,7 @@ export const SmoothScrollProvider: React.FC<{
           type="button"
           onClick={scrollToTop}
           aria-label="Scroll to top of page"
-          className="group relative flex h-12 w-12 items-center justify-center rounded-full bg-white/95 text-navy shadow-xl backdrop-blur-md border border-gray-200 transition-transform duration-300 hover:scale-110 active:scale-95"
+          className="group relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-white/95 text-navy shadow-lg backdrop-blur-md border border-gray-200 transition-transform duration-300 hover:scale-110 active:scale-95 cursor-pointer"
         >
           {/* Circular SVG Progress Ring */}
           <svg className="absolute inset-0 h-full w-full -rotate-90 p-0.5" viewBox="0 0 48 48">
@@ -153,7 +153,7 @@ export const SmoothScrollProvider: React.FC<{
 
           {/* Up Arrow Icon */}
           <div className="relative z-10 transition-transform duration-300 group-hover:-translate-y-0.5">
-            <Icon name="arrow-back" className="h-4 w-4 rotate-90 text-navy group-hover:text-primary transition-colors" />
+            <Icon name="arrow-back" className="h-3.5 w-3.5 sm:h-4 sm:w-4 rotate-90 text-navy group-hover:text-primary transition-colors" />
           </div>
         </button>
       </div>

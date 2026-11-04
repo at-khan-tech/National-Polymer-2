@@ -82,101 +82,99 @@ export const MaterialFinder: React.FC = () => {
   return (
     <section
       id="material-finder"
-      className="w-full bg-primary py-16 text-white md:py-24 transition-colors duration-300"
+      className="w-full bg-primary py-12 sm:py-18 md:py-24 text-white transition-colors duration-300 overflow-hidden"
       aria-labelledby="material-finder-title"
     >
-      <div className="container mx-auto px-5 sm:px-6 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-8 lg:gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           {/* Left Guide Information */}
-          <div className="max-w-xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary-lighter">
+          <div className="max-w-xl text-left no-justify">
+            <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.2em] sm:tracking-[0.24em] text-primary-lighter">
               Interactive product guide
             </p>
             <h2
               id="material-finder-title"
-              className="mt-4 text-4xl font-light text-white md:text-5xl leading-tight"
+              className="mt-2.5 sm:mt-4 text-2xl sm:text-4xl md:text-5xl font-light text-white leading-tight tracking-tight"
             >
               Find the right material
             </h2>
-            <p className="mt-5 text-base leading-7 text-white/80">
+            <p className="mt-3 sm:mt-5 text-sm sm:text-base leading-relaxed text-white/85">
               Answer three quick questions to get a useful starting point for your
               application. Our technical team can then help confirm the grade and
               specifications.
             </p>
 
             {/* Stepper Progress Indicator */}
-            <div className="mt-8 flex items-center gap-3" aria-label="Finder progress">
+            <div className="mt-6 sm:mt-8 flex items-center gap-2.5 sm:gap-3" aria-label="Finder progress">
               <span
-                className={`grid h-9 w-9 place-items-center rounded-full border text-sm font-semibold transition-colors ${
+                className={`grid h-8 w-8 sm:h-9 sm:w-9 place-items-center rounded-full border text-xs sm:text-sm font-semibold transition-colors ${
                   currentStep >= 1
                     ? "border-white bg-white text-primary"
-                    : "border-white/25 text-white/45"
+                    : "border-white/30 text-white/50"
                 }`}
               >
                 1
               </span>
-              <span className="bg-white/20 h-px w-10" />
+              <span className="bg-white/25 h-px w-8 sm:w-10" />
 
               <span
-                className={`grid h-9 w-9 place-items-center rounded-full border text-sm font-semibold transition-colors ${
+                className={`grid h-8 w-8 sm:h-9 sm:w-9 place-items-center rounded-full border text-xs sm:text-sm font-semibold transition-colors ${
                   currentStep >= 2
                     ? "border-white bg-white text-primary"
-                    : "border-white/25 text-white/45"
+                    : "border-white/30 text-white/50"
                 }`}
               >
                 2
               </span>
-              <span className="bg-white/20 h-px w-10" />
+              <span className="bg-white/25 h-px w-8 sm:w-10" />
 
               <span
-                className={`grid h-9 w-9 place-items-center rounded-full border text-sm font-semibold transition-colors ${
+                className={`grid h-8 w-8 sm:h-9 sm:w-9 place-items-center rounded-full border text-xs sm:text-sm font-semibold transition-colors ${
                   currentStep >= 3
                     ? "border-white bg-white text-primary"
-                    : "border-white/25 text-white/45"
+                    : "border-white/30 text-white/50"
                 }`}
               >
                 3
               </span>
             </div>
 
-            <p className="mt-6 text-xs leading-5 text-white/60">
-              Recommendations are indicative starting points, not final technical
-              specifications. Suitability depends on grade, processing conditions,
-              regulations and end use.
+            <p className="mt-4 sm:mt-6 text-[11px] sm:text-xs leading-normal text-white/70">
+              Recommendations are indicative starting points. Suitability depends on grade, processing conditions, and end use.
             </p>
           </div>
 
           {/* Right Interactive Card */}
-          <div className="bg-white p-6 text-gray-900 shadow-2xl md:p-9 rounded">
+          <div className="bg-white p-5 sm:p-7 md:p-9 text-gray-900 shadow-xl rounded-2xl no-justify text-left">
             {currentStep === 1 && (
               <div>
-                <div className="flex items-start justify-between gap-5">
+                <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-darker">
+                    <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-primary-darker">
                       Step 1 of 3
                     </p>
-                    <h3 className="mt-2 text-2xl font-normal text-gray-900">
+                    <h3 className="mt-1 sm:mt-2 text-xl sm:text-2xl font-normal text-gray-900">
                       What are you making?
                     </h3>
                   </div>
                 </div>
 
-                <div className="mt-7 grid gap-3 sm:grid-cols-2">
+                <div className="mt-5 sm:mt-7 grid gap-2.5 sm:gap-3 sm:grid-cols-2">
                   {step1Options.map((opt) => (
                     <button
                       key={opt.id}
                       type="button"
                       onClick={() => handleStep1Select(opt.id)}
-                      className="group flex min-h-24 items-start gap-4 border border-gray-200 p-4 text-left transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-md cursor-pointer"
+                      className="group flex min-h-[72px] sm:min-h-20 items-start gap-3 sm:gap-4 border border-gray-200 rounded-xl p-3 sm:p-3.5 text-left transition-all hover:border-primary hover:shadow-sm cursor-pointer active:scale-98"
                     >
-                      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-primary/10 text-primary-darker transition-colors group-hover:bg-primary group-hover:text-white">
-                        <Icon name={opt.icon} className="w-6 h-6" />
+                      <span className="grid h-9 w-9 sm:h-10 sm:w-10 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary-darker transition-colors group-hover:bg-primary group-hover:text-white">
+                        <Icon name={opt.icon} className="w-5 h-5" />
                       </span>
                       <span>
-                        <span className="block font-semibold text-gray-900">
+                        <span className="block font-semibold text-xs sm:text-sm text-gray-900">
                           {opt.title}
                         </span>
-                        <span className="mt-1 block text-xs leading-5 text-gray-500">
+                        <span className="mt-0.5 block text-[11px] sm:text-xs leading-snug text-gray-500">
                           {opt.desc}
                         </span>
                       </span>
@@ -188,35 +186,35 @@ export const MaterialFinder: React.FC = () => {
 
             {currentStep === 2 && (
               <div>
-                <div className="flex items-start justify-between gap-5">
+                <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-darker">
+                    <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-primary-darker">
                       Step 2 of 3
                     </p>
-                    <h3 className="mt-2 text-2xl font-normal text-gray-900">
+                    <h3 className="mt-1 sm:mt-2 text-xl sm:text-2xl font-normal text-gray-900">
                       Processing / Manufacturing Method
                     </h3>
                   </div>
                   <button
                     onClick={() => setCurrentStep(1)}
-                    className="text-xs text-primary-darker hover:underline"
+                    className="text-xs text-primary-darker hover:underline font-semibold"
                   >
                     &larr; Back
                   </button>
                 </div>
 
-                <div className="mt-7 grid gap-3 sm:grid-cols-1">
+                <div className="mt-5 sm:mt-7 grid gap-2.5 sm:gap-3 sm:grid-cols-1">
                   {(step2Options[selectedApp] || []).map((method, idx) => (
                     <button
                       key={idx}
                       type="button"
                       onClick={() => handleStep2Select(method)}
-                      className="group flex items-center justify-between border border-gray-200 p-4 text-left transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-md cursor-pointer"
+                      className="group flex items-center justify-between border border-gray-200 rounded-xl p-3.5 sm:p-4 text-left transition-all hover:border-primary hover:shadow-sm cursor-pointer active:scale-98"
                     >
-                      <span className="font-semibold text-gray-900">{method}</span>
+                      <span className="font-semibold text-xs sm:text-sm text-gray-900">{method}</span>
                       <Icon
                         name="arrow-forward"
-                        className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform"
+                        className="w-4 h-4 sm:w-5 sm:h-5 text-primary group-hover:translate-x-1 transition-transform"
                       />
                     </button>
                   ))}
@@ -226,28 +224,28 @@ export const MaterialFinder: React.FC = () => {
 
             {currentStep === 3 && (
               <div>
-                <div className="flex items-start justify-between gap-5">
+                <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-darker">
+                    <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-primary-darker">
                       Step 3 of 3 · Recommended Solution
                     </p>
-                    <h3 className="mt-2 text-2xl font-normal text-gray-900">
+                    <h3 className="mt-1 sm:mt-2 text-xl sm:text-2xl font-normal text-gray-900">
                       Ideal Grade Recommendations
                     </h3>
                   </div>
                   <button
                     onClick={handleReset}
-                    className="text-xs text-primary-darker hover:underline"
+                    className="text-xs text-primary-darker hover:underline font-semibold"
                   >
                     Start over
                   </button>
                 </div>
 
-                <div className="mt-6 p-5 bg-gray-50 border border-primary/30 rounded">
-                  <p className="text-xs uppercase tracking-wider text-primary font-bold">
+                <div className="mt-5 p-4 sm:p-5 bg-gray-50 border border-primary/25 rounded-xl">
+                  <p className="text-[10px] sm:text-xs uppercase tracking-wider text-primary font-bold">
                     Primary Match:
                   </p>
-                  <h4 className="text-xl font-bold text-gray-900 mt-1">
+                  <h4 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mt-1">
                     {selectedApp === "packaging"
                       ? "LDPE / LLDPE C4 & C6 Film Grades"
                       : selectedApp === "bottles"
@@ -258,26 +256,26 @@ export const MaterialFinder: React.FC = () => {
                       ? "PP Copolymer, PE Compounds & Engineering Resins"
                       : "PLA Bioplastics & High-Flow Polypropylene"}
                   </h4>
-                  <p className="text-sm text-gray-600 mt-2">
+                  <p className="text-xs sm:text-sm text-gray-600 mt-2 leading-relaxed">
                     Method selected: <strong className="text-gray-800">{selectedMethod}</strong>.
                     Available for immediate global shipping from regional warehouses in UAE,
                     Middle East, and international hubs.
                   </p>
                 </div>
 
-                <div className="mt-6 flex flex-wrap gap-4 items-center">
+                <div className="mt-6 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
                   <Link
-                    href="/contact#contactForm"
-                    className="bg-primary text-white px-6 py-3 text-sm font-semibold hover:bg-primary-darker transition-colors inline-flex items-center gap-2"
+                    href={`/enquiry?product=${encodeURIComponent(selectedApp)}`}
+                    className="bg-primary text-white px-5 py-3 rounded-lg text-xs sm:text-sm font-semibold hover:bg-primary-darker transition-colors inline-flex items-center justify-center gap-2 active:scale-95 text-center shadow-xs"
                   >
-                    Request Grade Quotation
+                    <span>Request Grade Quotation</span>
                     <Icon name="arrow-forward" className="w-4 h-4" />
                   </Link>
                   <Link
-                    href="/products"
-                    className="border border-gray-300 text-gray-800 px-5 py-3 text-sm font-semibold hover:border-primary transition-colors"
+                    href="/products#grades-explorer"
+                    className="border border-gray-300 text-gray-800 px-5 py-3 rounded-lg text-xs sm:text-sm font-semibold hover:border-primary transition-colors inline-flex items-center justify-center active:scale-95 text-center"
                   >
-                    Explore Technical Sheets
+                    <span>Explore Technical Sheets</span>
                   </Link>
                 </div>
               </div>
