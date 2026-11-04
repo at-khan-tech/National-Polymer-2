@@ -63,7 +63,7 @@ const TripletUnit: React.FC<TripletUnitProps> = ({ brands }) => {
   ];
 
   return (
-    <div className="relative w-full aspect-[350/340] max-w-[340px] xl:max-w-[360px] mx-auto select-none shrink-0">
+    <div className="relative w-full aspect-[350/340] max-w-[380px] sm:max-w-[440px] lg:max-w-[370px] xl:max-w-[420px] 2xl:max-w-[450px] mx-auto select-none shrink-0">
       {/* SVG Canvas for 3 Hexagons with Bold Borders, Chemical Accents & Orange Contact Nodes */}
       <svg
         viewBox="0 0 350 340"
@@ -78,7 +78,7 @@ const TripletUnit: React.FC<TripletUnitProps> = ({ brands }) => {
               ? "fill-orange-50/70 stroke-primary"
               : "fill-white stroke-slate-900"
           }`}
-          strokeWidth="3"
+          strokeWidth="3.5"
           strokeLinejoin="round"
         />
         {/* Hexagon 1 Inner Double Bond Accent */}
@@ -88,7 +88,7 @@ const TripletUnit: React.FC<TripletUnitProps> = ({ brands }) => {
           className={`transition-colors duration-200 ${
             hoveredHex === 0 ? "stroke-primary" : "stroke-slate-900"
           }`}
-          strokeWidth="2.5"
+          strokeWidth="2.8"
           strokeLinecap="round"
         />
 
@@ -100,7 +100,7 @@ const TripletUnit: React.FC<TripletUnitProps> = ({ brands }) => {
               ? "fill-orange-50/70 stroke-primary"
               : "fill-white stroke-slate-900"
           }`}
-          strokeWidth="3"
+          strokeWidth="3.5"
           strokeLinejoin="round"
         />
         {/* Hexagon 2 Inner Double Bond Accent */}
@@ -110,7 +110,7 @@ const TripletUnit: React.FC<TripletUnitProps> = ({ brands }) => {
           className={`transition-colors duration-200 ${
             hoveredHex === 1 ? "stroke-primary" : "stroke-slate-900"
           }`}
-          strokeWidth="2.5"
+          strokeWidth="2.8"
           strokeLinecap="round"
         />
 
@@ -122,7 +122,7 @@ const TripletUnit: React.FC<TripletUnitProps> = ({ brands }) => {
               ? "fill-orange-50/70 stroke-primary"
               : "fill-white stroke-slate-900"
           }`}
-          strokeWidth="3"
+          strokeWidth="3.5"
           strokeLinejoin="round"
         />
         {/* Hexagon 3 Inner Double Bond Accents */}
@@ -132,7 +132,7 @@ const TripletUnit: React.FC<TripletUnitProps> = ({ brands }) => {
           className={`transition-colors duration-200 ${
             hoveredHex === 2 ? "stroke-primary" : "stroke-slate-900"
           }`}
-          strokeWidth="2.5"
+          strokeWidth="2.8"
           strokeLinecap="round"
         />
         <path
@@ -141,16 +141,16 @@ const TripletUnit: React.FC<TripletUnitProps> = ({ brands }) => {
           className={`transition-colors duration-200 ${
             hoveredHex === 2 ? "stroke-primary" : "stroke-slate-900"
           }`}
-          strokeWidth="2.5"
+          strokeWidth="2.8"
           strokeLinecap="round"
         />
 
         {/* Orange Circular Bond Nodes (matching reference sketch) */}
-        <circle cx="66" cy="170" r="4.5" fill="#ea580c" />
-        <circle cx="154" cy="170" r="4.5" fill="#ea580c" />
-        <circle cx="198" cy="94" r="4.5" fill="#ea580c" />
-        <circle cx="198" cy="246" r="4.5" fill="#ea580c" />
-        <circle cx="330" cy="170" r="4.5" fill="#ea580c" />
+        <circle cx="66" cy="170" r="5" fill="#ea580c" />
+        <circle cx="154" cy="170" r="5" fill="#ea580c" />
+        <circle cx="198" cy="94" r="5" fill="#ea580c" />
+        <circle cx="198" cy="246" r="5" fill="#ea580c" />
+        <circle cx="330" cy="170" r="5" fill="#ea580c" />
       </svg>
 
       {/* HTML Overlays for each Brand inside the 3 Hexagons */}
@@ -160,38 +160,38 @@ const TripletUnit: React.FC<TripletUnitProps> = ({ brands }) => {
           href={`/products?brand=${encodeURIComponent(brand.name)}#grades-explorer`}
           onMouseEnter={() => setHoveredHex(idx)}
           onMouseLeave={() => setHoveredHex(null)}
-          className="group absolute flex flex-col items-center justify-between p-2.5 sm:p-3 text-center focus:outline-none transition-transform duration-200 active:scale-95"
+          className="group absolute flex flex-col items-center justify-between p-2 sm:p-2.5 xl:p-3 text-center focus:outline-none transition-transform duration-200 active:scale-95"
           style={overlayStyles[idx]}
           aria-label={`View ${brand.name} candidate grades`}
         >
           {/* Origin Pill (e.g. 🟢 sa Saudi Arabia) */}
-          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-100/90 group-hover:bg-primary/10 transition-colors">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-            <span className="text-[9px] font-bold text-slate-700 group-hover:text-primary transition-colors tracking-tight">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-100/95 group-hover:bg-primary/10 transition-colors border border-slate-200/60 shadow-2xs">
+            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 shrink-0"></span>
+            <span className="text-[9px] sm:text-[10px] xl:text-[11px] font-bold text-slate-700 group-hover:text-primary transition-colors tracking-tight line-clamp-1">
               {getOriginPill(brand.origin)}
             </span>
           </div>
 
-          {/* Refinery Logo */}
-          <div className="relative w-full h-8 sm:h-9 my-1 flex items-center justify-center px-2">
+          {/* Large, Clear Refinery Logo */}
+          <div className="relative w-full h-10 sm:h-12 md:h-13 xl:h-14 my-0.5 sm:my-1 flex items-center justify-center px-1 sm:px-2">
             <Image
               src={brand.logoUrl}
               alt={`${brand.name} logo`}
               fill
-              sizes="(max-width: 640px) 120px, 160px"
-              className="object-contain filter group-hover:scale-108 transition-transform duration-300"
+              sizes="(max-width: 640px) 140px, (max-width: 1024px) 180px, 220px"
+              className="object-contain filter group-hover:scale-108 transition-transform duration-300 drop-shadow-2xs"
             />
           </div>
 
           {/* Brand Name, Categories & View Action */}
           <div className="w-full flex flex-col items-center">
-            <h4 className="font-extrabold text-xs sm:text-[13px] text-slate-900 group-hover:text-primary transition-colors line-clamp-1 leading-tight">
+            <h4 className="font-black text-xs sm:text-sm xl:text-base text-slate-900 group-hover:text-primary transition-colors line-clamp-1 leading-tight">
               {brand.name}
             </h4>
-            <p className="text-[8px] sm:text-[9px] text-slate-500 font-medium line-clamp-1 mt-0.5">
+            <p className="text-[9px] sm:text-[10px] xl:text-[11px] text-slate-600 font-semibold line-clamp-1 mt-0.5">
               {brand.categories.join(" · ")}
             </p>
-            <div className="mt-1 flex items-center gap-0.5 text-[9px] font-bold text-primary group-hover:gap-1 transition-all">
+            <div className="mt-0.5 sm:mt-1 flex items-center gap-1 text-[9px] sm:text-[10px] xl:text-[11px] font-bold text-primary group-hover:gap-1.5 transition-all">
               <span>View Grades</span>
               <span className="inline-block transition-transform duration-200 group-hover:translate-x-0.5">→</span>
             </div>
@@ -224,7 +224,7 @@ export const SuppliersSection: React.FC = () => {
 
   return (
     <section className="w-full bg-white py-12 sm:py-16 md:py-20 border-t border-gray-100 overflow-hidden">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1320px]">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1360px]">
         {/* 1. Dubai Trading Desk Callout Box */}
         <div
           data-aos="card-3d-flip"
@@ -265,13 +265,13 @@ export const SuppliersSection: React.FC = () => {
           {/* Connected Molecular Hexagon Diagram (Exact layout from user's mockup) */}
           <div className="w-full mb-12 sm:mb-16">
             {/* Desktop View: 3 Units connected along a continuous horizontal bond line */}
-            <div className="hidden lg:flex items-center justify-center gap-0 w-full max-w-6xl mx-auto">
+            <div className="hidden lg:flex items-center justify-center gap-0 w-full max-w-full mx-auto">
               {/* Group 1: SABIC, APC, SIPCHEM */}
               <TripletUnit brands={group1Brands} />
 
               {/* Connecting Bond Line 1 */}
               <div className="flex items-center justify-center w-8 xl:w-12 shrink-0">
-                <div className="w-full h-[3px] bg-slate-900"></div>
+                <div className="w-full h-[3.5px] bg-slate-900"></div>
               </div>
 
               {/* Group 2: TASNEE, SK Geo Centric, Formosa Plastics */}
@@ -279,7 +279,7 @@ export const SuppliersSection: React.FC = () => {
 
               {/* Connecting Bond Line 2 */}
               <div className="flex items-center justify-center w-8 xl:w-12 shrink-0">
-                <div className="w-full h-[3px] bg-slate-900"></div>
+                <div className="w-full h-[3.5px] bg-slate-900"></div>
               </div>
 
               {/* Group 3: NATPET, Nghi Son (NSRP), SIDPEC */}
@@ -293,9 +293,9 @@ export const SuppliersSection: React.FC = () => {
 
               {/* Vertical Connector Line 1 */}
               <div className="flex flex-col items-center justify-center my-1">
-                <div className="w-[3px] h-8 bg-slate-900 relative">
-                  <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-primary"></span>
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-primary"></span>
+                <div className="w-[3.5px] h-8 bg-slate-900 relative">
+                  <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-primary"></span>
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-primary"></span>
                 </div>
               </div>
 
@@ -304,9 +304,9 @@ export const SuppliersSection: React.FC = () => {
 
               {/* Vertical Connector Line 2 */}
               <div className="flex flex-col items-center justify-center my-1">
-                <div className="w-[3px] h-8 bg-slate-900 relative">
-                  <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-primary"></span>
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-primary"></span>
+                <div className="w-[3.5px] h-8 bg-slate-900 relative">
+                  <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-primary"></span>
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-primary"></span>
                 </div>
               </div>
 
