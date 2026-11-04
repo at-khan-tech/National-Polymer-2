@@ -22,6 +22,7 @@ export interface BrandInfo {
   categories: string[];
   status: string;
   description: string;
+  logoUrl: string;
 }
 
 export const MAJOR_BRANDS: BrandInfo[] = [
@@ -33,6 +34,7 @@ export const MAJOR_BRANDS: BrandInfo[] = [
     categories: ["PP"],
     status: "15 candidate grades verified",
     description: "Leading Saudi producer of high-performance polypropylene homopolymers, impact copolymers, and BOPP film resins.",
+    logoUrl: "/images/logos/APC.png",
   },
   {
     id: "sabic",
@@ -42,6 +44,7 @@ export const MAJOR_BRANDS: BrandInfo[] = [
     categories: ["PP", "HDPE", "LDPE", "LLDPE"],
     status: "15 candidate grades verified",
     description: "One of the world's largest petrochemical conglomerates offering certified prime polyolefins and engineering thermoplastics.",
+    logoUrl: "/images/logos/SABIC.png",
   },
   {
     id: "sk",
@@ -51,6 +54,7 @@ export const MAJOR_BRANDS: BrandInfo[] = [
     categories: ["PP"],
     status: "9 candidate grades verified",
     description: "South Korean chemical powerhouse specializing in high-impact copolymers, yarn grades, and high-clarity random PP.",
+    logoUrl: "/images/logos/sk-geocentric.png",
   },
   {
     id: "sidpec",
@@ -60,6 +64,7 @@ export const MAJOR_BRANDS: BrandInfo[] = [
     categories: ["HDPE"],
     status: "8 candidate grades verified",
     description: "Egypt's premier polyethylene producer manufacturing certified blow moulding, injection moulding, and rotomoulding HDPE grades.",
+    logoUrl: "/images/logos/sidpec.svg",
   },
   {
     id: "formosa",
@@ -69,6 +74,7 @@ export const MAJOR_BRANDS: BrandInfo[] = [
     categories: ["HDPE", "PP"],
     status: "9 candidate grades verified",
     description: "Global resin manufacturer supplying top-tier blow film, injection moulding HDPE, and thin-wall PP grades.",
+    logoUrl: "/images/logos/FORMOSA.png",
   },
   {
     id: "sipchem",
@@ -78,6 +84,7 @@ export const MAJOR_BRANDS: BrandInfo[] = [
     categories: ["LDPE", "EVA", "PE"],
     status: "Available on request (Manufacturer catalogue verified)",
     description: "Specialized Saudi refiner known for high-grade EVA copolymers, LDPE films, and wire & cable compounding resins.",
+    logoUrl: "/images/logos/sipchem.png",
   },
   {
     id: "tasnee",
@@ -87,6 +94,7 @@ export const MAJOR_BRANDS: BrandInfo[] = [
     categories: ["HDPE", "LDPE", "LLDPE"],
     status: "Available on request (Manufacturer catalogue verified)",
     description: "Major Saudi private sector industrialist supplying certified PE100 pipe grades and flexible packaging polyethylene.",
+    logoUrl: "/images/logos/tasnee.jpg",
   },
   {
     id: "natpet",
@@ -96,6 +104,7 @@ export const MAJOR_BRANDS: BrandInfo[] = [
     categories: ["PP"],
     status: "Available on request (Manufacturer catalogue verified)",
     description: "State-of-the-art Yanbu plant producing Spheripol PP homopolymer and impact grades for technical nonwovens and packaging.",
+    logoUrl: "/images/logos/NATPET.png",
   },
   {
     id: "nsrp",
@@ -105,6 +114,7 @@ export const MAJOR_BRANDS: BrandInfo[] = [
     categories: ["PP"],
     status: "Available on request (Manufacturer catalogue verified)",
     description: "Key Southeast Asian refining hub providing consistent PP homopolymers and film resins.",
+    logoUrl: "/images/logos/nsrp.jpg",
   },
 ];
 

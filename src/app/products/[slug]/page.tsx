@@ -22,8 +22,13 @@ export default async function ProductInnerPage({ params }: PageProps) {
     notFound();
   }
 
-  // Find candidate grades that match this polymer family
-  const categoryKeywords = slug === "pp" ? ["PP"] : slug === "pe" ? ["HDPE", "LDPE", "LLDPE"] : [slug.toUpperCase()];
+  const categoryKeywords =
+    slug === "pp"
+      ? ["PP"]
+      : slug === "pe"
+      ? ["HDPE", "LDPE", "LLDPE"]
+      : [slug.toUpperCase()];
+
   const matchingGrades = CANDIDATE_GRADES.filter((g) =>
     categoryKeywords.some((k) => g.category.toUpperCase().includes(k))
   );
@@ -31,46 +36,81 @@ export default async function ProductInnerPage({ params }: PageProps) {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-white pt-16 md:pt-20 pb-16 sm:pb-20">
-        {/* Hero Banner for Product */}
-        <section className="bg-gradient-to-b from-navy to-[#0c234b] text-white py-12 sm:py-16 md:py-20">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-2 text-[11px] sm:text-xs text-primary-lighter uppercase tracking-wider mb-3">
-              <Link href="/" className="hover:underline">Home</Link>
-              <span>/</span>
-              <Link href="/products" className="hover:underline">Products</Link>
-              <span>/</span>
-              <span className="text-white font-semibold">{product.name}</span>
-            </div>
+      <main className="min-h-screen bg-[#f6f7f9] pt-16 md:pt-20 pb-20">
 
-            <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
+        {/* ─── HERO BANNER ─── */}
+        <section className="relative bg-navy overflow-hidden">
+          {/* grid texture */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 opacity-[0.04]"
+            style={{
+              backgroundImage:
+                "repeating-linear-gradient(0deg,#fff 0,#fff 1px,transparent 1px,transparent 40px),repeating-linear-gradient(90deg,#fff 0,#fff 1px,transparent 1px,transparent 40px)",
+            }}
+          />
+          <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-12 sm:py-16 md:py-20">
+            {/* Breadcrumb */}
+            <nav className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-primary-lighter mb-6">
+              <Link href="/" className="hover:text-white transition-colors">Home</Link>
+              <svg className="w-3 h-3 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+              </svg>
+              <Link href="/products" className="hover:text-white transition-colors">Products</Link>
+              <svg className="w-3 h-3 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+              </svg>
+              <span className="text-white">{product.name}</span>
+            </nav>
+
+            <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+              {/* Left: Text */}
               <div>
-                <span className="inline-block rounded-full bg-primary/20 px-3 py-1 text-[10px] sm:text-xs font-semibold text-primary uppercase tracking-wider mb-2.5">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/20 border border-primary/30 px-3.5 py-1.5 text-[11px] font-bold text-primary uppercase tracking-wider mb-4">
                   {product.category}
                 </span>
-                <h1 className="text-2xl sm:text-4xl md:text-5xl font-light tracking-tight text-white leading-tight">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight text-white leading-[1.1]">
                   {product.name}
                 </h1>
-                <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-white/80 leading-relaxed">
+                <p className="mt-3 sm:mt-4 text-sm sm:text-base text-white/70 leading-relaxed max-w-lg">
                   {product.tagline}
                 </p>
-                <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3">
+
+                {/* Quick stats row */}
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <div className="bg-white/8 border border-white/12 rounded-xl px-4 py-2.5 text-center">
+                    <span className="text-base font-bold text-primary block">{product.subTypes.length}</span>
+                    <span className="text-[10px] text-white/50 font-medium">Processing Grades</span>
+                  </div>
+                  <div className="bg-white/8 border border-white/12 rounded-xl px-4 py-2.5 text-center">
+                    <span className="text-base font-bold text-primary block">{matchingGrades.length}</span>
+                    <span className="text-[10px] text-white/50 font-medium">Manufacturer SKUs</span>
+                  </div>
+                  <div className="bg-white/8 border border-white/12 rounded-xl px-4 py-2.5 text-center">
+                    <span className="text-base font-bold text-primary block">{product.applications.length}+</span>
+                    <span className="text-[10px] text-white/50 font-medium">Applications</span>
+                  </div>
+                </div>
+
+                <div className="mt-7 flex flex-col sm:flex-row gap-3">
                   <Link
                     href={`/enquiry?product=${product.slug}`}
-                    className="rounded-lg bg-primary px-5 py-3 text-xs sm:text-sm font-semibold text-white shadow-md transition-all hover:bg-primary-darker active:scale-95 text-center"
+                    className="rounded-xl bg-primary hover:bg-primary-darker px-6 py-3 text-sm font-bold text-white shadow-lg transition-all active:scale-95 text-center"
                   >
-                    Request Quotation for {product.name.split(" ")[0]}
+                    Request Quotation
                   </Link>
                   <Link
                     href="#grades"
-                    className="rounded-lg border border-white/30 px-5 py-3 text-xs sm:text-sm font-semibold text-white hover:bg-white/10 transition-colors text-center"
+                    className="rounded-xl border border-white/25 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors text-center"
                   >
                     View Available Grades
                   </Link>
                 </div>
               </div>
 
-              <div className="relative aspect-[16/10] sm:aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-slate-900">
+              {/* Right: Product Image */}
+              <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-slate-900"
+                style={{ aspectRatio: "4/3" }}>
                 <Image
                   src={product.imageUrl}
                   alt={product.name}
@@ -78,74 +118,82 @@ export default async function ProductInnerPage({ params }: PageProps) {
                   className="object-cover"
                   priority
                 />
+                {/* Bottom gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-transparent" />
               </div>
             </div>
           </div>
         </section>
 
-        {/* Detailed Content & Specifications */}
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 max-w-6xl">
-          <div className="grid gap-10 lg:grid-cols-[1fr_340px]">
-            {/* Left Main Content */}
-            <div className="space-y-10 sm:space-y-12">
-              {/* Product Description */}
-              <div>
-                <h2 className="text-xl sm:text-2xl font-light text-gray-900 mb-3 sm:mb-4 border-b pb-2">
-                  Material Overview &amp; Polymer Characteristics
-                </h2>
-                <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-5">
+        {/* ─── MAIN CONTENT ─── */}
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl mt-10 sm:mt-14">
+          <div className="grid gap-8 lg:gap-10 lg:grid-cols-[1fr_300px] xl:grid-cols-[1fr_320px]">
+
+            {/* ═══ LEFT MAIN CONTENT ═══ */}
+            <div className="space-y-8 sm:space-y-10 min-w-0">
+
+              {/* Material Overview */}
+              <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="w-1 h-5 rounded-full bg-primary block shrink-0" />
+                  <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                    Material Overview &amp; Polymer Characteristics
+                  </h2>
+                </div>
+                <p className="mt-4 text-sm text-gray-600 leading-relaxed">
                   {product.description}
                 </p>
-                <div className="space-y-2.5 sm:space-y-3">
+                <div className="mt-5 space-y-3">
                   {product.overview.map((pt, idx) => (
-                    <div key={idx} className="flex items-start gap-2.5 sm:gap-3">
-                      <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-primary/10 text-primary mt-0.5">
-                        <Icon name="check" className="w-3.5 h-3.5" />
+                    <div key={idx} className="flex items-start gap-3">
+                      <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-primary/10">
+                        <Icon name="check" className="w-3 h-3 text-primary" />
                       </span>
-                      <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">{pt}</p>
+                      <p className="text-sm text-gray-700 leading-relaxed">{pt}</p>
                     </div>
                   ))}
                 </div>
-              </div>
+              </section>
 
-              {/* ─── Available Processing Grades Table ─── */}
-              <div id="grades" className="scroll-mt-24">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-4 border-b pb-2">
-                  <h2 className="text-xl sm:text-2xl font-light text-gray-900">
-                    Standard Processing Grades &amp; Melt Flow Range
-                  </h2>
-                  <span className="text-[11px] sm:text-xs text-gray-500">
-                    Click &apos;Get Quote&apos; to prefill enquiry
+              {/* Standard Processing Grades Table */}
+              <section id="grades" className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden scroll-mt-24">
+                <div className="px-6 sm:px-8 pt-6 sm:pt-7 pb-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1 h-5 rounded-full bg-primary block shrink-0" />
+                    <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                      Standard Processing Grades
+                    </h2>
+                  </div>
+                  <span className="text-xs text-gray-400 bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 font-medium">
+                    {product.subTypes.length} grades available
                   </span>
                 </div>
-                <div className="overflow-x-auto rounded-xl border border-gray-200">
-                  <table className="w-full text-left text-xs sm:text-sm min-w-[560px]">
-                    <thead className="bg-gray-50 text-gray-700 uppercase tracking-wider text-[11px] font-semibold border-b border-gray-200">
-                      <tr>
-                        <th className="py-3 px-4">Grade Classification</th>
-                        <th className="py-3 px-4">MFI (g/10 min)</th>
-                        <th className="py-3 px-4">Density (g/cm³)</th>
-                        <th className="py-3 px-4">Target Application</th>
-                        <th className="py-3 px-4 text-right">Action</th>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left min-w-[580px]">
+                    <thead className="bg-gray-50 border-b border-gray-200">
+                      <tr className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
+                        <th className="py-3.5 px-5">Grade Classification</th>
+                        <th className="py-3.5 px-4">MFI (g/10 min)</th>
+                        <th className="py-3.5 px-4">Density (g/cm³)</th>
+                        <th className="py-3.5 px-4">Target Application</th>
+                        <th className="py-3.5 px-4 text-right">Action</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-gray-100 text-sm">
                       {product.subTypes.map((sub, i) => (
-                        <tr key={i} className="hover:bg-gray-50/70 transition-colors">
-                          <td className="py-3.5 px-4 font-semibold text-gray-900">{sub.name}</td>
-                          <td className="py-3.5 px-4 font-mono text-gray-600">{sub.mfi}</td>
-                          <td className="py-3.5 px-4 font-mono text-gray-600">{sub.density}</td>
-                          <td className="py-3.5 px-4 text-gray-600">{sub.useCase}</td>
-                          <td className="py-3.5 px-4 text-right">
+                        <tr key={i} className="hover:bg-gray-50/80 transition-colors group">
+                          <td className="py-4 px-5 font-bold text-gray-900">{sub.name}</td>
+                          <td className="py-4 px-4 font-mono text-xs text-gray-600">{sub.mfi}</td>
+                          <td className="py-4 px-4 font-mono text-xs text-gray-600">{sub.density}</td>
+                          <td className="py-4 px-4 text-xs text-gray-600">{sub.useCase}</td>
+                          <td className="py-4 px-4 text-right">
                             <Link
-                              href={`/enquiry?product=${product.slug}&grade=${encodeURIComponent(
-                                sub.name
-                              )}`}
-                              className="inline-flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary-darker transition shadow-2xs"
+                              href={`/enquiry?product=${product.slug}&grade=${encodeURIComponent(sub.name)}`}
+                              className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-1.5 text-xs font-bold text-white hover:bg-primary-darker transition shadow-sm"
                             >
                               <span>Get Quote</span>
                               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7-7 7m7-7H3" />
                               </svg>
                             </Link>
                           </td>
@@ -154,62 +202,70 @@ export default async function ProductInnerPage({ params }: PageProps) {
                     </tbody>
                   </table>
                 </div>
-              </div>
+              </section>
 
-              {/* ─── Manufacturer-Specific Verified Candidate Grades ─── */}
+              {/* Manufacturer Candidate Grades */}
               {matchingGrades.length > 0 && (
-                <div>
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-4 border-b pb-2">
+                <section className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                  <div className="px-6 sm:px-8 pt-6 sm:pt-7 pb-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-primary block">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary mb-1">
                         Verified Allocations
-                      </span>
-                      <h2 className="text-lg sm:text-2xl font-light text-gray-900">
-                        Major Manufacturer Candidate Grades ({matchingGrades.length})
-                      </h2>
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <span className="w-1 h-5 rounded-full bg-primary block shrink-0" />
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                          Manufacturer Candidate Grades
+                        </h2>
+                      </div>
                     </div>
-                    <span className="text-[11px] text-emerald-700 font-semibold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 self-start sm:self-auto">
-                      Available on request
+                    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full self-start sm:self-auto">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      {matchingGrades.length} Available on request
                     </span>
                   </div>
 
-                  <div className="overflow-x-auto rounded-xl border border-gray-200">
-                    <table className="w-full text-left text-xs sm:text-sm min-w-[580px]">
-                      <thead className="bg-gray-50 text-gray-700 uppercase tracking-wider text-[11px] font-semibold border-b border-gray-200">
-                        <tr>
-                          <th className="py-3 px-4">Manufacturer</th>
-                          <th className="py-3 px-4">Grade Code</th>
-                          <th className="py-3 px-4">Subtype</th>
-                          <th className="py-3 px-4">MFI Spec</th>
-                          <th className="py-3 px-4">Application</th>
-                          <th className="py-3 px-4 text-right">Instant RFQ</th>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left min-w-[600px]">
+                      <thead className="bg-gray-50 border-b border-gray-200">
+                        <tr className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
+                          <th className="py-3.5 px-5">Manufacturer</th>
+                          <th className="py-3.5 px-4">Grade Code</th>
+                          <th className="py-3.5 px-4">Subtype</th>
+                          <th className="py-3.5 px-4">MFI Spec</th>
+                          <th className="py-3.5 px-4">Application</th>
+                          <th className="py-3.5 px-4 text-right">RFQ</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-100">
+                      <tbody className="divide-y divide-gray-100 text-sm">
                         {matchingGrades.slice(0, 10).map((g) => (
-                          <tr key={g.id} className="hover:bg-primary-soft/30 transition-colors">
-                            <td className="py-3 px-4">
-                              <span className="font-bold text-gray-900 block">{g.brand}</span>
-                              <span className="text-[10px] text-gray-400">{g.origin}</span>
+                          <tr key={g.id} className="hover:bg-primary/[0.03] transition-colors group">
+                            <td className="py-3.5 px-5">
+                              <span className="font-bold text-gray-900 group-hover:text-primary transition-colors block text-sm">
+                                {g.brand}
+                              </span>
+                              <span className="text-[10px] text-gray-400 font-medium">{g.origin}</span>
                             </td>
-                            <td className="py-3 px-4 font-mono font-bold text-navy">
-                              <span className="bg-slate-100 px-2 py-0.5 rounded">{g.grade}</span>
+                            <td className="py-3.5 px-4">
+                              <span className="font-mono font-bold text-navy text-xs bg-slate-100 px-2.5 py-1 rounded-lg">
+                                {g.grade}
+                              </span>
                             </td>
-                            <td className="py-3 px-4 text-gray-600">{g.subCategory}</td>
-                            <td className="py-3 px-4 font-mono text-gray-600 text-xs">{g.mfi}</td>
-                            <td className="py-3 px-4 text-gray-600">{g.application}</td>
-                            <td className="py-3 px-4 text-right">
+                            <td className="py-3.5 px-4 text-xs text-gray-600">{g.subCategory}</td>
+                            <td className="py-3.5 px-4 font-mono text-xs text-gray-600">{g.mfi}</td>
+                            <td className="py-3.5 px-4">
+                              <span className="text-xs text-gray-600 bg-gray-50 border border-gray-200 px-2 py-0.5 rounded-md">
+                                {g.application}
+                              </span>
+                            </td>
+                            <td className="py-3.5 px-4 text-right">
                               <Link
-                                href={`/enquiry?product=${product.slug}&grade=${encodeURIComponent(
-                                  g.grade
-                                )}&brand=${encodeURIComponent(g.brand)}&origin=${encodeURIComponent(
-                                  g.origin
-                                )}`}
-                                className="inline-flex items-center gap-1 rounded-md bg-navy hover:bg-navy-dark px-3 py-1.5 text-xs font-semibold text-white transition shadow-2xs"
+                                href={`/enquiry?product=${product.slug}&grade=${encodeURIComponent(g.grade)}&brand=${encodeURIComponent(g.brand)}&origin=${encodeURIComponent(g.origin)}`}
+                                className="inline-flex items-center gap-1.5 rounded-lg bg-navy hover:bg-primary px-3.5 py-1.5 text-xs font-bold text-white transition shadow-sm"
                               >
-                                <span>Enquire</span>
+                                Enquire
                                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7-7 7m7-7H3" />
                                 </svg>
                               </Link>
                             </td>
@@ -220,87 +276,127 @@ export default async function ProductInnerPage({ params }: PageProps) {
                   </div>
 
                   {matchingGrades.length > 10 && (
-                    <div className="mt-3 text-right">
+                    <div className="px-6 py-4 border-t border-gray-100 text-right">
                       <Link
                         href={`/products?category=${categoryKeywords[0]}#grades-explorer`}
-                        className="text-xs text-primary font-semibold hover:underline"
+                        className="text-xs font-bold text-primary hover:underline"
                       >
-                        View all {matchingGrades.length} {categoryKeywords[0]} candidate grades &rarr;
+                        View all {matchingGrades.length} {categoryKeywords[0]} grades in catalog →
                       </Link>
                     </div>
                   )}
-                </div>
+                </section>
               )}
 
-              {/* Typical Technical Properties */}
-              <div>
-                <h2 className="text-xl sm:text-2xl font-light text-gray-900 mb-4 border-b pb-2">
-                  Technical Specifications (Standard Laboratory Test Values)
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+              {/* Technical Specifications */}
+              <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8">
+                <div className="flex items-center gap-2 mb-6">
+                  <span className="w-1 h-5 rounded-full bg-primary block shrink-0" />
+                  <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                    Technical Specifications
+                  </h2>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   {product.specs.map((sp, idx) => (
-                    <div key={idx} className="p-3.5 sm:p-4 rounded-xl bg-gray-50 border border-gray-200">
-                      <span className="text-[11px] sm:text-xs text-gray-500 uppercase tracking-wider block font-medium">
+                    <div key={idx} className="flex items-start justify-between gap-4 p-4 rounded-xl bg-gray-50 border border-gray-200">
+                      <span className="text-xs text-gray-500 font-medium leading-relaxed">
                         {sp.property}
                       </span>
-                      <span className="text-sm sm:text-base font-bold text-gray-900 mt-0.5 block">
+                      <span className="text-sm font-bold text-gray-900 text-right shrink-0">
                         {sp.value}
                       </span>
                     </div>
                   ))}
                 </div>
-              </div>
+              </section>
+
             </div>
 
-            {/* Right Sidebar */}
-            <div className="space-y-6">
-              {/* Primary Applications Card */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-gray-50 border border-gray-200">
-                <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-primary mb-3 sm:mb-4">
-                  Key Processing Applications
-                </h3>
-                <ul className="space-y-2 text-xs sm:text-sm text-gray-700">
-                  {product.applications.map((app, idx) => (
-                    <li key={idx} className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                      <span>{app}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            {/* ═══ RIGHT SIDEBAR ═══ */}
+            <div className="space-y-5">
 
-              {/* Standard Packaging Card */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-gray-50 border border-gray-200">
-                <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-gray-800 mb-3 sm:mb-4">
-                  Export Packaging &amp; Logistics
-                </h3>
-                <ul className="space-y-2 text-xs sm:text-sm text-gray-600">
-                  {product.packaging.map((pack, idx) => (
-                    <li key={idx} className="flex items-center gap-2">
-                      <Icon name="check" className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span>{pack}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-4 pt-3.5 border-t border-gray-200 text-xs text-gray-500">
-                  FOB &amp; CIF deliveries directly to 40+ container ports worldwide.
+              {/* Sticky wrapper */}
+              <div className="lg:sticky lg:top-28 space-y-5">
+
+                {/* CTA Quote Box */}
+                <div className="rounded-2xl bg-navy overflow-hidden shadow-xl relative">
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 opacity-[0.04]"
+                    style={{
+                      backgroundImage:
+                        "repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 1px,transparent 24px)",
+                    }}
+                  />
+                  <div className="relative p-6 text-center">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary block mb-2">
+                      Price Indication
+                    </span>
+                    <h3 className="text-lg font-bold text-white">
+                      Ready for a Quote?
+                    </h3>
+                    <p className="mt-2 text-xs text-white/65 leading-relaxed">
+                      Get current CIF rates, shipping schedules, and full COA data sheets for {product.name}.
+                    </p>
+                    <Link
+                      href={`/enquiry?product=${product.slug}`}
+                      className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-darker py-3.5 text-xs font-bold uppercase tracking-wider text-white transition-colors shadow-sm active:scale-95"
+                    >
+                      Request Technical Data &amp; Quote
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7-7 7m7-7H3" />
+                      </svg>
+                    </Link>
+                  </div>
                 </div>
-              </div>
 
-              {/* Immediate Quote Box */}
-              <div className="p-5 sm:p-6 rounded-2xl bg-primary text-white text-center shadow-xl">
-                <h3 className="text-base sm:text-lg font-semibold">Ready for a Price Indication?</h3>
-                <p className="mt-2 text-xs text-white/85">
-                  Get current container CIF rates, shipping schedule, and full COA data sheets for {product.name}.
-                </p>
+                {/* Processing Applications */}
+                <div className="rounded-2xl bg-white border border-gray-200 shadow-sm p-5 sm:p-6">
+                  <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-primary mb-4">
+                    Key Processing Applications
+                  </h3>
+                  <ul className="space-y-2.5">
+                    {product.applications.map((app, idx) => (
+                      <li key={idx} className="flex items-center gap-2.5 text-sm text-gray-700">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                        {app}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Export Packaging */}
+                <div className="rounded-2xl bg-white border border-gray-200 shadow-sm p-5 sm:p-6">
+                  <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-gray-700 mb-4">
+                    Export Packaging &amp; Logistics
+                  </h3>
+                  <ul className="space-y-2.5">
+                    {product.packaging.map((pack, idx) => (
+                      <li key={idx} className="flex items-start gap-2.5 text-sm text-gray-600">
+                        <Icon name="check" className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                        {pack}
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-4 pt-4 border-t border-gray-100 text-xs text-gray-400 leading-relaxed">
+                    FOB &amp; CIF deliveries directly to 40+ container ports worldwide.
+                  </p>
+                </div>
+
+                {/* Back to catalog */}
                 <Link
-                  href={`/enquiry?product=${product.slug}`}
-                  className="mt-4 sm:mt-5 block w-full rounded-lg bg-white py-3 text-xs font-bold uppercase tracking-wider text-primary hover:bg-gray-100 transition-colors shadow-sm active:scale-95"
+                  href="/products"
+                  className="flex items-center justify-center gap-2 w-full rounded-xl border border-gray-200 bg-white hover:border-primary/50 hover:bg-gray-50 px-5 py-3 text-xs font-bold text-gray-600 hover:text-primary transition-all shadow-sm"
                 >
-                  Request Technical Data &amp; Quote
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                  </svg>
+                  Back to Full Catalog
                 </Link>
+
               </div>
             </div>
+
           </div>
         </div>
       </main>
