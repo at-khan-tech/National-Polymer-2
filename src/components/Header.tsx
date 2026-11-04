@@ -1,15 +1,22 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Icon } from "./Icons";
 import { MAIN_NAVIGATION } from "@/data/siteNavigation";
 
 export const Header: React.FC = () => {
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeMobileDropdown, setActiveMobileDropdown] = useState<string | null>(null);
+
+  // Full-width search bar state
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,9 +38,40 @@ export const Header: React.FC = () => {
     };
   }, [mobileMenuOpen]);
 
+  // Focus input when search bar opens & handle Escape key
+  useEffect(() => {
+    if (isSearchOpen) {
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 50);
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isSearchOpen) {
+        setIsSearchOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isSearchOpen]);
+
   const toggleMobileDropdown = (name: string) => {
     setActiveMobileDropdown(activeMobileDropdown === name ? null : name);
   };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}#grades-explorer`);
+    setIsSearchOpen(false);
+    setMobileMenuOpen(false);
+  };
+
+  // Filter navigation items for desktop (exclude Contact Us since it is now the right CTA button)
+  const desktopNavItems = MAIN_NAVIGATION.filter(
+    (item) => !item.isCTA && item.name.toLowerCase() !== "contact us"
+  );
 
   return (
     <>
@@ -47,7 +85,7 @@ export const Header: React.FC = () => {
         >
           <div className="flex flex-row justify-between items-center w-full px-3.5 sm:px-6 lg:px-8 h-full text-xs">
             {/* Left: Brand Logo & Mobile Toggle */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               {/* Mobile Hamburger Button */}
               <button
                 type="button"
@@ -80,77 +118,156 @@ export const Header: React.FC = () => {
               </Link>
             </div>
 
-            {/* Middle: Desktop Navigation Links */}
-            <ul className="hidden xl:flex items-center h-full uppercase text-[13px] font-semibold tracking-wider">
-              {MAIN_NAVIGATION.filter((item) => !item.isCTA).map((item) => {
-                const hasSub = item.subItems && item.subItems.length > 0;
-                return (
-                  <li
-                    key={item.name}
-                    className="relative group h-full flex items-center px-2.5 2xl:px-3 text-gray-900 hover:text-primary transition-colors"
-                  >
-                    <Link
-                      href={item.href}
-                      className="flex items-center gap-1 h-full py-4 border-b-2 border-transparent group-hover:border-primary group-hover:text-primary transition-all"
+            {/* ══════════════════════════════════════════════════════════════ */}
+            {/* MIDDLE: EITHER FULL-WIDTH SEARCH BAR OR DESKTOP NAVIGATION     */}
+            {/* ══════════════════════════════════════════════════════════════ */}
+            {isSearchOpen ? (
+              /* Expanded Full Search Bar replacing entire menu */
+              <div className="flex-1 max-w-3xl mx-3 sm:mx-6 animate-news-fade">
+                <form
+                  onSubmit={handleSearchSubmit}
+                  className="flex items-center gap-2 bg-gray-100 hover:bg-gray-100/90 rounded-xl px-3.5 py-2 sm:py-2.5 border border-primary/40 bg-white ring-2 ring-primary/15 shadow-sm transition-all"
+                >
+                  <Icon name="search" className="w-5 h-5 text-primary shrink-0" />
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search polymer grades (e.g. PP, HDPE, SABIC, Injection, MFI...)"
+                    className="w-full bg-transparent text-xs sm:text-sm text-gray-900 placeholder-gray-500 focus:outline-none"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery("")}
+                      className="text-gray-400 hover:text-gray-600 p-1"
+                      title="Clear text"
                     >
-                      <span>{item.name}</span>
-                      {hasSub && (
-                        <Icon
-                          name="chevron-down"
-                          className="w-3.5 h-3.5 text-gray-500 group-hover:text-primary transition-transform group-hover:rotate-180"
-                        />
-                      )}
-                    </Link>
+                      <Icon name="close" className="w-4 h-4" />
+                    </button>
+                  )}
+                  <button
+                    type="submit"
+                    className="bg-primary hover:bg-primary-darker text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors shrink-0 cursor-pointer shadow-xs"
+                  >
+                    Search
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsSearchOpen(false)}
+                    className="text-gray-400 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-100 transition-colors shrink-0 cursor-pointer"
+                    title="Close search (Esc)"
+                    aria-label="Close search"
+                  >
+                    <Icon name="close" className="w-5 h-5" />
+                  </button>
+                </form>
+              </div>
+            ) : (
+              /* Normal Desktop Navigation Menu */
+              <ul className="hidden xl:flex items-center h-full uppercase text-[13px] font-semibold tracking-wider">
+                {desktopNavItems.map((item, idx) => {
+                  const hasSub = item.subItems && item.subItems.length > 0;
+                  // If menu item is in right half, align mega-menu right so it doesn't overflow
+                  const isRightHalf = idx >= 3;
 
-                    {/* Mega Dropdown Menu */}
-                    {hasSub && (
-                      <div className="hidden group-hover:block absolute left-0 top-full pt-2 z-50 animate-news-fade">
-                        <div className="bg-white text-gray-900 shadow-2xl rounded-lg border-t-4 border-primary p-4 min-w-[280px] max-w-[340px] divide-y divide-gray-100">
-                          {item.subItems!.map((sub) => (
-                            <Link
-                              key={sub.name}
-                              href={sub.href}
-                              className="group/sub flex items-start gap-3 py-2.5 px-3 hover:bg-gray-50 rounded-md transition-colors"
-                            >
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-semibold text-xs text-gray-900 group-hover/sub:text-primary transition-colors">
-                                    {sub.name}
-                                  </span>
-                                  {sub.badge && (
-                                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
-                                      {sub.badge}
+                  return (
+                    <li
+                      key={item.name}
+                      className="relative group h-full flex items-center px-2.5 2xl:px-3 text-gray-900 hover:text-primary transition-colors"
+                    >
+                      <Link
+                        href={item.href}
+                        className="flex items-center gap-1 h-full py-4 border-b-2 border-transparent group-hover:border-primary group-hover:text-primary transition-all"
+                      >
+                        <span>{item.name}</span>
+                        {hasSub && (
+                          <Icon
+                            name="chevron-down"
+                            className="w-3.5 h-3.5 text-gray-500 group-hover:text-primary transition-transform group-hover:rotate-180"
+                          />
+                        )}
+                      </Link>
+
+                      {/* 2-Column Mega Dropdown Menu */}
+                      {hasSub && (
+                        <div
+                          className={`hidden group-hover:block absolute top-full pt-2 z-50 animate-news-fade ${
+                            isRightHalf ? "right-0" : "left-0"
+                          }`}
+                        >
+                          <div className="bg-white text-gray-900 shadow-2xl rounded-2xl border-t-4 border-primary p-4 min-w-[540px] max-w-[620px] grid grid-cols-2 gap-2 text-left normal-case">
+                            {item.subItems!.map((sub) => (
+                              <Link
+                                key={sub.name}
+                                href={sub.href}
+                                className="group/sub flex items-start gap-2.5 p-2.5 hover:bg-primary-soft/40 rounded-xl transition-all border border-transparent hover:border-primary/20"
+                              >
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="font-bold text-xs text-gray-900 group-hover/sub:text-primary transition-colors">
+                                      {sub.name}
                                     </span>
+                                    {sub.badge && (
+                                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
+                                        {sub.badge}
+                                      </span>
+                                    )}
+                                  </div>
+                                  {sub.desc && (
+                                    <p className="text-[11px] text-gray-500 font-normal leading-snug mt-0.5 line-clamp-1">
+                                      {sub.desc}
+                                    </p>
                                   )}
                                 </div>
-                                {sub.desc && (
-                                  <p className="text-[11px] text-gray-500 font-normal leading-normal mt-0.5 line-clamp-1">
-                                    {sub.desc}
-                                  </p>
-                                )}
-                              </div>
-                              <Icon
-                                name="arrow-forward"
-                                className="w-3.5 h-3.5 text-gray-300 group-hover/sub:text-primary transition-transform group-hover/sub:translate-x-1 mt-1 shrink-0"
-                              />
-                            </Link>
-                          ))}
+                                <Icon
+                                  name="arrow-forward"
+                                  className="w-3.5 h-3.5 text-gray-300 group-hover/sub:text-primary transition-transform group-hover/sub:translate-x-0.5 mt-1 shrink-0"
+                                />
+                              </Link>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
+                      )}
+                    </li>
+                  );
+                })}
 
-            {/* Right: Quick Actions (Enquiry Button) */}
+                {/* Search Bar Trigger Button in place of Contact Us */}
+                <li className="h-full flex items-center pl-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsSearchOpen(true)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 hover:bg-primary-soft border border-gray-200 hover:border-primary/40 text-gray-700 hover:text-primary transition-all text-xs font-semibold cursor-pointer shadow-2xs"
+                    title="Search polymer grades and manufacturers"
+                    aria-label="Open search bar"
+                  >
+                    <Icon name="search" className="w-3.5 h-3.5 text-primary" />
+                    <span>Search</span>
+                  </button>
+                </li>
+              </ul>
+            )}
+
+            {/* Right: Search Icon for Mobile & Contact Us CTA Button */}
             <div className="flex items-center gap-2 shrink-0">
-              <Link
-                href="/enquiry"
-                className="inline-flex items-center gap-1.5 sm:gap-2 bg-primary hover:bg-primary-darker text-white font-semibold text-[11px] sm:text-xs uppercase tracking-wider px-3 py-2 sm:px-4 sm:py-2.5 rounded-md transition-all shadow-sm hover:scale-105 active:scale-95"
+              {/* Mobile Search Toggle Icon */}
+              <button
+                type="button"
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                className="xl:hidden flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 text-gray-700 hover:text-primary hover:border-primary transition-colors"
+                aria-label="Toggle search"
               >
-                <span className="hidden sm:inline">Enquiry Form</span>
-                <span className="sm:hidden">Enquiry</span>
+                <Icon name={isSearchOpen ? "close" : "search"} className="w-4 h-4" />
+              </button>
+
+              {/* Contact Us Button (Replaced Enquiry Button) */}
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-1.5 sm:gap-2 bg-primary hover:bg-primary-darker text-white font-semibold text-[11px] sm:text-xs uppercase tracking-wider px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-lg transition-all shadow-sm hover:scale-105 active:scale-95 text-center"
+              >
+                <span>Contact Us</span>
                 <Icon name="arrow-forward" className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               </Link>
             </div>
@@ -193,6 +310,18 @@ export const Header: React.FC = () => {
                 </button>
               </div>
 
+              {/* Mobile Search Input in Drawer */}
+              <form onSubmit={handleSearchSubmit} className="mt-4 relative">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search grades (e.g. PP, HDPE)..."
+                  className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary"
+                />
+                <Icon name="search" className="w-4 h-4 text-gray-400 absolute left-2.5 top-2.5" />
+              </form>
+
               {/* Navigation Items with Accordions */}
               <ul className="mt-4 space-y-1">
                 {MAIN_NAVIGATION.map((item) => {
@@ -203,11 +332,11 @@ export const Header: React.FC = () => {
                     return (
                       <li key={item.name} className="pt-3">
                         <Link
-                          href={item.href}
+                          href="/contact"
                           onClick={() => setMobileMenuOpen(false)}
                           className="flex items-center justify-center gap-2 w-full bg-primary text-white text-center py-3 rounded-lg font-semibold text-sm shadow-sm active:scale-95 transition-transform"
                         >
-                          <span>{item.name}</span>
+                          <span>Contact Us</span>
                           <Icon name="arrow-forward" className="w-4 h-4" />
                         </Link>
                       </li>

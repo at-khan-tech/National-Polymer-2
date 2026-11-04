@@ -23,8 +23,9 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
   const searchParams = useSearchParams();
   const urlBrand = searchParams?.get("brand") || initialBrand || "";
   const urlCategory = searchParams?.get("category") || initialCategory || "";
+  const urlSearch = searchParams?.get("search") || searchParams?.get("q") || "";
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(urlSearch);
   const [selectedBrand, setSelectedBrand] = useState(urlBrand);
   const [selectedCategory, setSelectedCategory] = useState(urlCategory);
   const [selectedApp, setSelectedApp] = useState("all");
@@ -34,7 +35,8 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
   useEffect(() => {
     if (urlBrand) setSelectedBrand(urlBrand);
     if (urlCategory) setSelectedCategory(urlCategory);
-  }, [urlBrand, urlCategory]);
+    if (urlSearch) setSearchQuery(urlSearch);
+  }, [urlBrand, urlCategory, urlSearch]);
 
   // Extract unique applications
   const allApplications = useMemo(() => {
