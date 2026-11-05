@@ -8,8 +8,8 @@ export async function GET() {
     const supabase = getSupabaseAdmin();
 
     const [productsRes, blogsRes, categoriesRes] = await Promise.all([
-      supabase.from("products").select("id", { count: "exact", head: true }),
-      supabase.from("blogs").select("id", { count: "exact", head: true }),
+      supabase.from("products").select("slug", { count: "exact", head: true }),
+      supabase.from("blogs").select("slug", { count: "exact", head: true }),
       supabase.from("admin_categories").select("id", { count: "exact", head: true }),
     ]);
 
@@ -19,19 +19,27 @@ export async function GET() {
       return NextResponse.json(
         {
           supabaseConnected: false,
-          error: productsRes.error?.message || blogsRes.error?.message || categoriesRes.error?.message,
-          message: "Supabase reached but database table query failed.",
+          errorDetails: {
+            products: productsRes.error?.message || "OK",
+            blogs: blogsRes.error?.message || "OK",
+            categories: categoriesRes.error?.message || "OK",
+          },
+          message: "Supabase connection reached, but a table query failed.",
         },
-        { status: 500 }
+        { status: 200 }
       );
     }
 
     return NextResponse.json({
       supabaseConnected: true,
       status: "Online & Ready",
-      productsCount: productsRes.count ?? 0,
-      blogsCount: blogsRes.count ?? 0,
-      categoriesCount: categoriesRes.count ?? 0,
+      database: "Supabase PostgreSQL",
+      counts: {
+        products: productsRes.count ?? 0,
+        blogs: blogsRes.count ?? 0,
+        categories: categoriesRes.count ?? 0,
+      },
+      message: "Congratulations! Your Supabase database is connected and active on Vercel.",
       timestamp: new Date().toISOString(),
     });
   } catch (err: unknown) {
@@ -47,4 +55,3 @@ export async function GET() {
     );
   }
 }
-
