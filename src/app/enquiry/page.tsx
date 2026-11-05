@@ -179,8 +179,8 @@ function EnquiryFormContent() {
   return (
     <main className="min-h-screen bg-gray-50 pb-20">
       {/* ─── HERO BANNER ─── */}
-      <section className="relative bg-navy text-white pt-24 md:pt-32 pb-12 sm:pb-16 mb-8 sm:mb-10 overflow-hidden">
-        {/* Background Image with Dark Readability Overlay */}
+      <section className="relative bg-gray-100 text-gray-900 pt-20 md:pt-28 pb-12 sm:pb-16 mb-8 sm:mb-10 overflow-hidden">
+        {/* Background Image with Light Gray/White 50% Translucent Overlay */}
         <div className="absolute inset-0 z-0">
           <Image
             src="/images/backgrounds/bg2.png"
@@ -190,21 +190,21 @@ function EnquiryFormContent() {
             className="object-cover object-center"
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/90 to-navy/80" />
+          <div className="absolute inset-0 bg-white/50 bg-gradient-to-r from-white/70 via-white/55 to-gray-100/50 backdrop-blur-[1px]" />
         </div>
 
         <div className="relative z-10 container mx-auto px-5 sm:px-6 lg:px-8 max-w-5xl">
-          <div className="flex items-center gap-2 text-xs text-primary-lighter uppercase tracking-wider mb-2">
-            <Link href="/" className="hover:underline">Home</Link>
-            <span>/</span>
-            <Link href="/products" className="hover:underline">Products</Link>
-            <span>/</span>
-            <span className="text-white font-semibold">Resin RFQ &amp; Enquiry Form</span>
+          <div className="flex items-center gap-2 text-xs text-gray-600 uppercase tracking-wider mb-2">
+            <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+            <span className="text-gray-400">/</span>
+            <Link href="/products" className="hover:text-primary transition-colors">Products</Link>
+            <span className="text-gray-400">/</span>
+            <span className="text-gray-900 font-semibold">Resin RFQ &amp; Enquiry Form</span>
           </div>
-          <h1 className="text-3xl md:text-5xl font-light text-white tracking-tight">
-            Request a Polymer Price Quote
+          <h1 className="text-3xl md:text-5xl font-light text-gray-900 tracking-tight">
+            Request a Polymer <span className="text-primary font-semibold">Price Quote</span>
           </h1>
-          <p className="mt-3 text-sm md:text-base text-white/80 max-w-3xl leading-relaxed">
+          <p className="mt-3 text-sm md:text-base text-gray-700 max-w-3xl leading-relaxed">
             Submit your material requirements to receive direct factory container rates, shipping lead times, and Certificate of Analysis (COA) from our Dubai commercial trading desk.
           </p>
         </div>

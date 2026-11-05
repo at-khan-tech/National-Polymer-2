@@ -10,9 +10,9 @@ export default function SolutionsPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gray-50 pt-24 md:pt-32 pb-20">
-        <section className="relative bg-navy text-white py-14 md:py-20 mb-12 overflow-hidden">
-          {/* Background Image with Dark Readability Overlay */}
+      <main className="min-h-screen bg-gray-50 pb-20">
+        <section className="relative bg-gray-100 text-gray-900 pt-20 md:pt-28 pb-14 md:pb-20 mb-12 overflow-hidden">
+          {/* Background Image with Light Gray/White 50% Translucent Overlay */}
           <div className="absolute inset-0 z-0">
             <Image
               src="/images/backgrounds/bg3.png"
@@ -22,19 +22,19 @@ export default function SolutionsPage() {
               className="object-cover object-center"
               sizes="100vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/90 to-navy/80" />
+            <div className="absolute inset-0 bg-white/50 bg-gradient-to-r from-white/70 via-white/55 to-gray-100/50 backdrop-blur-[1px]" />
           </div>
 
           <div className="relative z-10 container mx-auto px-5 sm:px-6 lg:px-8 max-w-6xl">
-            <div className="flex items-center gap-2 text-xs text-primary-lighter uppercase tracking-wider mb-2">
-              <Link href="/" className="hover:underline">Home</Link>
-              <span>/</span>
-              <span className="text-white font-semibold">Solutions</span>
+            <div className="flex items-center gap-2 text-xs text-gray-600 uppercase tracking-wider mb-2">
+              <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+              <span className="text-gray-400">/</span>
+              <span className="text-gray-900 font-semibold">Solutions</span>
             </div>
-            <h1 className="text-3xl md:text-5xl font-light text-white tracking-tight">
-              Value-Added Polymer Trading Solutions
+            <h1 className="text-3xl md:text-5xl font-light text-gray-900 tracking-tight">
+              Value-Added <span className="text-primary font-semibold">Polymer Trading Solutions</span>
             </h1>
-            <p className="mt-4 max-w-2xl text-sm md:text-base text-white/80 leading-relaxed">
+            <p className="mt-4 max-w-2xl text-sm md:text-base text-gray-700 leading-relaxed">
               From contract prime security to technical grade substitution and JIT port shipping, we solve complex manufacturing and supply chain challenges for converters in 40+ countries.
             </p>
           </div>

@@ -24,7 +24,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-white pt-24 md:pt-32 pb-20">
+      <main className="min-h-screen bg-white pt-20 md:pt-24 pb-20">
         <article className="container mx-auto px-5 sm:px-6 lg:px-8 max-w-4xl">
           <div className="flex items-center gap-2 text-xs text-gray-500 uppercase tracking-wider mb-4">
             <Link href="/" className="hover:text-primary">Home</Link>

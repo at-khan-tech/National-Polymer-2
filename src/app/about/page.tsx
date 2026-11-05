@@ -10,10 +10,10 @@ export default function AboutPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-white pt-24 md:pt-32 pb-20">
+      <main className="min-h-screen bg-white pb-20">
         {/* Hero Section */}
-        <section className="relative bg-navy text-white py-16 md:py-24 overflow-hidden">
-          {/* Background Image with Dark Readability Overlay */}
+        <section className="relative bg-gray-100 text-gray-900 pt-20 md:pt-28 pb-16 md:pb-24 overflow-hidden">
+          {/* Background Image with Light Gray/White 50% Translucent Overlay */}
           <div className="absolute inset-0 z-0">
             <Image
               src="/images/backgrounds/bg3.png"
@@ -23,20 +23,20 @@ export default function AboutPage() {
               className="object-cover object-center"
               sizes="100vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/90 to-navy/80" />
+            <div className="absolute inset-0 bg-white/50 bg-gradient-to-r from-white/70 via-white/55 to-gray-100/50 backdrop-blur-[1px]" />
           </div>
 
           <div className="relative z-10 container mx-auto px-5 sm:px-6 lg:px-8 max-w-6xl">
-            <div className="flex items-center gap-2 text-xs text-primary-lighter uppercase tracking-wider mb-3">
-              <Link href="/" className="hover:underline">Home</Link>
-              <span>/</span>
-              <span className="text-white font-semibold">About Us</span>
+            <div className="flex items-center gap-2 text-xs text-gray-600 uppercase tracking-wider mb-3">
+              <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+              <span className="text-gray-400">/</span>
+              <span className="text-gray-900 font-semibold">About Us</span>
             </div>
-            <h1 className="text-3xl md:text-6xl font-light text-white tracking-tight leading-tight">
+            <h1 className="text-3xl md:text-6xl font-light text-gray-900 tracking-tight leading-tight">
               21 Years of Excellence in <br className="hidden sm:inline" />
-              <span className="text-primary font-normal">Global Polymer Distribution</span>
+              <span className="text-primary font-semibold">Global Polymer Distribution</span>
             </h1>
-            <p className="mt-5 max-w-3xl text-sm md:text-lg text-white/80 leading-relaxed text-justify">
+            <p className="mt-5 max-w-3xl text-sm md:text-lg text-gray-700 leading-relaxed text-justify">
               National Polymers LLC FZ is an international polymer trading firm based in Dubai, UAE, connecting premier petrochemical refiners from North America, Europe, Australia, and Asia with manufacturing converters across the globe.
             </p>
           </div>

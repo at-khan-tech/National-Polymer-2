@@ -28,10 +28,10 @@ export default async function SolutionInnerPage({ params }: PageProps) {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-white pt-24 md:pt-32 pb-20">
+      <main className="min-h-screen bg-white pb-20">
         {/* Solution Hero */}
-        <section className="relative bg-navy text-white py-16 md:py-24 overflow-hidden">
-          {/* Background Image with Dark Readability Overlay */}
+        <section className="relative bg-gray-100 text-gray-900 pt-20 md:pt-28 pb-16 md:pb-24 overflow-hidden">
+          {/* Background Image with Light Gray/White 50% Translucent Overlay */}
           <div className="absolute inset-0 z-0">
             <Image
               src="/images/backgrounds/bg3.png"
@@ -41,22 +41,22 @@ export default async function SolutionInnerPage({ params }: PageProps) {
               className="object-cover object-center"
               sizes="100vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/90 to-navy/80" />
+            <div className="absolute inset-0 bg-white/50 bg-gradient-to-r from-white/70 via-white/55 to-gray-100/50 backdrop-blur-[1px]" />
           </div>
 
           <div className="relative z-10 container mx-auto px-5 sm:px-6 lg:px-8 max-w-5xl">
-            <div className="flex items-center gap-2 text-xs text-primary-lighter uppercase tracking-wider mb-3">
-              <Link href="/" className="hover:underline">Home</Link>
-              <span>/</span>
-              <Link href="/solutions" className="hover:underline">Solutions</Link>
-              <span>/</span>
-              <span className="text-white font-semibold">{solution.title}</span>
+            <div className="flex items-center gap-2 text-xs text-gray-600 uppercase tracking-wider mb-3">
+              <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+              <span className="text-gray-400">/</span>
+              <Link href="/solutions" className="hover:text-primary transition-colors">Solutions</Link>
+              <span className="text-gray-400">/</span>
+              <span className="text-gray-900 font-semibold">{solution.title}</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-light text-white tracking-tight">
+            <h1 className="text-3xl sm:text-5xl font-light text-gray-900 tracking-tight">
               {solution.title}
             </h1>
-            <p className="mt-4 text-base sm:text-lg text-white/80 leading-relaxed max-w-3xl">
+            <p className="mt-4 text-base sm:text-lg text-gray-700 leading-relaxed max-w-3xl">
               {solution.tagline}
             </p>
 
@@ -71,7 +71,7 @@ export default async function SolutionInnerPage({ params }: PageProps) {
                 href="https://wa.me/971568512508"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-sm border border-white/30 hover:border-white px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white transition-colors"
+                className="rounded-sm border-2 border-gray-900 hover:bg-gray-900 hover:text-white px-6 py-3 text-xs font-semibold uppercase tracking-wider text-gray-900 transition-colors"
               >
                 Instant WhatsApp Enquiry
               </a>

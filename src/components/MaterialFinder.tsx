@@ -83,10 +83,10 @@ export const MaterialFinder: React.FC = () => {
   return (
     <section
       id="material-finder"
-      className="relative w-full py-12 sm:py-18 md:py-24 text-white overflow-hidden bg-navy transition-colors duration-300"
+      className="relative w-full py-12 sm:py-18 md:py-24 text-gray-900 overflow-hidden bg-gray-100 transition-colors duration-300"
       aria-labelledby="material-finder-title"
     >
-      {/* Background Image with Rich Readability Overlay */}
+      {/* Background Image with Light Gray/White 50% Translucent Overlay */}
       <div className="absolute inset-0 z-0">
         <Image
           src="/images/backgrounds/bg2.png"
@@ -95,24 +95,24 @@ export const MaterialFinder: React.FC = () => {
           className="object-cover object-center"
           sizes="100vw"
         />
-        {/* Dark & Primary Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/90 to-primary/80" />
+        {/* White/Light-Gray 50% Overlay */}
+        <div className="absolute inset-0 bg-white/50 bg-gradient-to-r from-white/70 via-white/55 to-gray-100/50 backdrop-blur-[1px]" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           {/* Left Guide Information */}
           <div className="max-w-xl text-left no-justify">
-            <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.2em] sm:tracking-[0.24em] text-primary-lighter">
+            <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] sm:tracking-[0.24em] text-primary">
               Interactive product guide
             </p>
             <h2
               id="material-finder-title"
-              className="mt-2.5 sm:mt-4 text-2xl sm:text-4xl md:text-5xl font-light text-white leading-tight tracking-tight"
+              className="mt-2.5 sm:mt-4 text-2xl sm:text-4xl md:text-5xl font-light text-gray-900 leading-tight tracking-tight"
             >
-              Find the right material
+              Find the <span className="text-primary font-semibold">Right Material</span>
             </h2>
-            <p className="mt-3 sm:mt-5 text-sm sm:text-base leading-relaxed text-white/85">
+            <p className="mt-3 sm:mt-5 text-sm sm:text-base leading-relaxed text-gray-700">
               Answer three quick questions to get a useful starting point for your
               application. Our technical team can then help confirm the grade and
               specifications.
@@ -123,37 +123,37 @@ export const MaterialFinder: React.FC = () => {
               <span
                 className={`grid h-8 w-8 sm:h-9 sm:w-9 place-items-center rounded-full border text-xs sm:text-sm font-semibold transition-colors ${
                   currentStep >= 1
-                    ? "border-white bg-white text-primary"
-                    : "border-white/30 text-white/50"
+                    ? "border-primary bg-primary text-white shadow-sm"
+                    : "border-gray-400/80 bg-white/90 text-gray-700"
                 }`}
               >
                 1
               </span>
-              <span className="bg-white/25 h-px w-8 sm:w-10" />
+              <span className="bg-gray-300 h-px w-8 sm:w-10" />
 
               <span
                 className={`grid h-8 w-8 sm:h-9 sm:w-9 place-items-center rounded-full border text-xs sm:text-sm font-semibold transition-colors ${
                   currentStep >= 2
-                    ? "border-white bg-white text-primary"
-                    : "border-white/30 text-white/50"
+                    ? "border-primary bg-primary text-white shadow-sm"
+                    : "border-gray-400/80 bg-white/90 text-gray-700"
                 }`}
               >
                 2
               </span>
-              <span className="bg-white/25 h-px w-8 sm:w-10" />
+              <span className="bg-gray-300 h-px w-8 sm:w-10" />
 
               <span
                 className={`grid h-8 w-8 sm:h-9 sm:w-9 place-items-center rounded-full border text-xs sm:text-sm font-semibold transition-colors ${
                   currentStep >= 3
-                    ? "border-white bg-white text-primary"
-                    : "border-white/30 text-white/50"
+                    ? "border-primary bg-primary text-white shadow-sm"
+                    : "border-gray-400/80 bg-white/90 text-gray-700"
                 }`}
               >
                 3
               </span>
             </div>
 
-            <p className="mt-4 sm:mt-6 text-[11px] sm:text-xs leading-normal text-white/70">
+            <p className="mt-4 sm:mt-6 text-[11px] sm:text-xs leading-normal text-gray-600">
               Recommendations are indicative starting points. Suitability depends on grade, processing conditions, and end use.
             </p>
           </div>

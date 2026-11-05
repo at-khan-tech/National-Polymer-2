@@ -25,9 +25,9 @@ export default function ContactPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gray-50 pt-18 sm:pt-22 md:pt-28 pb-16 sm:pb-20">
-        <section className="relative bg-navy text-white py-12 sm:py-16 md:py-20 mb-8 sm:mb-12 overflow-hidden">
-          {/* Background Image with Dark Readability Overlay */}
+      <main className="min-h-screen bg-gray-50 pb-16 sm:pb-20">
+        <section className="relative bg-gray-100 text-gray-900 pt-20 md:pt-28 pb-12 sm:pb-16 md:pb-20 mb-8 sm:mb-12 overflow-hidden">
+          {/* Background Image with Light Gray/White 50% Translucent Overlay */}
           <div className="absolute inset-0 z-0">
             <Image
               src="/images/backgrounds/bg5.png"
@@ -37,19 +37,19 @@ export default function ContactPage() {
               className="object-cover object-center"
               sizes="100vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/90 to-navy/80" />
+            <div className="absolute inset-0 bg-white/50 bg-gradient-to-r from-white/70 via-white/55 to-gray-100/50 backdrop-blur-[1px]" />
           </div>
 
           <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-            <div className="flex items-center gap-2 text-[11px] sm:text-xs text-primary-lighter uppercase tracking-wider mb-2">
-              <Link href="/" className="hover:underline">Home</Link>
-              <span>/</span>
-              <span className="text-white font-semibold">Contact Us</span>
+            <div className="flex items-center gap-2 text-[11px] sm:text-xs text-gray-600 uppercase tracking-wider mb-2">
+              <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+              <span className="text-gray-400">/</span>
+              <span className="text-gray-900 font-semibold">Contact Us</span>
             </div>
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-light text-white tracking-tight leading-tight">
-              Get in Touch with National Polymers
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-light text-gray-900 tracking-tight leading-tight">
+              Get in Touch with <span className="text-primary font-semibold">National Polymers</span>
             </h1>
-            <p className="mt-3 sm:mt-4 max-w-2xl text-xs sm:text-base text-white/80 leading-relaxed">
+            <p className="mt-3 sm:mt-4 max-w-2xl text-xs sm:text-base text-gray-700 leading-relaxed">
               Connect directly with our Dubai commercial trading desk for container allocations, technical data sheets, and port delivery schedules.
             </p>
           </div>

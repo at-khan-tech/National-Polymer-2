@@ -16,11 +16,11 @@ export default async function ProductsPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-[#f6f7f9] pt-20 md:pt-28 pb-20">
+      <main className="min-h-screen bg-[#f6f7f9] pb-20">
 
         {/* ─── HERO BANNER ─── */}
-        <section className="relative bg-navy overflow-hidden">
-          {/* Background Image with Dark Readability Overlay */}
+        <section className="relative bg-gray-100 overflow-hidden pt-20 md:pt-28 pb-14 sm:pb-20 md:pb-24">
+          {/* Background Image with Light Gray/White 50% Translucent Overlay */}
           <div className="absolute inset-0 z-0">
             <Image
               src="/images/backgrounds/b4.png"
@@ -30,30 +30,30 @@ export default async function ProductsPage() {
               className="object-cover object-center"
               sizes="100vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/90 to-navy/80" />
+            <div className="absolute inset-0 bg-white/50 bg-gradient-to-r from-white/70 via-white/55 to-gray-100/50 backdrop-blur-[1px]" />
           </div>
 
-          <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-14 sm:py-20 md:py-24">
+          <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
             {/* Breadcrumb */}
-            <nav className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-primary-lighter mb-5">
-              <Link href="/" className="hover:text-white transition-colors">Home</Link>
-              <svg className="w-3 h-3 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <nav className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-gray-600 mb-5">
+              <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+              <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
               </svg>
-              <span className="text-white">Products &amp; Grades Catalog</span>
+              <span className="text-gray-900 font-bold">Products &amp; Grades Catalog</span>
             </nav>
 
             <div className="max-w-3xl">
               <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-primary mb-3">
                 Polymer Raw Materials
               </p>
-              <h1 className="text-3xl sm:text-5xl md:text-6xl font-light text-white tracking-tight leading-[1.1]">
+              <h1 className="text-3xl sm:text-5xl md:text-6xl font-light text-gray-900 tracking-tight leading-[1.1]">
                 Plastic Raw Materials
                 <span className="block text-primary mt-1 font-semibold">
                   &amp; Grades Catalog
                 </span>
               </h1>
-              <p className="mt-5 text-sm sm:text-base text-white/70 leading-relaxed max-w-2xl">
+              <p className="mt-5 text-sm sm:text-base text-gray-700 leading-relaxed max-w-2xl">
                 Direct containerized distribution of certified Prime, Near-Prime, Off-Grade &amp; Recycled polymer resins — sourced from global petrochemical refiners across Saudi Arabia, South Korea, Egypt, USA &amp; Asia.
               </p>
             </div>
@@ -68,10 +68,10 @@ export default async function ProductsPage() {
               ].map((s) => (
                 <div
                   key={s.label}
-                  className="flex items-center gap-2 bg-white/8 border border-white/12 rounded-xl px-4 py-2.5"
+                  className="flex items-center gap-2 bg-white/85 border border-gray-200 rounded-xl px-4 py-2.5 shadow-2xs"
                 >
                   <span className="text-base sm:text-lg font-bold text-primary">{s.value}</span>
-                  <span className="text-[11px] text-white/60 font-medium">{s.label}</span>
+                  <span className="text-[11px] text-gray-700 font-medium">{s.label}</span>
                 </div>
               ))}
             </div>
