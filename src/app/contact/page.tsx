@@ -46,8 +46,8 @@ export default function ContactPage() {
               <span className="text-gray-400">/</span>
               <span className="text-gray-900 font-semibold">Contact Us</span>
             </div>
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-light text-gray-900 tracking-tight leading-tight">
-              Get in Touch with <span className="text-primary font-semibold">National Polymers</span>
+            <h1 className="font-montserrat text-2xl sm:text-4xl md:text-5xl font-extrabold text-navy tracking-tight leading-tight">
+              Get in Touch with <span className="text-primary font-black">National Polymers</span>
             </h1>
             <p className="mt-3 sm:mt-4 max-w-2xl text-xs sm:text-base text-gray-700 leading-relaxed">
               Connect directly with our Dubai commercial trading desk for container allocations, technical data sheets, and port delivery schedules.

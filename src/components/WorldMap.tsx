@@ -416,7 +416,7 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
 
       {/* Floating Info Tooltip */}
       {activeTooltip && (
-        <div className="pointer-events-none absolute bottom-4 left-6 rounded-lg border border-blue-200/90 bg-white/95 px-4 py-2.5 shadow-md backdrop-blur-sm transition-all duration-200">
+        <div className="pointer-events-none absolute bottom-4 left-6 rounded-lg border border-orange-200/90 bg-white/95 px-4 py-2.5 shadow-md backdrop-blur-sm transition-all duration-200">
           <div className="flex items-center gap-2">
             <span
               className={`h-2.5 w-2.5 rounded-full ${
@@ -430,7 +430,7 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
             <span className="text-xs font-bold text-gray-900">
               {activeTooltip.name}
             </span>
-            <span className="rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-blue-700">
+            <span className="rounded bg-orange-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
               {activeTooltip.type === "hub"
                 ? "Trading Hub"
                 : activeTooltip.type === "sourcing"
@@ -473,7 +473,7 @@ export const GlobalTradingMapSection: React.FC = () => {
     <div
       id="global-network"
       data-aos="fade-up"
-      className="mt-16 w-full rounded-2xl border border-blue-100/80 bg-gradient-to-b from-sky-50/40 via-white to-blue-50/30 p-6 sm:p-8 lg:p-10 shadow-sm"
+      className="mt-16 w-full rounded-2xl border border-orange-100/80 bg-gradient-to-b from-orange-50/20 via-white to-slate-50/30 p-6 sm:p-8 lg:p-10 shadow-sm"
     >
       {/* Section Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-gray-200/70">
@@ -492,7 +492,7 @@ export const GlobalTradingMapSection: React.FC = () => {
         </div>
 
         {/* Legend */}
-        <div className="shrink-0 bg-white/95 border border-blue-100 rounded-xl p-3 sm:p-4 shadow-xs">
+        <div className="shrink-0 bg-white/95 border border-orange-100 rounded-xl p-3 sm:p-4 shadow-xs">
           <MapLegend />
         </div>
       </div>
@@ -504,7 +504,7 @@ export const GlobalTradingMapSection: React.FC = () => {
 
       {/* Quick Route Summary Highlights */}
       <div className="mt-6 pt-6 border-t border-gray-200/70 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-        <div className="rounded-xl bg-white/90 border border-blue-100 p-4 shadow-xs">
+        <div className="rounded-xl bg-white/90 border border-gray-200 p-4 shadow-xs">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-navy" />
             <p className="font-bold text-navy">Sourcing Corridors</p>

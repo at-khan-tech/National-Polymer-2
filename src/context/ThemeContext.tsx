@@ -18,8 +18,8 @@ export const defaultCustomPalette: CustomPalette = {
   primaryDarker: "#b11a00",
   primaryLighter: "#fde8e1",
   primarySoft: "#fff5f1",
-  accent: "#0f3b82",
-  navy: "#0f3b82",
+  accent: "#1c2a53",
+  navy: "#1c2a53",
 };
 
 interface ThemeContextType {
@@ -83,10 +83,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const rawTheme = urlParams.get("theme") || localStorage.getItem("np_theme");
-      if (rawTheme === "gold" || rawTheme === "indigo" || rawTheme === "custom") {
-        setThemeState(rawTheme);
-      } else if (rawTheme === "blue" || rawTheme === "polymer") {
-        setThemeState("indigo");
+      if (rawTheme === "custom") {
+        setThemeState("custom");
+      } else {
+        // Enforce the signature brand orange theme across all pages
+        setThemeState("gold");
+        localStorage.setItem("np_theme", "gold");
       }
 
       const savedPalette = localStorage.getItem("np_custom_palette");
@@ -158,7 +160,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const toggleTheme = () => {
-    setThemeState((prev) => (prev === "gold" ? "indigo" : "gold"));
+    setThemeState("gold");
   };
 
   const updateCustomColor = (key: keyof CustomPalette, value: string) => {

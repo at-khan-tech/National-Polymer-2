@@ -53,7 +53,7 @@ export default async function SolutionInnerPage({ params }: PageProps) {
               <span className="text-gray-900 font-semibold">{solution.title}</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-light text-gray-900 tracking-tight">
+            <h1 className="font-montserrat text-3xl sm:text-5xl font-extrabold text-navy tracking-tight">
               {solution.title}
             </h1>
             <p className="mt-4 text-base sm:text-lg text-gray-700 leading-relaxed max-w-3xl">

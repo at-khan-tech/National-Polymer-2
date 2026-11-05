@@ -34,8 +34,8 @@ export default async function BlogsPage() {
               <span className="text-gray-400">/</span>
               <span className="text-gray-900 font-semibold">Blogs &amp; Industry Insights</span>
             </div>
-            <h1 className="text-3xl md:text-5xl font-light text-gray-900 tracking-tight">
-              Polymer Market Analysis &amp; <span className="text-primary font-semibold">Technical Insights</span>
+            <h1 className="font-montserrat text-3xl md:text-5xl font-extrabold text-navy tracking-tight">
+              Polymer Market Analysis &amp; <span className="text-primary font-black">Technical Insights</span>
             </h1>
             <p className="mt-4 max-w-2xl text-sm md:text-base text-gray-700 leading-relaxed">
               Stay ahead with regular updates on global petrochemical pricing, shipping freight, polymer processing tips, and circular plastic developments.

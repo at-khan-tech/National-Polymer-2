@@ -68,8 +68,8 @@ export default function MarketsPage() {
               <span className="text-gray-400">/</span>
               <span className="text-gray-900 font-semibold">Global Markets</span>
             </div>
-            <h1 className="text-3xl md:text-5xl font-light text-gray-900 tracking-tight">
-              International Polymer <span className="text-primary font-semibold">Trading Corridors</span>
+            <h1 className="font-montserrat text-3xl md:text-5xl font-extrabold text-navy tracking-tight">
+              International Polymer <span className="text-primary font-black">Trading Corridors</span>
             </h1>
             <p className="mt-4 max-w-2xl text-sm md:text-base text-gray-700 leading-relaxed">
               Serving manufacturing converters in over 40 countries across 5 key continents with localized shipping expertise and customs documentation.

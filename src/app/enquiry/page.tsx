@@ -201,8 +201,8 @@ function EnquiryFormContent() {
             <span className="text-gray-400">/</span>
             <span className="text-gray-900 font-semibold">Resin RFQ &amp; Enquiry Form</span>
           </div>
-          <h1 className="text-3xl md:text-5xl font-light text-gray-900 tracking-tight">
-            Request a Polymer <span className="text-primary font-semibold">Price Quote</span>
+          <h1 className="font-montserrat text-3xl md:text-5xl font-extrabold text-navy tracking-tight">
+            Request a Polymer <span className="text-primary font-black">Price Quote</span>
           </h1>
           <p className="mt-3 text-sm md:text-base text-gray-700 max-w-3xl leading-relaxed">
             Submit your material requirements to receive direct factory container rates, shipping lead times, and Certificate of Analysis (COA) from our Dubai commercial trading desk.

@@ -31,8 +31,8 @@ export default function SolutionsPage() {
               <span className="text-gray-400">/</span>
               <span className="text-gray-900 font-semibold">Solutions</span>
             </div>
-            <h1 className="text-3xl md:text-5xl font-light text-gray-900 tracking-tight">
-              Value-Added <span className="text-primary font-semibold">Polymer Trading Solutions</span>
+            <h1 className="font-montserrat text-3xl md:text-5xl font-extrabold text-navy tracking-tight">
+              Value-Added <span className="text-primary font-black">Polymer Trading Solutions</span>
             </h1>
             <p className="mt-4 max-w-2xl text-sm md:text-base text-gray-700 leading-relaxed">
               From contract prime security to technical grade substitution and JIT port shipping, we solve complex manufacturing and supply chain challenges for converters in 40+ countries.

@@ -37,7 +37,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           <span className="inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary mb-3">
             {post.category}
           </span>
-          <h1 className="text-3xl sm:text-5xl font-light text-gray-900 tracking-tight leading-tight mb-4">
+          <h1 className="font-montserrat text-3xl sm:text-5xl font-extrabold text-navy tracking-tight leading-tight mb-4">
             {post.title}
           </h1>
 

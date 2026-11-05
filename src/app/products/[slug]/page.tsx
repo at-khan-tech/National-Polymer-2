@@ -73,7 +73,7 @@ export default async function ProductInnerPage({ params }: PageProps) {
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 border border-primary/20 px-3.5 py-1.5 text-[11px] font-bold text-primary uppercase tracking-wider mb-4">
                   {product.category}
                 </span>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight text-gray-900 leading-[1.1]">
+                <h1 className="font-montserrat text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-navy leading-[1.1]">
                   {product.name}
                 </h1>
                 <p className="mt-3 sm:mt-4 text-sm sm:text-base text-gray-700 leading-relaxed max-w-lg">

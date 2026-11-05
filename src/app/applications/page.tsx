@@ -82,8 +82,8 @@ export default function ApplicationsPage() {
               <span className="text-gray-400">/</span>
               <span className="text-gray-900 font-semibold">Applications</span>
             </div>
-            <h1 className="text-3xl md:text-5xl font-light text-gray-900 tracking-tight">
-              Manufacturing &amp; <span className="text-primary font-semibold">Processing Applications</span>
+            <h1 className="font-montserrat text-3xl md:text-5xl font-extrabold text-navy tracking-tight">
+              Manufacturing &amp; <span className="text-primary font-black">Processing Applications</span>
             </h1>
             <p className="mt-4 max-w-2xl text-sm md:text-base text-gray-700 leading-relaxed">
               Tailored polymer grades optimized for specific conversion machinery, cooling cycles, and finished part performance requirements.

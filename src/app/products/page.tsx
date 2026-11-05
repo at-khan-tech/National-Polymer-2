@@ -47,9 +47,9 @@ export default async function ProductsPage() {
               <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-primary mb-3">
                 Polymer Raw Materials
               </p>
-              <h1 className="text-3xl sm:text-5xl md:text-6xl font-light text-gray-900 tracking-tight leading-[1.1]">
+              <h1 className="font-montserrat text-3xl sm:text-5xl md:text-6xl font-extrabold text-navy tracking-tight leading-[1.1]">
                 Plastic Raw Materials
-                <span className="block text-primary mt-1 font-semibold">
+                <span className="block text-primary mt-1 font-black">
                   &amp; Grades Catalog
                 </span>
               </h1>

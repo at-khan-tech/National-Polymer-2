@@ -32,9 +32,9 @@ export default function AboutPage() {
               <span className="text-gray-400">/</span>
               <span className="text-gray-900 font-semibold">About Us</span>
             </div>
-            <h1 className="text-3xl md:text-6xl font-light text-gray-900 tracking-tight leading-tight">
+            <h1 className="font-montserrat text-3xl md:text-5xl lg:text-6xl font-extrabold text-navy tracking-tight leading-tight">
               21 Years of Excellence in <br className="hidden sm:inline" />
-              <span className="text-primary font-semibold">Global Polymer Distribution</span>
+              <span className="text-primary font-black">Global Polymer Distribution</span>
             </h1>
             <p className="mt-5 max-w-3xl text-sm md:text-lg text-gray-700 leading-relaxed text-justify">
               National Polymers LLC FZ is an international polymer trading firm based in Dubai, UAE, connecting premier petrochemical refiners from North America, Europe, Australia, and Asia with manufacturing converters across the globe.
@@ -263,7 +263,7 @@ export default function AboutPage() {
           <div className="container mx-auto px-5 sm:px-6 lg:px-8 max-w-6xl">
             <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
               <div>
-                <span className="text-xs font-bold uppercase tracking-widest text-emerald-600 block mb-2">
+                <span className="text-xs font-bold uppercase tracking-widest text-primary block mb-2">
                   Circular Commitment
                 </span>
                 <h2 className="text-3xl md:text-4xl font-light text-gray-900 leading-tight">
@@ -275,7 +275,7 @@ export default function AboutPage() {
                 <div className="mt-6 flex flex-wrap gap-4">
                   <Link
                     href="/products/recycled"
-                    className="rounded-sm bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 text-xs font-semibold uppercase tracking-wider"
+                    className="rounded-md bg-primary hover:bg-primary-darker text-white px-6 py-3 text-xs font-semibold uppercase tracking-wider transition-colors shadow-sm"
                   >
                     Explore Recycled Grades
                   </Link>

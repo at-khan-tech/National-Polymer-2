@@ -7,27 +7,30 @@
   --color-primary-darker: #b11a00;
   --color-primary-lighter: #fde8e1;
   --color-primary-soft: #fff5f1;
-  --color-accent: #2f46d8;
-  --color-accent-light: #eef0ff;
-  --color-navy: #2f46d8;
-  --color-navy-dark: #2437b5;
+  --color-accent: #1c2a53;
+  --color-accent-light: #f0f3fa;
+  --color-navy: #1c2a53;
+  --color-navy-dark: #101932;
   --color-hover-card: #e95220;
   --color-scrollbar-thumb: #e95220;
   --color-scrollbar-hover: #b11a00;
 }
 
-.theme-indigo {
-  --color-primary: #384eda;
-  --color-primary-darker: #2638b0;
-  --color-primary-lighter: #eaefff;
-  --color-primary-soft: #f7f9ff;
-  --color-accent: #e95220;
-  --color-accent-light: #fff5f2;
-  --color-navy: #18235c;
-  --color-navy-dark: #0e163d;
-  --color-hover-card: #384eda;
-  --color-scrollbar-thumb: #384eda;
-  --color-scrollbar-hover: #2638b0;
+.theme-gold,
+.theme-indigo,
+.theme-polymer,
+.theme-blue {
+  --color-primary: #e95220;
+  --color-primary-darker: #b11a00;
+  --color-primary-lighter: #fde8e1;
+  --color-primary-soft: #fff5f1;
+  --color-accent: #1c2a53;
+  --color-accent-light: #f0f3fa;
+  --color-navy: #1c2a53;
+  --color-navy-dark: #101932;
+  --color-hover-card: #e95220;
+  --color-scrollbar-thumb: #e95220;
+  --color-scrollbar-hover: #b11a00;
 }
 
 /* Viewport & Body Overflow Safety for Mobile */
