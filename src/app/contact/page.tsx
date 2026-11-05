@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -25,8 +26,21 @@ export default function ContactPage() {
     <>
       <Header />
       <main className="min-h-screen bg-gray-50 pt-18 sm:pt-22 md:pt-28 pb-16 sm:pb-20">
-        <section className="bg-navy text-white py-12 sm:py-16 md:py-20 mb-8 sm:mb-12">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+        <section className="relative bg-navy text-white py-12 sm:py-16 md:py-20 mb-8 sm:mb-12 overflow-hidden">
+          {/* Background Image with Dark Readability Overlay */}
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="/images/backgrounds/bg5.png"
+              alt="Contact National Polymers Background"
+              fill
+              priority
+              className="object-cover object-center"
+              sizes="100vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/90 to-navy/80" />
+          </div>
+
+          <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
             <div className="flex items-center gap-2 text-[11px] sm:text-xs text-primary-lighter uppercase tracking-wider mb-2">
               <Link href="/" className="hover:underline">Home</Link>
               <span>/</span>

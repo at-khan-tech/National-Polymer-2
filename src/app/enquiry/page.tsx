@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, Suspense } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Header } from "@/components/Header";
@@ -176,24 +177,40 @@ function EnquiryFormContent() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 pt-24 md:pt-32 pb-20">
-      <div className="container mx-auto px-5 sm:px-6 lg:px-8 max-w-5xl">
-        {/* Breadcrumb & Title */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 text-xs text-gray-500 uppercase tracking-wider mb-2">
-            <Link href="/" className="hover:text-primary">Home</Link>
+    <main className="min-h-screen bg-gray-50 pb-20">
+      {/* ─── HERO BANNER ─── */}
+      <section className="relative bg-navy text-white pt-24 md:pt-32 pb-12 sm:pb-16 mb-8 sm:mb-10 overflow-hidden">
+        {/* Background Image with Dark Readability Overlay */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/images/backgrounds/bg2.png"
+            alt="Request Quote Background"
+            fill
+            priority
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/90 to-navy/80" />
+        </div>
+
+        <div className="relative z-10 container mx-auto px-5 sm:px-6 lg:px-8 max-w-5xl">
+          <div className="flex items-center gap-2 text-xs text-primary-lighter uppercase tracking-wider mb-2">
+            <Link href="/" className="hover:underline">Home</Link>
             <span>/</span>
-            <Link href="/products" className="hover:text-primary">Products</Link>
+            <Link href="/products" className="hover:underline">Products</Link>
             <span>/</span>
-            <span className="text-primary font-semibold">Resin RFQ &amp; Enquiry Form</span>
+            <span className="text-white font-semibold">Resin RFQ &amp; Enquiry Form</span>
           </div>
-          <h1 className="text-3xl md:text-5xl font-light text-gray-900 tracking-tight">
+          <h1 className="text-3xl md:text-5xl font-light text-white tracking-tight">
             Request a Polymer Price Quote
           </h1>
-          <p className="mt-2 text-sm md:text-base text-gray-600">
+          <p className="mt-3 text-sm md:text-base text-white/80 max-w-3xl leading-relaxed">
             Submit your material requirements to receive direct factory container rates, shipping lead times, and Certificate of Analysis (COA) from our Dubai commercial trading desk.
           </p>
         </div>
+      </section>
+
+      <div className="container mx-auto px-5 sm:px-6 lg:px-8 max-w-5xl">
 
         {/* ─── PRE-FILLED GRADE HIGHLIGHT BANNER ─── */}
         {selectedGrade && (

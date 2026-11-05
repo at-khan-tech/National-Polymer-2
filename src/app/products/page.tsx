@@ -20,16 +20,20 @@ export default async function ProductsPage() {
 
         {/* ─── HERO BANNER ─── */}
         <section className="relative bg-navy overflow-hidden">
-          {/* subtle grid texture */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 opacity-[0.04]"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(0deg,#fff 0,#fff 1px,transparent 1px,transparent 40px),repeating-linear-gradient(90deg,#fff 0,#fff 1px,transparent 1px,transparent 40px)",
-            }}
-          />
-          <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-14 sm:py-20 md:py-24">
+          {/* Background Image with Dark Readability Overlay */}
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="/images/backgrounds/b4.png"
+              alt="Products Catalog Background"
+              fill
+              priority
+              className="object-cover object-center"
+              sizes="100vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/90 to-navy/80" />
+          </div>
+
+          <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-14 sm:py-20 md:py-24">
             {/* Breadcrumb */}
             <nav className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-primary-lighter mb-5">
               <Link href="/" className="hover:text-white transition-colors">Home</Link>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "./Icons";
 
@@ -82,10 +83,23 @@ export const MaterialFinder: React.FC = () => {
   return (
     <section
       id="material-finder"
-      className="w-full bg-primary py-12 sm:py-18 md:py-24 text-white transition-colors duration-300 overflow-hidden"
+      className="relative w-full py-12 sm:py-18 md:py-24 text-white overflow-hidden bg-navy transition-colors duration-300"
       aria-labelledby="material-finder-title"
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Background Image with Rich Readability Overlay */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/backgrounds/bg2.png"
+          alt="Material Finder Industrial Background"
+          fill
+          className="object-cover object-center"
+          sizes="100vw"
+        />
+        {/* Dark & Primary Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/90 to-primary/80" />
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           {/* Left Guide Information */}
           <div className="max-w-xl text-left no-justify">
