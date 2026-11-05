@@ -83,14 +83,68 @@ export const Header: React.FC = () => {
               : "bg-white/95 backdrop-blur-md shadow-[0_4px_14px_rgba(0,0,0,0.06)] text-gray-900"
           }`}
         >
-          <div className="flex flex-row justify-between items-center w-full px-3.5 sm:px-6 lg:px-8 h-full text-xs">
+          {/* ══════════════════════════════════════════════════════════════ */}
+          {/* MOBILE FULL-HEADER SEARCH BAR (Only when search is open on mobile) */}
+          {/* ══════════════════════════════════════════════════════════════ */}
+          {isSearchOpen && (
+            <div className="flex xl:hidden items-center w-full h-full px-3 sm:px-4 animate-news-fade">
+              <form
+                onSubmit={handleSearchSubmit}
+                className="flex items-center gap-2 w-full bg-gray-50 border border-primary/50 ring-2 ring-primary/20 rounded-xl px-3 py-2 shadow-sm"
+              >
+                <Icon name="search" className="w-5 h-5 text-primary shrink-0" />
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search polymer grades (PP, HDPE, SABIC...)"
+                  className="w-full bg-transparent text-sm text-gray-900 placeholder-gray-500 focus:outline-none"
+                  autoFocus
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    className="text-gray-400 hover:text-gray-600 p-1 shrink-0 cursor-pointer"
+                    title="Clear text"
+                  >
+                    <Icon name="close" className="w-4 h-4" />
+                  </button>
+                )}
+                <button
+                  type="submit"
+                  className="bg-primary hover:bg-primary-darker text-white text-xs font-bold px-3 py-1.5 rounded-lg shrink-0 cursor-pointer shadow-xs active:scale-95 transition-colors"
+                >
+                  Search
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsSearchOpen(false)}
+                  className="text-gray-500 hover:text-gray-800 p-1.5 rounded-lg hover:bg-gray-100 shrink-0 cursor-pointer transition-colors"
+                  aria-label="Close search"
+                >
+                  <Icon name="close" className="w-5 h-5" />
+                </button>
+              </form>
+            </div>
+          )}
+
+          {/* ══════════════════════════════════════════════════════════════ */}
+          {/* MAIN HEADER ROW (Hidden on mobile when mobile search is open)  */}
+          {/* ══════════════════════════════════════════════════════════════ */}
+          <div
+            className={`${
+              isSearchOpen ? "hidden xl:flex" : "flex"
+            } flex-row justify-between items-center w-full px-3.5 sm:px-6 lg:px-8 h-full text-xs`}
+          >
             {/* Left: Brand Logo & Mobile Toggle */}
             <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               {/* Mobile Hamburger Button */}
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="xl:hidden justify-center items-center aspect-square w-10 h-10 text-white transition-colors hover:bg-primary-darker bg-primary flex cursor-pointer rounded-md shrink-0"
+                className="xl:hidden justify-center items-center aspect-square w-10 h-10 text-white transition-colors hover:bg-primary-darker bg-primary flex cursor-pointer rounded-md shrink-0 shadow-xs"
                 aria-label="Toggle navigation"
                 aria-expanded={mobileMenuOpen}
               >
@@ -119,11 +173,11 @@ export const Header: React.FC = () => {
             </div>
 
             {/* ══════════════════════════════════════════════════════════════ */}
-            {/* MIDDLE: EITHER FULL-WIDTH SEARCH BAR OR DESKTOP NAVIGATION     */}
+            {/* MIDDLE (DESKTOP ONLY): EXPANDED SEARCH BAR OR DESKTOP NAV MENU */}
             {/* ══════════════════════════════════════════════════════════════ */}
             {isSearchOpen ? (
-              /* Expanded Full Search Bar replacing entire menu */
-              <div className="flex-1 max-w-3xl mx-3 sm:mx-6 animate-news-fade">
+              /* Expanded Full Search Bar on Desktop replacing desktop menu */
+              <div className="hidden xl:block flex-1 max-w-3xl mx-6 animate-news-fade">
                 <form
                   onSubmit={handleSearchSubmit}
                   className="flex items-center gap-2 bg-gray-100 hover:bg-gray-100/90 rounded-xl px-3.5 py-2 sm:py-2.5 border border-primary/40 bg-white ring-2 ring-primary/15 shadow-sm transition-all"
@@ -250,22 +304,22 @@ export const Header: React.FC = () => {
               </ul>
             )}
 
-            {/* Right: Search Icon for Mobile & Contact Us CTA Button */}
+            {/* Right: Search Icon for Mobile & Desktop Contact Us CTA Button */}
             <div className="flex items-center gap-2 shrink-0">
               {/* Mobile Search Toggle Icon */}
               <button
                 type="button"
-                onClick={() => setIsSearchOpen(!isSearchOpen)}
-                className="xl:hidden flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 text-gray-700 hover:text-primary hover:border-primary transition-colors"
-                aria-label="Toggle search"
+                onClick={() => setIsSearchOpen(true)}
+                className="xl:hidden flex items-center justify-center w-10 h-10 rounded-lg border border-gray-200 text-gray-700 hover:text-primary hover:border-primary transition-colors cursor-pointer bg-gray-50 shadow-2xs"
+                aria-label="Open search bar"
               >
-                <Icon name={isSearchOpen ? "close" : "search"} className="w-4 h-4" />
+                <Icon name="search" className="w-5 h-5 text-primary" />
               </button>
 
-              {/* Contact Us Button (Replaced Enquiry Button) */}
+              {/* Desktop Only Contact Us Button (Hidden on Mobile) */}
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-1.5 sm:gap-2 bg-primary hover:bg-primary-darker text-white font-semibold text-[11px] sm:text-xs uppercase tracking-wider px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-lg transition-all shadow-sm hover:scale-105 active:scale-95 text-center"
+                className="hidden xl:inline-flex items-center gap-1.5 sm:gap-2 bg-primary hover:bg-primary-darker text-white font-semibold text-[11px] sm:text-xs uppercase tracking-wider px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-lg transition-all shadow-sm hover:scale-105 active:scale-95 text-center"
               >
                 <span>Contact Us</span>
                 <Icon name="arrow-forward" className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
