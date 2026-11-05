@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 
-import type { BlogPost } from "@/data/blogsData";
-import type { ProductDetail } from "@/data/productsData";
+import { BLOGS_DATA, type BlogPost } from "@/data/blogsData";
+import { PRODUCTS_DATA, type ProductDetail } from "@/data/productsData";
 import type { CategoryType, OrderStatus } from "@/lib/database.types";
 import { getSupabaseAdmin, throwIfDatabaseError } from "@/lib/supabase";
 
@@ -162,12 +162,18 @@ async function ensureCategory(name: string, type: CategoryType) {
 }
 
 export async function getAllProducts(): Promise<ProductDetail[]> {
-  const { data, error } = await getSupabaseAdmin()
-    .from("products")
-    .select("*")
-    .order("name");
-  throwIfDatabaseError(error);
-  return (data ?? []).map(toProduct);
+  try {
+    const { data, error } = await getSupabaseAdmin()
+      .from("products")
+      .select("*")
+      .order("name");
+    throwIfDatabaseError(error);
+    const mapped = (data ?? []).map(toProduct);
+    return mapped.length > 0 ? mapped : PRODUCTS_DATA;
+  } catch (error) {
+    console.error("Failed to load products from Supabase, using local catalog data:", error);
+    return PRODUCTS_DATA;
+  }
 }
 
 export async function getAdminCategories(): Promise<ContentCategory[]> {
@@ -281,22 +287,34 @@ export async function updateAdminOrderStatus(id: string, status: OrderStatus) {
 }
 
 export async function getAllBlogs(): Promise<BlogPost[]> {
-  const { data, error } = await getSupabaseAdmin()
-    .from("blogs")
-    .select("*")
-    .eq("status", "published")
-    .order("created_at", { ascending: false });
-  throwIfDatabaseError(error);
-  return (data ?? []).map(toBlog);
+  try {
+    const { data, error } = await getSupabaseAdmin()
+      .from("blogs")
+      .select("*")
+      .eq("status", "published")
+      .order("created_at", { ascending: false });
+    throwIfDatabaseError(error);
+    const mapped = (data ?? []).map(toBlog);
+    return mapped.length > 0 ? mapped : BLOGS_DATA;
+  } catch (error) {
+    console.error("Failed to load blogs from Supabase, using local articles data:", error);
+    return BLOGS_DATA;
+  }
 }
 
 export async function getAdminBlogs(): Promise<BlogPost[]> {
-  const { data, error } = await getSupabaseAdmin()
-    .from("blogs")
-    .select("*")
-    .order("created_at", { ascending: false });
-  throwIfDatabaseError(error);
-  return (data ?? []).map(toBlog);
+  try {
+    const { data, error } = await getSupabaseAdmin()
+      .from("blogs")
+      .select("*")
+      .order("created_at", { ascending: false });
+    throwIfDatabaseError(error);
+    const mapped = (data ?? []).map(toBlog);
+    return mapped.length > 0 ? mapped : BLOGS_DATA;
+  } catch (error) {
+    console.error("Failed to load admin blogs from Supabase, using local articles data:", error);
+    return BLOGS_DATA;
+  }
 }
 
 export async function addProduct(
