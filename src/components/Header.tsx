@@ -112,11 +112,14 @@ export const Header: React.FC = () => {
                     <Icon name="close" className="w-4 h-4" />
                   </button>
                 )}
+                {/* Submit Icon Button (No text, icon only) */}
                 <button
                   type="submit"
-                  className="bg-primary hover:bg-primary-darker text-white text-xs font-bold px-3 py-1.5 rounded-lg shrink-0 cursor-pointer shadow-xs active:scale-95 transition-colors"
+                  className="bg-primary hover:bg-primary-darker text-white p-2 rounded-lg shrink-0 cursor-pointer shadow-xs active:scale-95 transition-colors flex items-center justify-center"
+                  aria-label="Submit search"
+                  title="Search"
                 >
-                  Search
+                  <Icon name="search" className="w-4 h-4 text-white" />
                 </button>
                 <button
                   type="button"
@@ -138,22 +141,8 @@ export const Header: React.FC = () => {
               isSearchOpen ? "hidden xl:flex" : "flex"
             } flex-row justify-between items-center w-full px-3.5 sm:px-6 lg:px-8 h-full text-xs`}
           >
-            {/* Left: Brand Logo & Mobile Toggle */}
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-              {/* Mobile Hamburger Button */}
-              <button
-                type="button"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="xl:hidden justify-center items-center aspect-square w-10 h-10 text-white transition-colors hover:bg-primary-darker bg-primary flex cursor-pointer rounded-md shrink-0 shadow-xs"
-                aria-label="Toggle navigation"
-                aria-expanded={mobileMenuOpen}
-              >
-                <Icon
-                  name={mobileMenuOpen ? "close" : "menu"}
-                  className="w-5 h-5 text-white"
-                />
-              </button>
-
+            {/* Left: Brand Logo */}
+            <div className="flex items-center shrink-0">
               {/* Brand Logo - National Polymers FZ LLC */}
               <Link
                 href="/"
@@ -304,19 +293,34 @@ export const Header: React.FC = () => {
               </ul>
             )}
 
-            {/* Right: Search Icon for Mobile & Desktop Contact Us CTA Button */}
+            {/* Right: Mobile Search Icon, Mobile Menu Button & Desktop Contact Us */}
             <div className="flex items-center gap-2 shrink-0">
-              {/* Mobile Search Toggle Icon */}
+              {/* 1. Mobile Search Icon Button */}
               <button
                 type="button"
                 onClick={() => setIsSearchOpen(true)}
-                className="xl:hidden flex items-center justify-center w-10 h-10 rounded-lg border border-gray-200 text-gray-700 hover:text-primary hover:border-primary transition-colors cursor-pointer bg-gray-50 shadow-2xs"
+                className="xl:hidden flex items-center justify-center w-10 h-10 rounded-lg border border-gray-200 text-gray-700 hover:text-primary hover:border-primary transition-colors cursor-pointer bg-gray-50 shadow-2xs active:scale-95"
                 aria-label="Open search bar"
+                title="Search grades"
               >
                 <Icon name="search" className="w-5 h-5 text-primary" />
               </button>
 
-              {/* Desktop Only Contact Us Button (Hidden on Mobile) */}
+              {/* 2. Mobile Menu (Hamburger) Button */}
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="xl:hidden justify-center items-center aspect-square w-10 h-10 text-white transition-colors hover:bg-primary-darker bg-primary flex cursor-pointer rounded-lg shrink-0 shadow-xs active:scale-95"
+                aria-label="Toggle navigation"
+                aria-expanded={mobileMenuOpen}
+              >
+                <Icon
+                  name={mobileMenuOpen ? "close" : "menu"}
+                  className="w-5 h-5 text-white"
+                />
+              </button>
+
+              {/* 3. Desktop Only Contact Us Button (Hidden on Mobile) */}
               <Link
                 href="/contact"
                 className="hidden xl:inline-flex items-center gap-1.5 sm:gap-2 bg-primary hover:bg-primary-darker text-white font-semibold text-[11px] sm:text-xs uppercase tracking-wider px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-lg transition-all shadow-sm hover:scale-105 active:scale-95 text-center"
