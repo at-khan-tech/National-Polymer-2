@@ -92,6 +92,8 @@ export const HeroStage: React.FC = () => {
     return () => window.clearInterval(timer);
   }, []);
 
+  const currentSlideData = heroSlides[currentSlide];
+
   return (
     <section
       id="home"
@@ -122,20 +124,20 @@ export const HeroStage: React.FC = () => {
         ))}
       </div>
 
-      {/* Gradient Readability Overlay */}
-      <div className="pointer-events-none absolute inset-0 z-10 flex">
-        <div className="h-full w-full sm:w-[72%] lg:w-[56%] bg-gradient-to-r from-white/95 via-white/85 to-transparent backdrop-blur-[0.5px]" />
-        <div className="hidden lg:block flex-1 h-full bg-gradient-to-l from-black/10 via-transparent to-transparent" />
+      {/* Gradient Readability Overlay - only at the bottom/content area, NOT reaching the top */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 top-auto h-[68%] sm:h-[62%] md:h-[58%] z-10 flex">
+        <div className="h-full w-full sm:w-[78%] lg:w-[62%] bg-gradient-to-tr from-white via-white/85 to-transparent" />
+        <div className="hidden lg:block flex-1 h-full bg-gradient-to-t from-white/40 via-transparent to-transparent" />
       </div>
 
-      {/* Hero Content Container */}
-      <div className="relative z-20 flex h-full w-full flex-col justify-center px-4 sm:px-8 md:px-14 lg:px-20 pt-20 sm:pt-26 md:pt-30 pb-10 sm:pb-12">
+      {/* Hero Content Container - aligned towards bottom */}
+      <div className="relative z-20 flex h-full w-full flex-col justify-end px-4 sm:px-8 md:px-14 lg:px-20 pb-8 sm:pb-10 md:pb-12 pt-20">
         <h1 className="sr-only">
           National Polymers FZ LLC — Global Polymer Supply with Industrial Demand
         </h1>
 
-        {/* Dynamic Slides Overlay Content */}
-        <div className="relative w-full max-w-xl lg:max-w-2xl min-h-[240px] sm:min-h-[280px] flex flex-col justify-center my-auto">
+        {/* Dynamic Slides Overlay Content - positioned slightly above the bottom buttons */}
+        <div className="relative w-full max-w-xl lg:max-w-2xl mb-4 sm:mb-6 min-h-[150px] sm:min-h-[180px]">
           {heroSlides.map((slide, index) => {
             const isActive = currentSlide === index;
             return (
@@ -157,35 +159,35 @@ export const HeroStage: React.FC = () => {
                 </h2>
 
                 {/* Supporting Text */}
-                <p className="mt-2.5 sm:mt-4 text-[13px] sm:text-[15px] md:text-[16px] text-[#5B6470] font-normal leading-relaxed max-w-lg no-justify">
+                <p className="mt-2.5 sm:mt-3 text-[13px] sm:text-[15px] md:text-[16px] text-[#5B6470] font-normal leading-relaxed max-w-lg no-justify">
                   {slide.supportingText}
                 </p>
-
-                {/* Action Buttons: Stack on mobile, inline on sm: */}
-                <div className="mt-6 sm:mt-9 lg:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-4 w-full sm:w-auto">
-                  {/* Primary Button */}
-                  <Link
-                    href={slide.primaryCta.href}
-                    className="inline-flex items-center justify-center rounded-lg bg-primary px-5 py-3 sm:px-6 sm:py-3.5 text-sm sm:text-[15px] font-semibold text-white shadow-md transition-all hover:bg-primary-darker hover:shadow-lg active:scale-95 text-center"
-                  >
-                    {slide.primaryCta.label}
-                  </Link>
-
-                  {/* Secondary Button */}
-                  <Link
-                    href={slide.secondaryCta.href}
-                    className="inline-flex items-center justify-center rounded-lg border-2 border-navy bg-white/95 px-5 py-3 sm:px-6 sm:py-3.5 text-sm sm:text-[15px] font-semibold text-navy shadow-xs transition-all hover:bg-navy hover:text-white hover:shadow-md active:scale-95 text-center"
-                  >
-                    {slide.secondaryCta.label}
-                  </Link>
-                </div>
               </div>
             );
           })}
         </div>
 
+        {/* Action Buttons: Anchored firmly at the bottom of hero section */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-4 w-full sm:w-auto z-20 mb-4 sm:mb-5">
+          {/* Primary Button */}
+          <Link
+            href={currentSlideData.primaryCta.href}
+            className="inline-flex items-center justify-center rounded-lg bg-primary px-5 py-3 sm:px-6 sm:py-3.5 text-sm sm:text-[15px] font-semibold text-white shadow-md transition-all hover:bg-primary-darker hover:shadow-lg active:scale-95 text-center cursor-pointer"
+          >
+            {currentSlideData.primaryCta.label}
+          </Link>
+
+          {/* Secondary Button */}
+          <Link
+            href={currentSlideData.secondaryCta.href}
+            className="inline-flex items-center justify-center rounded-lg border-2 border-navy bg-white/95 px-5 py-3 sm:px-6 sm:py-3.5 text-sm sm:text-[15px] font-semibold text-navy shadow-xs transition-all hover:bg-navy hover:text-white hover:shadow-md active:scale-95 text-center cursor-pointer"
+          >
+            {currentSlideData.secondaryCta.label}
+          </Link>
+        </div>
+
         {/* Indicators (Slide Pagination Dots) */}
-        <div className="mt-5 sm:mt-7 flex items-center">
+        <div className="flex items-center z-20">
           <div className="flex items-center gap-2" aria-label="Choose a hero slide">
             {heroSlides.map((image, index) => (
               <button
@@ -194,7 +196,7 @@ export const HeroStage: React.FC = () => {
                 onClick={() => setCurrentSlide(index)}
                 aria-label={`Show slide ${index + 1} of ${heroSlides.length}`}
                 aria-current={currentSlide === index ? "true" : undefined}
-                className={`h-2 rounded-full transition-all duration-300 ${
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                   currentSlide === index
                     ? "w-8 bg-primary shadow-sm"
                     : "w-3 bg-gray-400/60 hover:bg-gray-600"
