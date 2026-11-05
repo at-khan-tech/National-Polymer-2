@@ -8,7 +8,7 @@ import { Icon } from "./Icons";
 export const Footer: React.FC = () => {
   return (
     <footer id="contact" className="w-full bg-primary text-white transition-colors duration-300">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-14">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-14 pb-24 md:pb-14">
         {/* Main Footer Links & Company Info */}
         <div className="grid gap-8 lg:gap-10 border-b border-white/15 pb-8 lg:grid-cols-[1.25fr_2fr]">
           {/* Company Info Left */}

@@ -115,7 +115,7 @@ export const SmoothScrollProvider: React.FC<{
 
       {/* Floating Back-To-Top Widget — Positioned neatly above the WhatsApp button */}
       <div
-        className={`fixed bottom-[74px] right-3.5 sm:bottom-22 sm:right-6 z-40 transition-all duration-500 ease-out ${
+        className={`fixed bottom-[144px] right-3.5 md:bottom-22 md:right-6 z-40 transition-all duration-500 ease-out ${
           showScrollTop
             ? "opacity-100 translate-y-0 scale-100"
             : "opacity-0 translate-y-6 scale-90 pointer-events-none"

@@ -137,7 +137,7 @@ export const HeroStage: React.FC = () => {
       />
 
       {/* Hero Content Container - aligned towards bottom */}
-      <div className="relative z-20 flex h-full w-full flex-col justify-end px-4 sm:px-8 md:px-14 lg:px-20 pb-4 sm:pb-6 md:pb-8 pt-16 sm:pt-20">
+      <div className="relative z-20 flex h-full w-full flex-col justify-end px-4 sm:px-8 md:px-14 lg:px-20 pb-20 md:pb-8 pt-16 sm:pt-20">
         <h1 className="sr-only">
           National Polymers FZ LLC — Global Polymer Supply with Industrial Demand
         </h1>
@@ -196,8 +196,8 @@ export const HeroStage: React.FC = () => {
           </div>
         </div>
 
-        {/* Action Buttons: Positioned as Bottom Navbar (side-by-side) */}
-        <div className="flex flex-row items-center gap-2.5 sm:gap-3.5 w-full max-w-md sm:max-w-lg z-20">
+        {/* Action Buttons: Positioned as Fixed Bottom Navbar on Mobile, In-Hero on Desktop */}
+        <div className="fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur-md px-3.5 py-2.5 sm:px-6 sm:py-3 border-t border-slate-200/80 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] flex flex-row items-center justify-center gap-2.5 sm:gap-3.5 w-full md:relative md:bottom-auto md:inset-x-auto md:z-20 md:bg-transparent md:backdrop-blur-none md:p-0 md:border-0 md:shadow-none md:max-w-md lg:max-w-lg">
           {/* Secondary Button: Request a Quote (Left) */}
           <Link
             href={currentSlideData.secondaryCta.href}

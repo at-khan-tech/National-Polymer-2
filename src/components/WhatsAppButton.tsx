@@ -12,7 +12,7 @@ export const WhatsAppButton: React.FC = () => {
   const waUrl = `https://wa.me/${phoneNumber}?text=${defaultMessage}`;
 
   return (
-    <aside aria-label="WhatsApp quick contact" className="fixed bottom-3.5 right-3.5 sm:bottom-6 sm:right-6 z-50 flex items-center gap-2.5">
+    <aside aria-label="WhatsApp quick contact" className="fixed bottom-[84px] right-3.5 md:bottom-6 md:right-6 z-50 flex items-center gap-2.5">
       {/* Tooltip Popup on Hover */}
       {showTooltip && (
         <div
