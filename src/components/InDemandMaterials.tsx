@@ -123,8 +123,8 @@ export const InDemandMaterials: React.FC = () => {
               idx % 3 === 0
                 ? "card-3d-left"
                 : idx % 3 === 1
-                ? "card-3d-depth"
-                : "card-3d-right";
+                  ? "card-3d-depth"
+                  : "card-3d-right";
             return (
               <article
                 key={item.name}

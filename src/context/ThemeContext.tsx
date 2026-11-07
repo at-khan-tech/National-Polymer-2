@@ -36,12 +36,12 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType>({
   theme: "gold",
   customPalette: defaultCustomPalette,
-  setTheme: () => {},
-  toggleTheme: () => {},
-  updateCustomColor: () => {},
-  setFullPalette: () => {},
-  autoGeneratePaletteFromPrimary: () => {},
-  resetCustomPalette: () => {},
+  setTheme: () => { },
+  toggleTheme: () => { },
+  updateCustomColor: () => { },
+  setFullPalette: () => { },
+  autoGeneratePaletteFromPrimary: () => { },
+  resetCustomPalette: () => { },
 });
 
 // Utility to calculate darker shade
@@ -138,7 +138,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       try {
         localStorage.setItem("np_theme", "custom");
         localStorage.setItem("np_custom_palette", JSON.stringify(customPalette));
-      } catch {}
+      } catch { }
     } else {
       // Clear any custom inline style overrides so preset CSS classes work cleanly
       cssVars.forEach((v) => root.style.removeProperty(v));
@@ -151,7 +151,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       try {
         localStorage.setItem("np_theme", theme);
-      } catch {}
+      } catch { }
     }
   }, [theme, customPalette, mounted]);
 
@@ -168,7 +168,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const updated = { ...prev, [key]: value };
       try {
         localStorage.setItem("np_custom_palette", JSON.stringify(updated));
-      } catch {}
+      } catch { }
       return updated;
     });
     setThemeState("custom");
@@ -179,7 +179,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const updated = { ...prev, ...palette };
       try {
         localStorage.setItem("np_custom_palette", JSON.stringify(updated));
-      } catch {}
+      } catch { }
       return updated;
     });
     setThemeState("custom");
@@ -204,7 +204,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setThemeState("custom");
     try {
       localStorage.setItem("np_custom_palette", JSON.stringify(updated));
-    } catch {}
+    } catch { }
   };
 
   const resetCustomPalette = () => {
@@ -213,7 +213,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     try {
       localStorage.removeItem("np_custom_palette");
       localStorage.setItem("np_theme", "gold");
-    } catch {}
+    } catch { }
   };
 
   return (

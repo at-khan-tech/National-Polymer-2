@@ -1,7 +1,125 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { regions } from "@/data/content";
+
+interface MobileRouteItem {
+  id: string;
+  name: string;
+  region: string;
+  type: "sourcing" | "market";
+  ports: string[];
+  description: string;
+  advantage: string;
+  materials: string;
+}
+
+const MOBILE_ROUTES: MobileRouteItem[] = [
+  // Sourcing Origins (Origins -> Dubai)
+  {
+    id: "src-usa",
+    name: "USA Gulf Coast & Refineries",
+    region: "North America",
+    type: "sourcing",
+    ports: ["Houston", "Beaumont", "Corpus Christi"],
+    description: "Direct off-take from world-scale ethylene crackers and refiners in Texas & Louisiana.",
+    advantage: "Tier-1 refinery allocations & rail-to-vessel loading",
+    materials: "HDPE, LDPE, LLDPE, Metallocene",
+  },
+  {
+    id: "src-canada",
+    name: "Alberta Polyolefin Corridors",
+    region: "Canada",
+    type: "sourcing",
+    ports: ["Vancouver", "Prince Rupert"],
+    description: "High-purity prime polyethylene resins sourced directly from Western Canadian producers.",
+    advantage: "Direct producer contracts & bulk container packaging",
+    materials: "Prime Film & Blow Moulding Resins",
+  },
+  {
+    id: "src-europe",
+    name: "Western Europe Refineries",
+    region: "Europe",
+    type: "sourcing",
+    ports: ["Antwerp", "Rotterdam", "Hamburg"],
+    description: "European petrochemical refiners providing specialty prime grades and certified circular polymers.",
+    advantage: "EU REACH compliance & low-carbon footprints",
+    materials: "Specialty Polyolefins, Circular Resins",
+  },
+  {
+    id: "src-fareast",
+    name: "East Asian Producer Network",
+    region: "Far East",
+    type: "sourcing",
+    ports: ["Ulsan", "Kaohsiung", "Ningbo", "Yokohama"],
+    description: "Leading petrochemical producers across South Korea, Taiwan, and Japan.",
+    advantage: "High MFI injection molding & Raffia grades",
+    materials: "PP Homopolymer, Copolymer, Suspension PVC",
+  },
+  {
+    id: "src-australia",
+    name: "Oceania & Australian Desks",
+    region: "Australia",
+    type: "sourcing",
+    ports: ["Melbourne", "Sydney", "Brisbane"],
+    description: "Direct supplier access for prime resins, industrial regrinds, and compounded materials.",
+    advantage: "Trans-Pacific shipping lanes with certified COA",
+    materials: "Prime, Near-Prime & Circular Polymers",
+  },
+
+  // Destination Markets (Dubai -> Customer Discharge Ports)
+  {
+    id: "mkt-india",
+    name: "Indian Subcontinent Corridors",
+    region: "South Asia",
+    type: "market",
+    ports: ["Nhava Sheva", "Mundra", "Karachi", "Chittagong", "Colombo"],
+    description: "Our highest volume export corridor supplying hundreds of converting plants.",
+    advantage: "Extended 14-21 day free container detention for smooth ICD rail transit",
+    materials: "High-Volume PP, HDPE Film & Blow, LLDPE",
+  },
+  {
+    id: "mkt-africa",
+    name: "African Continent Ports",
+    region: "Africa",
+    type: "market",
+    ports: ["Durban", "Mombasa", "Lagos (Apapa)", "Alexandria", "Tema"],
+    description: "Trusted supplier for industrial packaging and pipe manufacturers across Africa.",
+    advantage: "Competitive CIF ocean charters & flexible LC payment terms",
+    materials: "Film Extrusion Resins, Raffia, Pipe Grades",
+  },
+  {
+    id: "mkt-gcc",
+    name: "Middle East & GCC Distribution",
+    region: "Middle East",
+    type: "market",
+    ports: ["Jebel Ali", "Dammam", "Jubail", "Sohar", "Hamad Port"],
+    description: "Regional distribution hub offering rapid trucking and bonded warehouse inventory in JAFZA.",
+    advantage: "Next-day road transport & local currency billing options",
+    materials: "Full Polymer Catalog & Buffer Inventories",
+  },
+  {
+    id: "mkt-latam",
+    name: "Latin American Ports",
+    region: "Latin America",
+    type: "market",
+    ports: ["Santos", "Paranagua", "Buenaventura", "Callao", "Manzanillo"],
+    description: "Multi-modal container deliveries serving packaging and agricultural processors.",
+    advantage: "Trans-Pacific and Atlantic sailings with pre-shipment inspections",
+    materials: "Prime & Off-Grade Resins, Compounding Materials",
+  },
+  {
+    id: "mkt-med",
+    name: "Southern Europe & Mediterranean",
+    region: "Europe / Med",
+    type: "market",
+    ports: ["Mersin", "Istanbul", "Antwerp", "Genoa", "Valencia"],
+    description: "High-spec prime polyolefins and compliant recycled rPE/rPP for European converters.",
+    advantage: "Full FDA & EU plastic taxation compliance documentation",
+    materials: "Certified Prime Resins & Circular Granules",
+  },
+];
 
 const W = 1000,
   H = 500;
@@ -469,70 +587,336 @@ export function MapLegend() {
 }
 
 export const GlobalTradingMapSection: React.FC = () => {
+  const [mobileTab, setMobileTab] = useState<"all" | "sourcing" | "market">("all");
+  const [showMobileMap, setShowMobileMap] = useState(false);
+
+  const filteredMobileRoutes =
+    mobileTab === "all"
+      ? MOBILE_ROUTES
+      : MOBILE_ROUTES.filter((r) => r.type === mobileTab);
+
   return (
     <div
       id="global-network"
       data-aos="fade-up"
-      className="mt-16 w-full rounded-2xl border border-orange-100/80 bg-gradient-to-b from-orange-50/20 via-white to-slate-50/30 p-6 sm:p-8 lg:p-10 shadow-sm"
+      className="mt-16 w-full rounded-2xl border border-orange-100/80 bg-gradient-to-b from-orange-50/20 via-white to-slate-50/30 p-4 sm:p-8 lg:p-10 shadow-sm"
     >
-      {/* Section Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-gray-200/70">
-        <div className="space-y-2">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-darker block">
-            Global Supply &amp; Distribution
-          </span>
-          <h3 className="text-2xl sm:text-3xl font-light text-gray-900 tracking-tight">
-            Strategic International Trade Routes
+      {/* ═══════════════════════════════════════════════════════════ */}
+      {/* ─── DESKTOP VIEW (hidden md:block) - EXACTLY AS BEFORE ─── */}
+      {/* ═══════════════════════════════════════════════════════════ */}
+      <div className="hidden md:block">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-gray-200/70">
+          <div className="space-y-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-darker block">
+              Global Supply &amp; Distribution
+            </span>
+            <h3 className="text-2xl sm:text-3xl font-light text-gray-900 tracking-tight">
+              Strategic International Trade Routes
+            </h3>
+            <p className="text-xs sm:text-sm text-gray-600 max-w-2xl leading-relaxed">
+              Coordinating reliable polymer distribution from North America,
+              Europe, and East Asia directly to converters in over 40 countries
+              through our Dubai commercial trading desk.
+            </p>
+          </div>
+
+          {/* Legend */}
+          <div className="shrink-0 bg-white/95 border border-orange-100 rounded-xl p-3 sm:p-4 shadow-xs">
+            <MapLegend />
+          </div>
+        </div>
+
+        {/* World Map Container */}
+        <div className="mt-6 w-full">
+          <WorldMap />
+        </div>
+
+        {/* Quick Route Summary Highlights */}
+        <div className="mt-6 pt-6 border-t border-gray-200/70 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+          <div className="rounded-xl bg-white/90 border border-gray-200 p-4 shadow-xs">
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-navy" />
+              <p className="font-bold text-navy">Sourcing Corridors</p>
+            </div>
+            <p className="mt-1.5 text-slate-600 leading-relaxed">
+              USA Gulf Coast, Alberta (Canada), Western Europe, and East Asian
+              refineries.
+            </p>
+          </div>
+          <div className="rounded-xl bg-white/90 border border-orange-100 p-4 shadow-xs">
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-primary" />
+              <p className="font-bold text-primary">Destination Markets</p>
+            </div>
+            <p className="mt-1.5 text-slate-600 leading-relaxed">
+              Indian Subcontinent, East &amp; West Africa, Middle East GCC, and
+              Latin America.
+            </p>
+          </div>
+          <div className="rounded-xl bg-white/90 border border-slate-200 p-4 shadow-xs">
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full border border-gray-950 bg-primary" />
+              <p className="font-bold text-gray-900">Trading Hub Advantage</p>
+            </div>
+            <p className="mt-1.5 text-slate-600 leading-relaxed">
+              Jebel Ali maritime nexus enabling flexible CIF delivery &amp; trade
+              arbitrage.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      {/* ─── MOBILE VIEW (block md:hidden) - SPECIALLY CRAFTED & CLEAR ─── */}
+      {/* ══════════════════════════════════════════════════════════════════════ */}
+      <div className="block md:hidden">
+        {/* Mobile Section Header */}
+        <div className="space-y-1.5 mb-4">
+          <div className="flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
+              Global Supply &amp; Logistics
+            </span>
+          </div>
+          <h3 className="text-xl font-extrabold text-navy font-montserrat tracking-tight leading-snug">
+            International Trade Routes
           </h3>
-          <p className="text-xs sm:text-sm text-gray-600 max-w-2xl leading-relaxed">
-            Coordinating reliable polymer distribution from North America,
-            Europe, and East Asia directly to converters in over 40 countries
-            through our Dubai commercial trading desk.
+          <p className="text-xs text-gray-600 leading-relaxed">
+            Direct containerized distribution connecting Tier-1 petrochemical refineries to converters in 40+ countries.
           </p>
         </div>
 
-        {/* Legend */}
-        <div className="shrink-0 bg-white/95 border border-orange-100 rounded-xl p-3 sm:p-4 shadow-xs">
-          <MapLegend />
-        </div>
-      </div>
+        {/* Central Dubai Trading Hub Card (Mobile Nexus) */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-navy via-[#16234b] to-navy p-4 text-white shadow-md border border-navy/30 mb-4">
+          {/* Subtle Watermark Map Dot Aura */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-primary/20 blur-2xl"
+          />
 
-      {/* World Map Container */}
-      <div className="mt-6 w-full">
-        <WorldMap />
-      </div>
+          <div className="relative z-10">
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/25 border border-primary/40 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary-lighter">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+                </span>
+                Global Epicenter
+              </span>
+              <span className="text-[10px] text-white/60 font-mono">25.20° N, 55.27° E</span>
+            </div>
 
-      {/* Quick Route Summary Highlights */}
-      <div className="mt-6 pt-6 border-t border-gray-200/70 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-        <div className="rounded-xl bg-white/90 border border-gray-200 p-4 shadow-xs">
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-navy" />
-            <p className="font-bold text-navy">Sourcing Corridors</p>
+            <h4 className="text-base font-bold text-white flex items-center gap-1.5">
+              <span>Dubai Commercial HQ</span>
+              <span className="text-primary font-normal text-xs">(Jebel Ali)</span>
+            </h4>
+            <p className="mt-1 text-[11px] text-white/80 leading-snug">
+              Crossroads for Middle East trade arbitrage, bonded buffer stock, and multi-modal container charters.
+            </p>
+
+            {/* Micro Stats Row */}
+            <div className="mt-3 pt-3 border-t border-white/10 grid grid-cols-3 gap-2 text-center">
+              <div className="bg-white/5 rounded-lg py-1.5 px-1 border border-white/5">
+                <span className="block text-xs font-bold text-primary">40+</span>
+                <span className="text-[9px] text-white/70 uppercase tracking-wide">Countries</span>
+              </div>
+              <div className="bg-white/5 rounded-lg py-1.5 px-1 border border-white/5">
+                <span className="block text-xs font-bold text-primary">10k+ MT</span>
+                <span className="text-[9px] text-white/70 uppercase tracking-wide">Monthly</span>
+              </div>
+              <div className="bg-white/5 rounded-lg py-1.5 px-1 border border-white/5">
+                <span className="block text-xs font-bold text-primary">14-21 Days</span>
+                <span className="text-[9px] text-white/70 uppercase tracking-wide">Free Demurrage</span>
+              </div>
+            </div>
           </div>
-          <p className="mt-1.5 text-slate-600 leading-relaxed">
-            USA Gulf Coast, Alberta (Canada), Western Europe, and East Asian
-            refineries.
-          </p>
         </div>
-        <div className="rounded-xl bg-white/90 border border-orange-100 p-4 shadow-xs">
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-primary" />
-            <p className="font-bold text-primary">Destination Markets</p>
+
+        {/* 3-Step Supply-to-Destination Flow Diagram on Mobile */}
+        <div className="bg-white rounded-xl border border-gray-200/90 p-3 shadow-2xs mb-4">
+          <div className="flex items-center justify-between text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">
+            <span>End-to-End Container Flow</span>
+            <span className="text-primary font-semibold">Direct CIF</span>
           </div>
-          <p className="mt-1.5 text-slate-600 leading-relaxed">
-            Indian Subcontinent, East &amp; West Africa, Middle East GCC, and
-            Latin America.
-          </p>
+
+          <div className="grid grid-cols-3 gap-1.5 items-center text-center">
+            {/* Step 1: Origins */}
+            <div className="bg-slate-50 border border-navy/20 rounded-lg p-2 flex flex-col items-center">
+              <span className="h-2 w-2 rounded-full bg-navy mb-1" />
+              <span className="text-[10px] font-bold text-navy leading-tight">5 Sourcing Regions</span>
+              <span className="text-[9px] text-gray-500 mt-0.5">USA, EU, Asia</span>
+            </div>
+
+            {/* Step 2: Dubai Hub */}
+            <div className="bg-orange-50/80 border border-primary/30 rounded-lg p-2 flex flex-col items-center relative">
+              <span className="h-2 w-2 rounded-full bg-primary mb-1" />
+              <span className="text-[10px] font-bold text-primary leading-tight">Dubai Trading Desk</span>
+              <span className="text-[9px] text-primary/80 mt-0.5">Quality &amp; COA</span>
+            </div>
+
+            {/* Step 3: Destination */}
+            <div className="bg-slate-50 border border-gray-200 rounded-lg p-2 flex flex-col items-center">
+              <span className="h-2 w-2 rounded-full bg-primary mb-1" />
+              <span className="text-[10px] font-bold text-gray-900 leading-tight">40+ Ports</span>
+              <span className="text-[9px] text-gray-500 mt-0.5">India, Africa, GCC</span>
+            </div>
+          </div>
         </div>
-        <div className="rounded-xl bg-white/90 border border-slate-200 p-4 shadow-xs">
-          <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full border border-gray-950 bg-primary" />
-            <p className="font-bold text-gray-900">Trading Hub Advantage</p>
-          </div>
-          <p className="mt-1.5 text-slate-600 leading-relaxed">
-            Jebel Ali maritime nexus enabling flexible CIF delivery &amp; trade
-            arbitrage.
-          </p>
+
+        {/* Interactive Segment Switcher Pills */}
+        <div className="flex items-center gap-1.5 bg-gray-100/90 p-1 rounded-xl mb-3 border border-gray-200">
+          <button
+            type="button"
+            onClick={() => setMobileTab("all")}
+            className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all text-center ${
+              mobileTab === "all"
+                ? "bg-white text-navy shadow-xs border border-gray-200/80"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            All Corridors (10)
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileTab("sourcing")}
+            className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all text-center flex items-center justify-center gap-1 ${
+              mobileTab === "sourcing"
+                ? "bg-navy text-white shadow-xs"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-white" />
+            Sourcing (5)
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileTab("market")}
+            className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all text-center flex items-center justify-center gap-1 ${
+              mobileTab === "market"
+                ? "bg-primary text-white shadow-xs"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-white" />
+            Markets (5)
+          </button>
+        </div>
+
+        {/* Mobile Route Cards List */}
+        <div className="space-y-2.5">
+          {filteredMobileRoutes.map((route, idx) => {
+            const isSourcing = route.type === "sourcing";
+            return (
+              <div
+                key={route.id}
+                className="rounded-xl border border-gray-200 bg-white p-3.5 shadow-2xs hover:border-primary/50 transition-all text-left"
+              >
+                {/* Top Badge & Type */}
+                <div className="flex items-center justify-between gap-2 mb-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <span
+                      className={`h-2 w-2 rounded-full shrink-0 ${
+                        isSourcing ? "bg-navy" : "bg-primary"
+                      }`}
+                    />
+                    <span className="text-[10px] font-mono font-bold text-gray-500 uppercase">
+                      {isSourcing ? `Origin 0${idx + 1}` : `Market 0${idx + 1}`}
+                    </span>
+                  </div>
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
+                      isSourcing
+                        ? "bg-slate-100 text-navy border border-navy/20"
+                        : "bg-orange-50 text-primary border border-primary/20"
+                    }`}
+                  >
+                    {isSourcing ? "Sourcing Corridor" : "Export Market"}
+                  </span>
+                </div>
+
+                {/* Corridor Name */}
+                <h4 className="text-sm font-bold text-gray-900 leading-snug">
+                  {route.name}
+                </h4>
+
+                {/* Description */}
+                <p className="mt-1 text-[11px] text-gray-600 leading-relaxed">
+                  {route.description}
+                </p>
+
+                {/* Ports Pills */}
+                <div className="mt-2.5 pt-2 border-t border-gray-100">
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-gray-400 block mb-1">
+                    {isSourcing ? "Loading Terminals / Ports:" : "Discharge Container Ports:"}
+                  </span>
+                  <div className="flex flex-wrap gap-1">
+                    {route.ports.map((p, i) => (
+                      <span
+                        key={i}
+                        className="rounded-md bg-gray-50 border border-gray-200 px-1.5 py-0.5 text-[10px] font-medium text-gray-700 font-mono"
+                      >
+                        {p}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Advantage & CTA Link */}
+                <div className="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between gap-2">
+                  <span className="text-[10px] text-gray-500 font-medium line-clamp-1">
+                    💡 {route.advantage}
+                  </span>
+                  <Link
+                    href={`/enquiry?route=${encodeURIComponent(route.name)}`}
+                    className="shrink-0 text-[10px] font-bold text-primary hover:text-primary-darker flex items-center gap-0.5"
+                  >
+                    <span>Get Rate</span>
+                    <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Optional Expandable Geographic World Map View on Mobile */}
+        <div className="mt-4 pt-3 border-t border-gray-200 text-center">
+          <button
+            type="button"
+            onClick={() => setShowMobileMap((prev) => !prev)}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs font-semibold text-navy hover:bg-gray-50 shadow-2xs transition-colors"
+          >
+            <span>{showMobileMap ? "Hide Geographic SVG Map" : "🗺️ View Interactive World Map"}</span>
+            <svg
+              className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                showMobileMap ? "rotate-180" : ""
+              }`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {showMobileMap && (
+            <div className="mt-3 rounded-xl border border-orange-200 bg-white p-2 shadow-sm animate-news-fade">
+              <p className="text-[10px] text-gray-400 mb-2 font-medium">
+                👉 Tip: Swipe horizontally to inspect continental routes &amp; nodes
+              </p>
+              <div className="overflow-x-auto pb-2 scrollbar-thin">
+                <div className="min-w-[580px]">
+                  <WorldMap compact={false} />
+                </div>
+              </div>
+              <div className="mt-2 pt-2 border-t border-gray-100 flex justify-center">
+                <MapLegend />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
