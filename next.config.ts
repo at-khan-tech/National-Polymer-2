@@ -6,6 +6,14 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "fdkckmjbpsarxxbppwny.supabase.co",
+      },
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+      },
+      {
+        protocol: "https",
         hostname: "www.multitradegroup.com",
       },
       {
