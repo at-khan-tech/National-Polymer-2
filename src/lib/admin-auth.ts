@@ -19,22 +19,27 @@ function signSession(expiresAt: string) {
 }
 
 export function verifyAdminCredentials(username: unknown, password: unknown) {
-  const configuredUsername = process.env.ADMIN_USERNAME;
-  const configuredPassword = process.env.ADMIN_PASSWORD;
+  const configuredUsername = process.env.ADMIN_USERNAME?.trim().replace(/^["']|["']$/g, "");
+  const configuredPassword = process.env.ADMIN_PASSWORD?.trim().replace(/^["']|["']$/g, "");
 
   if (!configuredUsername || !configuredPassword) {
     return false;
   }
 
+  const cleanUsername = typeof username === "string" ? username.trim() : "";
+  const cleanPassword = typeof password === "string" ? password.trim() : "";
+
+  if (!cleanUsername || !cleanPassword) {
+    return false;
+  }
+
   return (
-    typeof username === "string" &&
-    typeof password === "string" &&
     timingSafeEqual(
-      createHash("sha256").update(username).digest(),
+      createHash("sha256").update(cleanUsername).digest(),
       createHash("sha256").update(configuredUsername).digest(),
     ) &&
     timingSafeEqual(
-      createHash("sha256").update(password).digest(),
+      createHash("sha256").update(cleanPassword).digest(),
       createHash("sha256").update(configuredPassword).digest(),
     )
   );
