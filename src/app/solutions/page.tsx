@@ -12,17 +12,17 @@ export default function SolutionsPage() {
       <Header />
       <main className="min-h-screen bg-gray-50 pb-20">
         <section className="relative bg-gray-100 text-gray-900 pt-20 md:pt-28 pb-14 md:pb-20 mb-12 overflow-hidden">
-          {/* Background Image with Light Gray/White 50% Translucent Overlay */}
+          {/* Subtle Consistent Chemical Background Overlay */}
           <div className="absolute inset-0 z-0">
             <Image
               src="/images/backgrounds/bg3.png"
               alt="Solutions Background"
               fill
               priority
-              className="object-cover object-center"
+              className="object-cover object-right md:object-center"
               sizes="100vw"
             />
-            <div className="absolute inset-0 bg-white/50 bg-gradient-to-r from-white/70 via-white/55 to-gray-100/50 backdrop-blur-[1px]" />
+            <div className="absolute inset-0 bg-white/70 bg-gradient-to-r from-white/95 via-white/85 to-white/50 backdrop-blur-[1px]" />
           </div>
 
           <div className="relative z-10 container mx-auto px-5 sm:px-6 lg:px-8 max-w-6xl">
