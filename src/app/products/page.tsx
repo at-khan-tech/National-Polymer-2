@@ -187,11 +187,12 @@ export default async function ProductsPage() {
                     title={`View ${product.name} specifications`}
                   >
                     <Image
-                      src={product.imageUrl}
+                      src={product.imageUrl || "/images/Product/p1.png"}
                       alt={product.name}
                       fill
                       sizes="(max-width: 640px) 100vw, 50vw"
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      unoptimized={Boolean(product.imageUrl && product.imageUrl.startsWith("http"))}
                     />
                     {/* Gradient overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />

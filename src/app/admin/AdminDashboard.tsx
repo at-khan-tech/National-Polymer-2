@@ -13,6 +13,7 @@ import {
   ChevronDown,
   CircleDollarSign,
   FilePlus2,
+  Layers,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -28,10 +29,11 @@ import {
 
 import type { BlogPost } from "@/data/blogsData";
 import type { ProductDetail } from "@/data/productsData";
+import type { PolymerGrade } from "@/data/gradesCatalog";
 import type { AdminOrder, ContentCategory, OrderStatus } from "@/lib/content-store";
 import { ImageUploadField } from "@/components/ImageUploadField";
 
-type View = "dashboard" | "blogs" | "products" | "categories" | "orders" | "settings";
+type View = "dashboard" | "blogs" | "products" | "grades" | "categories" | "orders" | "settings";
 type Notice = { type: "success" | "error"; message: string } | null;
 type BlogEditor = {
   title: string;
@@ -50,11 +52,26 @@ type NewOrder = {
   quantity: string;
   total: string;
 };
+type GradeFormData = {
+  brand: string;
+  grade: string;
+  category: "PP" | "HDPE" | "LDPE" | "LLDPE" | "PVC" | "EVA" | "Recycled" | "Engineering";
+  subCategory: string;
+  origin: string;
+  mfi: string;
+  density: string;
+  application: string;
+  availability: string;
+  status: "Verified" | "Pending";
+  tdsUrl: string;
+  notes: string;
+};
 
 const navigation: { id: View; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { id: "blogs", label: "Blogs", icon: BookOpen },
   { id: "products", label: "Products", icon: Package },
+  { id: "grades", label: "Grades", icon: Layers },
+  { id: "blogs", label: "Blogs", icon: BookOpen },
   { id: "categories", label: "Categories", icon: Boxes },
   { id: "orders", label: "Orders", icon: ShoppingBag },
 ];
@@ -67,6 +84,20 @@ const initialProduct = {
   tagline: "",
   description: "",
   imageUrl: "",
+};
+const initialGrade: GradeFormData = {
+  brand: "SABIC",
+  grade: "",
+  category: "PP",
+  subCategory: "Homopolymer",
+  origin: "Saudi Arabia",
+  mfi: "",
+  density: "",
+  application: "",
+  availability: "Available on request",
+  status: "Verified",
+  tdsUrl: "",
+  notes: "",
 };
 const emptyBlog: BlogEditor = {
   title: "",
@@ -152,6 +183,7 @@ export default function AdminPanelPage() {
   const [products, setProducts] = useState<ProductDetail[]>([]);
   const [categories, setCategories] = useState<ContentCategory[]>([]);
   const [orders, setOrders] = useState<AdminOrder[]>([]);
+  const [grades, setGrades] = useState<PolymerGrade[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [search, setSearch] = useState("");
@@ -164,6 +196,10 @@ export default function AdminPanelPage() {
   const [editingProductSlug, setEditingProductSlug] = useState<string | null>(null);
   const [productNotice, setProductNotice] = useState<Notice>(null);
   const [isSavingProduct, setIsSavingProduct] = useState(false);
+  const [gradeForm, setGradeForm] = useState<GradeFormData>(initialGrade);
+  const [editingGradeId, setEditingGradeId] = useState<string | null>(null);
+  const [gradeNotice, setGradeNotice] = useState<Notice>(null);
+  const [isSavingGrade, setIsSavingGrade] = useState(false);
   const [categoryName, setCategoryName] = useState("");
   const [categoryType, setCategoryType] = useState<"blog" | "product">("blog");
   const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null);
@@ -178,16 +214,18 @@ export default function AdminPanelPage() {
   const loadData = useCallback(async () => {
     setLoadError("");
     try {
-      const [blogResult, productResult, categoryResult, orderResult] = await Promise.all([
+      const [blogResult, productResult, categoryResult, orderResult, gradeResult] = await Promise.all([
         fetch("/api/admin/blogs", { cache: "no-store" }).then((response) => readResponse(response, "Unable to load posts.")),
         fetch("/api/products", { cache: "no-store" }).then((response) => readResponse(response, "Unable to load products.")),
         fetch("/api/admin/categories", { cache: "no-store" }).then((response) => readResponse(response, "Unable to load categories.")),
         fetch("/api/admin/orders", { cache: "no-store" }).then((response) => readResponse(response, "Unable to load orders.")),
+        fetch("/api/grades", { cache: "no-store" }).then((response) => readResponse(response, "Unable to load grades.")).catch(() => ({ grades: [] })),
       ]);
       setPosts(blogResult.blogs as BlogPost[]);
       setProducts(productResult.products as ProductDetail[]);
       setCategories(categoryResult.categories as ContentCategory[]);
       setOrders(orderResult.orders as AdminOrder[]);
+      setGrades((gradeResult.grades as PolymerGrade[]) || []);
     } catch (error) {
       setLoadError(error instanceof Error ? error.message : "Unable to load admin data.");
     } finally {
@@ -205,6 +243,10 @@ export default function AdminPanelPage() {
     const query = search.trim().toLowerCase();
     return products.filter((product) => !query || [product.name, product.category, product.tagline].some((value) => value.toLowerCase().includes(query)));
   }, [products, search]);
+  const filteredGrades = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return grades.filter((g) => !query || [g.brand, g.grade, g.category, g.subCategory, g.application, g.origin, g.mfi, g.density].some((value) => value?.toLowerCase().includes(query)));
+  }, [grades, search]);
   const filteredOrders = useMemo(() => {
     const query = search.trim().toLowerCase();
     return orders.filter((order) => !query || [order.orderNumber, order.customer, order.email, order.product].some((value) => value.toLowerCase().includes(query)));
@@ -344,6 +386,70 @@ export default function AdminPanelPage() {
     }
   };
 
+  const saveGrade = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsSavingGrade(true);
+    setGradeNotice(null);
+    try {
+      const url = editingGradeId ? `/api/admin/grades/${encodeURIComponent(editingGradeId)}` : "/api/admin/grades";
+      const method = editingGradeId ? "PATCH" : "POST";
+      const result = await readResponse(
+        await fetch(url, {
+          method,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(gradeForm),
+        }),
+        "Unable to save grade."
+      );
+      setGradeNotice({ type: "success", message: result.message ?? "Polymer grade saved." });
+      setGradeForm(initialGrade);
+      setEditingGradeId(null);
+      await loadData();
+    } catch (error) {
+      setGradeNotice({ type: "error", message: error instanceof Error ? error.message : "Unable to save grade." });
+    } finally {
+      setIsSavingGrade(false);
+    }
+  };
+
+  const editGrade = (g: PolymerGrade) => {
+    setEditingGradeId(g.id);
+    setGradeForm({
+      brand: g.brand,
+      grade: g.grade,
+      category: g.category as GradeFormData["category"],
+      subCategory: g.subCategory,
+      origin: g.origin,
+      mfi: g.mfi,
+      density: g.density,
+      application: g.application,
+      availability: g.availability,
+      status: g.status,
+      tdsUrl: g.tdsUrl || "",
+      notes: g.notes || "",
+    });
+    setGradeNotice(null);
+  };
+
+  const deleteGrade = async (g: PolymerGrade) => {
+    if (!window.confirm(`Delete grade “${g.brand} ${g.grade}”? This will remove it from the catalog and dynamic grade detail page.`)) return;
+    setGradeNotice(null);
+    try {
+      await readResponse(
+        await fetch(`/api/admin/grades/${encodeURIComponent(g.id)}`, { method: "DELETE" }),
+        "Unable to delete grade."
+      );
+      setGrades((current) => current.filter((item) => item.id !== g.id));
+      if (editingGradeId === g.id) {
+        setEditingGradeId(null);
+        setGradeForm(initialGrade);
+      }
+      setGradeNotice({ type: "success", message: `Grade "${g.grade}" deleted.` });
+    } catch (error) {
+      setGradeNotice({ type: "error", message: error instanceof Error ? error.message : "Unable to delete grade." });
+    }
+  };
+
   const saveCategory = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSavingCategory(true);
@@ -431,7 +537,16 @@ export default function AdminPanelPage() {
   };
 
   const pageTitle = navigation.find((item) => item.id === activeView)?.label ?? "Settings";
-  const searchPlaceholder = activeView === "blogs" ? "Search posts..." : activeView === "products" ? "Search products..." : activeView === "orders" ? "Search orders..." : "";
+  const searchPlaceholder =
+    activeView === "blogs"
+      ? "Search posts..."
+      : activeView === "products"
+      ? "Search products..."
+      : activeView === "grades"
+      ? "Search grades (e.g. SABIC, HDPE, H312)..."
+      : activeView === "orders"
+      ? "Search orders..."
+      : "";
   const sidebar = (
     <div className="flex h-full flex-col border-r border-slate-200 bg-white">
       <Link href="/" className="flex h-[76px] items-center border-b border-slate-100 px-6" aria-label="National Polymers home">
@@ -528,7 +643,8 @@ export default function AdminPanelPage() {
           {!isLoading && activeView === "dashboard" ? (
             <div>
               <SectionHeading eyebrow="Workspace overview" title="Good day, Administrator" description="Here’s what’s happening across your store and content." action={<button onClick={() => { setView("blogs"); openNewBlog(); }} className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700"><Plus size={17} /> Create post</button>} />
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+                <MetricCard title="Polymer grades" value={grades.length} note="Live technical grades" icon={Layers} trend="up" />
                 <MetricCard title="Total products" value={products.length} note="Across your product catalog" icon={Package} trend="up" />
                 <MetricCard title="Published articles" value={posts.filter((post) => post.status !== "draft").length} note={`${posts.filter((post) => post.status === "draft").length} drafts waiting`} icon={BookOpen} trend="up" />
                 <MetricCard title="Open orders" value={orders.filter((order) => !["completed", "cancelled"].includes(order.status)).length} note={`${orders.filter((order) => order.status === "pending").length} need attention`} icon={ShoppingBag} />
@@ -542,7 +658,7 @@ export default function AdminPanelPage() {
                 <section className="rounded-xl border border-slate-200 bg-white p-5">
                   <h2 className="text-sm font-semibold">Quick actions</h2><p className="mt-1 text-xs text-slate-500">Common tasks, all in one place.</p>
                   <div className="mt-4 space-y-2">
-                    {[{ label: "Write a new blog post", icon: BookOpen, view: "blogs" as View }, { label: "Add a product", icon: Package, view: "products" as View }, { label: "Manage categories", icon: Boxes, view: "categories" as View }, { label: "Create an order", icon: ShoppingBag, view: "orders" as View }].map(({ label, icon: Icon, view }) => <button key={label} onClick={() => { setView(view); if (view === "blogs") openNewBlog(); if (view === "orders") setOrderFormOpen(true); }} className="flex w-full items-center gap-3 rounded-lg border border-slate-100 p-3 text-left text-sm font-medium text-slate-700 transition hover:border-indigo-100 hover:bg-indigo-50/60"><span className="rounded-md bg-slate-100 p-2 text-slate-600"><Icon size={16} /></span>{label}<ArrowUpRight className="ml-auto text-slate-400" size={15} /></button>)}
+                    {[{ label: "Manage polymer grades", icon: Layers, view: "grades" as View }, { label: "Write a new blog post", icon: BookOpen, view: "blogs" as View }, { label: "Add a product", icon: Package, view: "products" as View }, { label: "Manage categories", icon: Boxes, view: "categories" as View }, { label: "Create an order", icon: ShoppingBag, view: "orders" as View }].map(({ label, icon: Icon, view }) => <button key={label} onClick={() => { setView(view); if (view === "blogs") openNewBlog(); if (view === "orders") setOrderFormOpen(true); }} className="flex w-full items-center gap-3 rounded-lg border border-slate-100 p-3 text-left text-sm font-medium text-slate-700 transition hover:border-indigo-100 hover:bg-indigo-50/60"><span className="rounded-md bg-slate-100 p-2 text-slate-600"><Icon size={16} /></span>{label}<ArrowUpRight className="ml-auto text-slate-400" size={15} /></button>)}
                   </div>
                 </section>
               </div>
@@ -579,6 +695,331 @@ export default function AdminPanelPage() {
   maxSizeMB={5}
   helperText="Product image shown on the catalog page and product details hero."
 /><NoticeBanner notice={productNotice} /><div className="flex gap-2">{editingProductSlug ? <button type="button" onClick={() => { setEditingProductSlug(null); setProductForm(initialProduct); setProductNotice(null); }} className="flex-1 rounded-lg border border-slate-200 px-3 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50">Cancel</button> : null}<button disabled={isSavingProduct || !categories.some((category) => category.type === "product")} className="flex-1 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50">{isSavingProduct ? "Saving..." : editingProductSlug ? "Save changes" : "Add product"}</button></div></form></section>
+              </div>
+            </div>
+          ) : null}
+
+          {!isLoading && activeView === "grades" ? (
+            <div>
+              <SectionHeading
+                eyebrow="Technical specifications"
+                title="Polymer Grades"
+                description="Add, edit, or remove polymer grades with MFI, density, manufacturer, and technical datasheets."
+                action={
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingGradeId(null);
+                      setGradeForm(initialGrade);
+                      setGradeNotice(null);
+                    }}
+                    className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700"
+                  >
+                    <Plus size={17} /> New grade
+                  </button>
+                }
+              />
+              <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
+                <section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-5 py-4">
+                    <div>
+                      <h2 className="text-sm font-semibold text-slate-900">Technical Grades Directory</h2>
+                      <p className="mt-0.5 text-xs text-slate-500">
+                        {filteredGrades.length} of {grades.length} grades matching filter
+                      </p>
+                    </div>
+                    <label className="relative sm:hidden">
+                      <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input
+                        value={search}
+                        onChange={(event) => setSearch(event.target.value)}
+                        placeholder="Search grades"
+                        className="w-36 rounded-lg border border-slate-200 py-2 pl-9 pr-2 text-xs outline-none focus:border-indigo-400"
+                      />
+                    </label>
+                  </div>
+
+                  {filteredGrades.length ? (
+                    <div className="overflow-x-auto">
+                      <table className="w-full min-w-[760px] text-left">
+                        <thead className="bg-slate-50 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                          <tr>
+                            <th className="px-5 py-3">Grade & Brand</th>
+                            <th className="px-4 py-3">Category</th>
+                            <th className="px-4 py-3">MFI (g/10m)</th>
+                            <th className="px-4 py-3">Density</th>
+                            <th className="px-4 py-3">Application</th>
+                            <th className="px-4 py-3">Status</th>
+                            <th className="px-5 py-3 text-right">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 text-sm">
+                          {filteredGrades.map((g) => (
+                            <tr key={g.id} className="hover:bg-slate-50/70 transition">
+                              <td className="px-5 py-3.5">
+                                <p className="font-semibold text-slate-900">{g.grade}</p>
+                                <p className="text-xs text-slate-500">{g.brand} · {g.origin}</p>
+                              </td>
+                              <td className="px-4 py-3.5">
+                                <span className="inline-flex rounded bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
+                                  {g.category}
+                                </span>
+                                <p className="mt-0.5 text-[11px] text-slate-500 truncate max-w-[120px]">{g.subCategory}</p>
+                              </td>
+                              <td className="px-4 py-3.5 text-xs font-mono text-slate-800">{g.mfi || "—"}</td>
+                              <td className="px-4 py-3.5 text-xs font-mono text-slate-600">{g.density || "—"}</td>
+                              <td className="px-4 py-3.5 text-xs text-slate-600 max-w-[160px] truncate" title={g.application}>
+                                {g.application}
+                              </td>
+                              <td className="px-4 py-3.5">
+                                <span
+                                  className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                                    g.status === "Verified"
+                                      ? "bg-emerald-50 text-emerald-700"
+                                      : "bg-amber-50 text-amber-700"
+                                  }`}
+                                >
+                                  {g.status}
+                                </span>
+                              </td>
+                              <td className="px-5 py-3.5 text-right">
+                                <div className="flex items-center justify-end gap-1">
+                                  <Link
+                                    href={`/grades/${g.id}`}
+                                    target="_blank"
+                                    title="View Grade Page & TDS"
+                                    className="rounded-md p-1.5 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600"
+                                  >
+                                    <ArrowUpRight size={15} />
+                                  </Link>
+                                  <button
+                                    type="button"
+                                    onClick={() => editGrade(g)}
+                                    title={`Edit ${g.grade}`}
+                                    className="rounded-md p-1.5 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600"
+                                  >
+                                    <Pencil size={15} />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => void deleteGrade(g)}
+                                    title={`Delete ${g.grade}`}
+                                    className="rounded-md p-1.5 text-slate-500 hover:bg-red-50 hover:text-red-600"
+                                  >
+                                    <Trash2 size={15} />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <div className="p-12 text-center">
+                      <Layers className="mx-auto text-slate-300" size={26} />
+                      <p className="mt-3 text-sm font-medium text-slate-700">No grades found</p>
+                      <p className="mt-1 text-xs text-slate-500">Try adjusting your search or add a new grade using the form.</p>
+                    </div>
+                  )}
+                </section>
+
+                <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <div className="mb-4">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-indigo-600">
+                      {editingGradeId ? "Edit Grade" : "Backend Integration"}
+                    </p>
+                    <h2 className="mt-1 text-lg font-semibold text-slate-900">
+                      {editingGradeId ? `Update ${gradeForm.grade}` : "Add Polymer Grade"}
+                    </h2>
+                    <p className="mt-1 text-xs text-slate-500">
+                      Changes update the live website database without code deployment.
+                    </p>
+                  </div>
+
+                  <form onSubmit={saveGrade} className="space-y-3.5">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className={labelClass} htmlFor="grade-brand">Manufacturer / Brand</label>
+                        <input
+                          id="grade-brand"
+                          list="brands-list"
+                          className={inputClass}
+                          value={gradeForm.brand}
+                          onChange={(e) => setGradeForm((c) => ({ ...c, brand: e.target.value }))}
+                          placeholder="e.g. SABIC"
+                          required
+                        />
+                        <datalist id="brands-list">
+                          <option value="SABIC" />
+                          <option value="APC" />
+                          <option value="Borouge" />
+                          <option value="SK Geo Centric" />
+                          <option value="ExxonMobil" />
+                          <option value="Formosa" />
+                          <option value="Lotte Chemical" />
+                          <option value="TotalEnergies" />
+                          <option value="LyondellBasell" />
+                          <option value="Reliance" />
+                        </datalist>
+                      </div>
+                      <div>
+                        <label className={labelClass} htmlFor="grade-code">Grade Code</label>
+                        <input
+                          id="grade-code"
+                          className={inputClass}
+                          value={gradeForm.grade}
+                          onChange={(e) => setGradeForm((c) => ({ ...c, grade: e.target.value }))}
+                          placeholder="e.g. H312"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className={labelClass} htmlFor="grade-cat">Polymer Category</label>
+                        <select
+                          id="grade-cat"
+                          className={inputClass}
+                          value={gradeForm.category}
+                          onChange={(e) => setGradeForm((c) => ({ ...c, category: e.target.value as GradeFormData["category"] }))}
+                          required
+                        >
+                          <option value="PP">PP (Polypropylene)</option>
+                          <option value="HDPE">HDPE</option>
+                          <option value="LDPE">LDPE</option>
+                          <option value="LLDPE">LLDPE</option>
+                          <option value="PVC">PVC</option>
+                          <option value="EVA">EVA</option>
+                          <option value="Recycled">Recycled</option>
+                          <option value="Engineering">Engineering</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className={labelClass} htmlFor="grade-subcat">Subcategory</label>
+                        <input
+                          id="grade-subcat"
+                          className={inputClass}
+                          value={gradeForm.subCategory}
+                          onChange={(e) => setGradeForm((c) => ({ ...c, subCategory: e.target.value }))}
+                          placeholder="e.g. Raffia / Homopolymer"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className={labelClass} htmlFor="grade-mfi">MFI / MFR (g/10min)</label>
+                        <input
+                          id="grade-mfi"
+                          className={inputClass}
+                          value={gradeForm.mfi}
+                          onChange={(e) => setGradeForm((c) => ({ ...c, mfi: e.target.value }))}
+                          placeholder="e.g. 3.0"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className={labelClass} htmlFor="grade-density">Density (g/cm³)</label>
+                        <input
+                          id="grade-density"
+                          className={inputClass}
+                          value={gradeForm.density}
+                          onChange={(e) => setGradeForm((c) => ({ ...c, density: e.target.value }))}
+                          placeholder="e.g. 0.905"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className={labelClass} htmlFor="grade-origin">Origin Country</label>
+                        <input
+                          id="grade-origin"
+                          className={inputClass}
+                          value={gradeForm.origin}
+                          onChange={(e) => setGradeForm((c) => ({ ...c, origin: e.target.value }))}
+                          placeholder="e.g. Saudi Arabia"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className={labelClass} htmlFor="grade-status">Verification Status</label>
+                        <select
+                          id="grade-status"
+                          className={inputClass}
+                          value={gradeForm.status}
+                          onChange={(e) => setGradeForm((c) => ({ ...c, status: e.target.value as "Verified" | "Pending" }))}
+                        >
+                          <option value="Verified">Verified</option>
+                          <option value="Pending">Pending Review</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className={labelClass} htmlFor="grade-app">Key Applications</label>
+                      <input
+                        id="grade-app"
+                        className={inputClass}
+                        value={gradeForm.application}
+                        onChange={(e) => setGradeForm((c) => ({ ...c, application: e.target.value }))}
+                        placeholder="e.g. Woven sacks, FIBC bags, strapping, tarpaulins"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className={labelClass} htmlFor="grade-avail">Availability</label>
+                      <input
+                        id="grade-avail"
+                        className={inputClass}
+                        value={gradeForm.availability}
+                        onChange={(e) => setGradeForm((c) => ({ ...c, availability: e.target.value }))}
+                        placeholder="e.g. Ready stock / Available on request"
+                      />
+                    </div>
+
+                    <div>
+                      <label className={labelClass} htmlFor="grade-notes">Technical Notes</label>
+                      <textarea
+                        id="grade-notes"
+                        className={`${inputClass} min-h-16`}
+                        value={gradeForm.notes}
+                        onChange={(e) => setGradeForm((c) => ({ ...c, notes: e.target.value }))}
+                        placeholder="Processing temperatures, additives, or manufacturer warranty notes."
+                      />
+                    </div>
+
+                    <NoticeBanner notice={gradeNotice} />
+
+                    <div className="flex gap-2 pt-1">
+                      {editingGradeId ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEditingGradeId(null);
+                            setGradeForm(initialGrade);
+                            setGradeNotice(null);
+                          }}
+                          className="flex-1 rounded-lg border border-slate-200 px-3 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                        >
+                          Cancel
+                        </button>
+                      ) : null}
+                      <button
+                        type="submit"
+                        disabled={isSavingGrade}
+                        className="flex-1 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 disabled:opacity-60"
+                      >
+                        {isSavingGrade ? "Saving..." : editingGradeId ? "Update Grade" : "Add Grade to DB"}
+                      </button>
+                    </div>
+                  </form>
+                </section>
               </div>
             </div>
           ) : null}

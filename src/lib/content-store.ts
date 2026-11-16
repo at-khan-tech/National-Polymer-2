@@ -2,8 +2,11 @@ import { randomUUID } from "node:crypto";
 
 import { BLOGS_DATA, type BlogPost } from "@/data/blogsData";
 import { PRODUCTS_DATA, type ProductDetail } from "@/data/productsData";
+import { CANDIDATE_GRADES, type PolymerGrade } from "@/data/gradesCatalog";
 import type { CategoryType, OrderStatus } from "@/lib/database.types";
 import { getSupabaseAdmin, throwIfDatabaseError } from "@/lib/supabase";
+
+export type { PolymerGrade };
 
 export interface ContentCategory {
   id: string;
@@ -545,4 +548,225 @@ export async function deleteBlog(slug: string): Promise<void> {
     .maybeSingle();
   throwIfDatabaseError(error);
   if (!data) throw new Error("Blog post not found.");
+}
+
+const GRADES_STORAGE_PATH = "catalog/grades.json";
+
+export async function getAllGrades(): Promise<PolymerGrade[]> {
+  const supabase = getSupabaseAdmin();
+
+  // 1. Try reading from PostgreSQL 'grades' table if it exists
+  try {
+    const { data, error } = await (supabase as any).from("grades").select("*").order("brand");
+    if (!error && Array.isArray(data) && data.length > 0) {
+      return data.map((row: any) => ({
+        id: row.id,
+        brand: row.brand,
+        origin: row.origin,
+        category: row.category,
+        subCategory: row.sub_category || row.subCategory,
+        grade: row.grade,
+        application: row.application,
+        mfi: row.mfi,
+        density: row.density,
+        availability: row.availability || "Available on request",
+        status: row.status || "Verified",
+        tdsUrl: row.tds_url || row.tdsUrl,
+        notes: row.notes,
+      }));
+    }
+  } catch {
+    // If table doesn't exist, proceed to Supabase Storage
+  }
+
+  // 2. Try reading from Supabase Storage
+  try {
+    const { data: downloadData, error: downloadError } = await supabase.storage
+      .from("uploads")
+      .download(GRADES_STORAGE_PATH);
+
+    if (!downloadError && downloadData) {
+      const text = await downloadData.text();
+      const parsed = JSON.parse(text);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed as PolymerGrade[];
+      }
+    }
+  } catch (err) {
+    console.warn("Could not read grades from Supabase Storage, using catalog fallback:", err);
+  }
+
+  // 3. Fallback to hardcoded catalog
+  return CANDIDATE_GRADES;
+}
+
+export async function getGradeById(id: string): Promise<PolymerGrade | null> {
+  const grades = await getAllGrades();
+  const lowerId = decodeURIComponent(id).toLowerCase().trim();
+  return (
+    grades.find(
+      (g) =>
+        g.id.toLowerCase() === lowerId ||
+        g.grade.toLowerCase() === lowerId ||
+        toSlug(g.grade) === lowerId ||
+        `${toSlug(g.brand)}-${toSlug(g.grade)}` === lowerId,
+    ) ?? null
+  );
+}
+
+export async function addGrade(input: Omit<PolymerGrade, "id"> & { id?: string }): Promise<PolymerGrade> {
+  const brand = input.brand?.trim();
+  const grade = input.grade?.trim();
+  const category = input.category || "PP";
+  const subCategory = input.subCategory?.trim() || "General Grade";
+  const mfi = input.mfi?.trim() || "N/A";
+  const density = input.density?.trim() || "N/A";
+  const application = input.application?.trim() || "General Processing";
+  const origin = input.origin?.trim() || "Global Producer";
+
+  if (!brand || !grade) {
+    throw new Error("Brand and Grade code are required.");
+  }
+
+  const id = input.id?.trim() || `${toSlug(brand)}-${toSlug(grade)}`;
+  const newGrade: PolymerGrade = {
+    id,
+    brand,
+    origin,
+    category,
+    subCategory,
+    grade,
+    application,
+    mfi,
+    density,
+    availability: input.availability?.trim() || "Available on request",
+    status: input.status || "Verified",
+    tdsUrl: input.tdsUrl?.trim() || undefined,
+    notes: input.notes?.trim() || undefined,
+  };
+
+  const existingGrades = await getAllGrades();
+  if (existingGrades.some((g) => g.id.toLowerCase() === id.toLowerCase() || (g.grade.toLowerCase() === grade.toLowerCase() && g.brand.toLowerCase() === brand.toLowerCase()))) {
+    throw new Error(`A grade with code "${grade}" for ${brand} already exists.`);
+  }
+
+  const updatedGrades = [newGrade, ...existingGrades];
+
+  // Persist to Supabase Storage
+  const supabase = getSupabaseAdmin();
+  const { error } = await supabase.storage
+    .from("uploads")
+    .upload(GRADES_STORAGE_PATH, Buffer.from(JSON.stringify(updatedGrades, null, 2)), {
+      contentType: "application/json",
+      upsert: true,
+    });
+  if (error) {
+    throw new Error(`Failed to save grade to Supabase: ${error.message}`);
+  }
+
+  // Also try persisting to table if table exists
+  try {
+    await (supabase as any).from("grades").upsert({
+      id: newGrade.id,
+      brand: newGrade.brand,
+      origin: newGrade.origin,
+      category: newGrade.category,
+      sub_category: newGrade.subCategory,
+      grade: newGrade.grade,
+      application: newGrade.application,
+      mfi: newGrade.mfi,
+      density: newGrade.density,
+      availability: newGrade.availability,
+      status: newGrade.status,
+      tds_url: newGrade.tdsUrl,
+      notes: newGrade.notes,
+    });
+  } catch {
+    // Table may not exist yet
+  }
+
+  return newGrade;
+}
+
+export async function updateGrade(id: string, input: Partial<PolymerGrade>): Promise<PolymerGrade> {
+  const existingGrades = await getAllGrades();
+  const index = existingGrades.findIndex((g) => g.id.toLowerCase() === id.toLowerCase());
+  if (index === -1) {
+    throw new Error("Grade not found.");
+  }
+
+  const current = existingGrades[index];
+  const updated: PolymerGrade = {
+    ...current,
+    ...input,
+    id: current.id,
+    brand: input.brand?.trim() || current.brand,
+    grade: input.grade?.trim() || current.grade,
+    origin: input.origin?.trim() || current.origin,
+    category: input.category || current.category,
+    subCategory: input.subCategory?.trim() || current.subCategory,
+    mfi: input.mfi?.trim() || current.mfi,
+    density: input.density?.trim() || current.density,
+    application: input.application?.trim() || current.application,
+    availability: input.availability?.trim() || current.availability,
+    status: input.status || current.status,
+    tdsUrl: input.tdsUrl !== undefined ? input.tdsUrl?.trim() || undefined : current.tdsUrl,
+    notes: input.notes !== undefined ? input.notes?.trim() || undefined : current.notes,
+  };
+
+  existingGrades[index] = updated;
+
+  const supabase = getSupabaseAdmin();
+  const { error } = await supabase.storage
+    .from("uploads")
+    .upload(GRADES_STORAGE_PATH, Buffer.from(JSON.stringify(existingGrades, null, 2)), {
+      contentType: "application/json",
+      upsert: true,
+    });
+  if (error) {
+    throw new Error(`Failed to update grade in Supabase: ${error.message}`);
+  }
+
+  try {
+    await (supabase as any).from("grades").upsert({
+      id: updated.id,
+      brand: updated.brand,
+      origin: updated.origin,
+      category: updated.category,
+      sub_category: updated.subCategory,
+      grade: updated.grade,
+      application: updated.application,
+      mfi: updated.mfi,
+      density: updated.density,
+      availability: updated.availability,
+      status: updated.status,
+      tds_url: updated.tdsUrl,
+      notes: updated.notes,
+    });
+  } catch {}
+
+  return updated;
+}
+
+export async function deleteGrade(id: string): Promise<void> {
+  const existingGrades = await getAllGrades();
+  const filtered = existingGrades.filter((g) => g.id.toLowerCase() !== id.toLowerCase());
+  if (filtered.length === existingGrades.length) {
+    throw new Error("Grade not found.");
+  }
+
+  const supabase = getSupabaseAdmin();
+  const { error } = await supabase.storage
+    .from("uploads")
+    .upload(GRADES_STORAGE_PATH, Buffer.from(JSON.stringify(filtered, null, 2)), {
+      contentType: "application/json",
+      upsert: true,
+    });
+  if (error) {
+    throw new Error(`Failed to delete grade from Supabase: ${error.message}`);
+  }
+
+  try {
+    await (supabase as any).from("grades").delete().eq("id", id);
+  } catch {}
 }

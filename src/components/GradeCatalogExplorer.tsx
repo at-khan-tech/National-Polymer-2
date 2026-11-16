@@ -8,6 +8,8 @@ import {
   MAJOR_BRANDS,
   type PolymerGrade,
 } from "@/data/gradesCatalog";
+import { TdsDownloadButton } from "@/components/TdsDownloadButton";
+import { ExternalLink, FileText } from "lucide-react";
 
 interface GradeCatalogExplorerProps {
   initialBrand?: string;
@@ -277,17 +279,20 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
                 >
                   <div>
                     <div className="flex items-start justify-between gap-2 mb-2">
-                      <div>
-                        <span className="font-extrabold text-sm text-navy block">
+                      <Link href={`/grades/${g.id}`} className="group/brand">
+                        <span className="font-extrabold text-sm text-navy group-hover/brand:text-primary transition-colors block">
                           {g.brand}
                         </span>
                         <span className="text-[10px] text-gray-400 font-medium">
                           {g.origin}
                         </span>
-                      </div>
-                      <span className="font-mono font-bold text-navy px-2 py-0.5 rounded bg-slate-100 text-xs">
+                      </Link>
+                      <Link
+                        href={`/grades/${g.id}`}
+                        className="font-mono font-bold text-navy hover:text-primary px-2 py-0.5 rounded bg-slate-100 hover:bg-primary-soft text-xs transition"
+                      >
                         {g.grade}
-                      </span>
+                      </Link>
                     </div>
 
                     <div className="flex items-center gap-2 mb-3">
@@ -317,16 +322,22 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
 
                   {/* Actions */}
                   <div className="flex items-center gap-2 pt-2.5 border-t border-gray-100">
+                    <Link
+                      href={`/grades/${g.id}`}
+                      className="flex-1 px-2.5 py-2 rounded-lg border border-gray-200 text-[11px] font-semibold text-navy hover:bg-gray-50 transition text-center"
+                    >
+                      Details
+                    </Link>
                     <button
                       type="button"
                       onClick={() => setActiveTdsGrade(g)}
-                      className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-xs font-semibold text-navy hover:bg-gray-50 transition text-center"
+                      className="px-2.5 py-2 rounded-lg border border-gray-200 text-[11px] font-semibold text-navy hover:bg-gray-50 transition text-center"
                     >
-                      View TDS
+                      TDS
                     </button>
                     <Link
                       href={enquiryUrl}
-                      className="flex-1 px-3 py-2 rounded-lg bg-primary hover:bg-primary-darker text-white text-xs font-bold text-center transition shadow-2xs"
+                      className="flex-1 px-3 py-2 rounded-lg bg-primary hover:bg-primary-darker text-white text-[11px] font-bold text-center transition shadow-2xs"
                     >
                       Get Quote
                     </Link>
@@ -365,21 +376,24 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
                     >
                       {/* Manufacturer & Origin */}
                       <td className="py-3.5 px-4 sm:px-5">
-                        <div className="flex flex-col">
-                          <span className="font-bold text-gray-900 group-hover:text-primary transition-colors">
+                        <Link href={`/grades/${g.id}`} className="flex flex-col group/brand">
+                          <span className="font-bold text-gray-900 group-hover/brand:text-primary transition-colors">
                             {g.brand}
                           </span>
                           <span className="text-[10.5px] text-gray-400 font-medium">
                             {g.origin}
                           </span>
-                        </div>
+                        </Link>
                       </td>
 
                       {/* Grade Code */}
                       <td className="py-3.5 px-4">
-                        <span className="font-mono font-bold text-navy px-2 py-1 rounded bg-slate-100 text-xs tracking-wide">
+                        <Link
+                          href={`/grades/${g.id}`}
+                          className="font-mono font-bold text-navy hover:text-primary hover:bg-primary-soft px-2 py-1 rounded bg-slate-100 text-xs tracking-wide transition-colors inline-block"
+                        >
                           {g.grade}
-                        </span>
+                        </Link>
                       </td>
 
                       {/* Category & Subtype */}
@@ -417,7 +431,17 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
 
                       {/* Action & TDS */}
                       <td className="py-3.5 px-4">
-                        <div className="flex items-center justify-center gap-2">
+                        <div className="flex items-center justify-center gap-1.5">
+                          {/* Direct Grade Detail Link */}
+                          <Link
+                            href={`/grades/${g.id}`}
+                            title={`View dynamic specs for ${g.grade}`}
+                            className="px-2 py-1 rounded border border-gray-200 hover:border-primary text-[11px] font-medium text-gray-700 hover:text-primary hover:bg-primary-soft transition flex items-center gap-1"
+                          >
+                            <span>Specs</span>
+                            <ExternalLink className="w-3 h-3" />
+                          </Link>
+
                           {/* TDS Quick View Button */}
                           <button
                             type="button"
@@ -425,9 +449,7 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
                             title="View Technical Data Sheet specifications"
                             className="px-2.5 py-1 rounded border border-gray-200 hover:border-navy text-[11px] font-medium text-navy hover:bg-navy/5 transition flex items-center gap-1 cursor-pointer"
                           >
-                            <svg className="w-3.5 h-3.5 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
+                            <FileText className="w-3.5 h-3.5 text-navy" />
                             <span>TDS</span>
                           </button>
 
@@ -436,10 +458,7 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
                             href={enquiryUrl}
                             className="px-3 py-1 rounded-lg bg-primary hover:bg-primary-darker text-white text-[11px] font-bold shadow-2xs hover:shadow-sm transition cursor-pointer flex items-center gap-1 shrink-0"
                           >
-                            <span>Get Quote</span>
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
+                            <span>Quote</span>
                           </Link>
                         </div>
                       </td>
@@ -526,24 +545,37 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
             </div>
 
             {/* Modal Actions */}
-            <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2.5 pt-3.5 border-t border-gray-100">
-              <button
-                type="button"
-                onClick={() => setActiveTdsGrade(null)}
-                className="w-full sm:w-auto px-4 py-2.5 text-xs font-semibold text-gray-600 hover:text-gray-900 text-center rounded-lg"
-              >
-                Close
-              </button>
-              <Link
-                href={`/enquiry?product=${activeTdsGrade.category.toLowerCase()}&grade=${encodeURIComponent(
-                  activeTdsGrade.grade
-                )}&brand=${encodeURIComponent(activeTdsGrade.brand)}&origin=${encodeURIComponent(
-                  activeTdsGrade.origin
-                )}&sub=${encodeURIComponent(activeTdsGrade.subCategory)}`}
-                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-darker text-white text-xs font-bold shadow-sm transition text-center"
-              >
-                Enquire for {activeTdsGrade.grade} Quote &rarr;
-              </Link>
+            <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-2.5 pt-3.5 border-t border-gray-100">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveTdsGrade(null)}
+                  className="px-3 py-2 text-xs font-semibold text-gray-600 hover:text-gray-900 rounded-lg"
+                >
+                  Close
+                </button>
+                <Link
+                  href={`/grades/${activeTdsGrade.id}`}
+                  className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-navy hover:text-primary transition"
+                >
+                  <span>Full Grade Page</span>
+                  <ExternalLink className="w-3 h-3" />
+                </Link>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <TdsDownloadButton grade={activeTdsGrade} variant="outline" />
+                <Link
+                  href={`/enquiry?product=${activeTdsGrade.category.toLowerCase()}&grade=${encodeURIComponent(
+                    activeTdsGrade.grade
+                  )}&brand=${encodeURIComponent(activeTdsGrade.brand)}&origin=${encodeURIComponent(
+                    activeTdsGrade.origin
+                  )}&sub=${encodeURIComponent(activeTdsGrade.subCategory)}`}
+                  className="px-4 py-2 rounded-xl bg-primary hover:bg-primary-darker text-white text-xs font-bold shadow-sm transition text-center"
+                >
+                  Enquire Quote &rarr;
+                </Link>
+              </div>
             </div>
           </div>
         </div>

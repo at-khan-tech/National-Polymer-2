@@ -116,11 +116,12 @@ export default async function ProductInnerPage({ params }: PageProps) {
               <div className="relative w-full rounded-2xl overflow-hidden shadow-xl border border-gray-200 bg-white"
                 style={{ aspectRatio: "4/3" }}>
                 <Image
-                  src={product.imageUrl}
+                  src={product.imageUrl || "/images/Product/p1.png"}
                   alt={product.name}
                   fill
                   className="object-cover"
                   priority
+                  unoptimized={Boolean(product.imageUrl && product.imageUrl.startsWith("http"))}
                 />
                 {/* Bottom gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-transparent" />
@@ -245,15 +246,20 @@ export default async function ProductInnerPage({ params }: PageProps) {
                         {matchingGrades.slice(0, 10).map((g) => (
                           <tr key={g.id} className="hover:bg-primary/[0.03] transition-colors group">
                             <td className="py-3.5 px-5">
-                              <span className="font-bold text-gray-900 group-hover:text-primary transition-colors block text-sm">
-                                {g.brand}
-                              </span>
-                              <span className="text-[10px] text-gray-400 font-medium">{g.origin}</span>
+                              <Link href={`/grades/${g.id}`} className="block">
+                                <span className="font-bold text-gray-900 group-hover:text-primary transition-colors block text-sm">
+                                  {g.brand}
+                                </span>
+                                <span className="text-[10px] text-gray-400 font-medium">{g.origin}</span>
+                              </Link>
                             </td>
                             <td className="py-3.5 px-4">
-                              <span className="font-mono font-bold text-navy text-xs bg-slate-100 px-2.5 py-1 rounded-lg">
+                              <Link
+                                href={`/grades/${g.id}`}
+                                className="font-mono font-bold text-navy hover:text-primary text-xs bg-slate-100 hover:bg-primary-soft px-2.5 py-1 rounded-lg inline-block transition"
+                              >
                                 {g.grade}
-                              </span>
+                              </Link>
                             </td>
                             <td className="py-3.5 px-4 text-xs text-gray-600">{g.subCategory}</td>
                             <td className="py-3.5 px-4 font-mono text-xs text-gray-600">{g.mfi}</td>
@@ -263,15 +269,20 @@ export default async function ProductInnerPage({ params }: PageProps) {
                               </span>
                             </td>
                             <td className="py-3.5 px-4 text-right">
-                              <Link
-                                href={`/enquiry?product=${product.slug}&grade=${encodeURIComponent(g.grade)}&brand=${encodeURIComponent(g.brand)}&origin=${encodeURIComponent(g.origin)}`}
-                                className="inline-flex items-center gap-1.5 rounded-lg bg-navy hover:bg-primary px-3.5 py-1.5 text-xs font-bold text-white transition shadow-sm"
-                              >
-                                Enquire
-                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7-7 7m7-7H3" />
-                                </svg>
-                              </Link>
+                              <div className="flex items-center justify-end gap-1.5">
+                                <Link
+                                  href={`/grades/${g.id}`}
+                                  className="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-white hover:border-primary px-2.5 py-1.5 text-xs font-semibold text-gray-700 hover:text-primary transition"
+                                >
+                                  Specs
+                                </Link>
+                                <Link
+                                  href={`/enquiry?product=${product.slug}&grade=${encodeURIComponent(g.grade)}&brand=${encodeURIComponent(g.brand)}&origin=${encodeURIComponent(g.origin)}`}
+                                  className="inline-flex items-center gap-1 rounded-lg bg-navy hover:bg-primary px-3 py-1.5 text-xs font-bold text-white transition shadow-sm"
+                                >
+                                  Enquire
+                                </Link>
+                              </div>
                             </td>
                           </tr>
                         ))}

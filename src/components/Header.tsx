@@ -1,11 +1,168 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Icon } from "./Icons";
 import { MAIN_NAVIGATION } from "@/data/siteNavigation";
+import { CANDIDATE_GRADES, MAJOR_BRANDS } from "@/data/gradesCatalog";
+
+const SEARCH_CATEGORIES = [
+  { name: "Polypropylene (PP)", code: "PP", slug: "pp", keywords: ["pp", "polypropylene", "homopolymer", "copolymer", "raffia", "bopp"] },
+  { name: "High-Density Polyethylene (HDPE)", code: "HDPE", slug: "pe", keywords: ["hdpe", "high density", "blow molding", "pipe"] },
+  { name: "Low-Density Polyethylene (LDPE)", code: "LDPE", slug: "pe", keywords: ["ldpe", "low density", "film grade"] },
+  { name: "Linear Low-Density Polyethylene (LLDPE)", code: "LLDPE", slug: "pe", keywords: ["lldpe", "linear low", "rotomolding"] },
+  { name: "Polyethylene (PE)", code: "PE", slug: "pe", keywords: ["pe", "polyethylene"] },
+  { name: "Polyvinyl Chloride (PVC)", code: "PVC", slug: "pvc", keywords: ["pvc", "polyvinyl", "k67", "k57", "pipe grade", "rigid"] },
+  { name: "Polyethylene Terephthalate (PET)", code: "PET", slug: "pet", keywords: ["pet", "bottle grade", "polyester"] },
+  { name: "Polystyrene (PS / GPPS / HIPS)", code: "PS", slug: "ps", keywords: ["ps", "gpps", "hips", "polystyrene"] },
+  { name: "Engineering Plastics (ABS / PC / POM / PA)", code: "Engineering", slug: "engineering-plastics", keywords: ["engineering", "abs", "pc", "polycarbonate", "pom", "nylon", "pa6"] },
+  { name: "Masterbatch & Additives", code: "Masterbatch", slug: "masterbatch-additives", keywords: ["masterbatch", "color", "white", "black", "additives"] },
+  { name: "Recycled & Reprocessed Polymers", code: "Recycled", slug: "recycled", keywords: ["recycled", "reprocessed", "pcr", "pir", "regrind"] },
+];
+
+function SearchResultsDropdown({
+  results,
+  query,
+  onSelect,
+  onSubmit,
+}: {
+  results: {
+    categories: typeof SEARCH_CATEGORIES;
+    brands: typeof MAJOR_BRANDS;
+    grades: typeof CANDIDATE_GRADES;
+  };
+  query: string;
+  onSelect: () => void;
+  onSubmit: (e: React.FormEvent) => void;
+}) {
+  const hasResults =
+    results.categories.length > 0 ||
+    results.brands.length > 0 ||
+    results.grades.length > 0;
+
+  if (!hasResults) {
+    return (
+      <div className="p-5 text-center text-xs text-gray-500">
+        <p className="font-semibold text-gray-700">No direct matches for &ldquo;{query}&rdquo;</p>
+        <p className="mt-1 text-[11px] text-gray-400">
+          Press <kbd className="px-1.5 py-0.5 bg-gray-100 rounded border border-gray-200">Enter</kbd> to search all 50+ catalog allocations or request a custom quote.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="divide-y divide-gray-100">
+      {/* 1. Categories */}
+      {results.categories.length > 0 && (
+        <div className="py-2">
+          <p className="px-4 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+            Polymer Categories
+          </p>
+          {results.categories.map((cat) => (
+            <Link
+              key={cat.code}
+              href={`/products/${cat.slug}`}
+              onClick={onSelect}
+              className="flex items-center justify-between px-4 py-2 hover:bg-gray-50 transition"
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="w-7 h-7 rounded-lg bg-primary/10 text-primary font-bold text-xs flex items-center justify-center shrink-0">
+                  {cat.code}
+                </span>
+                <div>
+                  <p className="text-xs font-semibold text-gray-900">{cat.name}</p>
+                  <p className="text-[10px] text-gray-400">Browse {cat.code} specs &amp; applications</p>
+                </div>
+              </div>
+              <span className="text-[11px] font-medium text-primary">View &rarr;</span>
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {/* 2. Brands */}
+      {results.brands.length > 0 && (
+        <div className="py-2">
+          <p className="px-4 py-1 text-[10px] font-bold uppercase tracking-wider text-navy">
+            Manufacturers &amp; Brands
+          </p>
+          {results.brands.map((b) => (
+            <Link
+              key={b.id}
+              href={`/products?brand=${encodeURIComponent(b.name)}#grades-explorer`}
+              onClick={onSelect}
+              className="flex items-center justify-between px-4 py-2 hover:bg-gray-50 transition"
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="w-7 h-7 rounded-lg bg-slate-100 text-slate-800 font-bold text-[11px] flex items-center justify-center shrink-0">
+                  {b.name.slice(0, 3)}
+                </span>
+                <div>
+                  <p className="text-xs font-semibold text-gray-900">
+                    {b.name} <span className="font-normal text-gray-400">· {b.origin}</span>
+                  </p>
+                  <p className="text-[10px] text-gray-400">{b.fullName}</p>
+                </div>
+              </div>
+              <span className="text-[11px] text-gray-500 font-medium">Grades &rarr;</span>
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {/* 3. Grades */}
+      {results.grades.length > 0 && (
+        <div className="py-2">
+          <p className="px-4 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-700">
+            Technical Grades &amp; TDS
+          </p>
+          {results.grades.map((g) => (
+            <Link
+              key={g.id}
+              href={`/grades/${g.id}`}
+              onClick={onSelect}
+              className="flex items-center justify-between px-4 py-2 hover:bg-primary-soft/40 transition group"
+            >
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span className="font-mono font-bold text-navy group-hover:text-primary text-xs bg-slate-100 px-2 py-0.5 rounded shrink-0">
+                  {g.grade}
+                </span>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-gray-900 truncate">
+                    {g.brand} {g.grade} <span className="text-[11px] font-normal text-gray-500">({g.category} · {g.subCategory})</span>
+                  </p>
+                  <p className="text-[10px] text-gray-500 truncate">
+                    MFI: {g.mfi} · Density: {g.density} · {g.application}
+                  </p>
+                </div>
+              </div>
+              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded shrink-0 ml-2">
+                TDS &rarr;
+              </span>
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {/* Footer */}
+      <div className="bg-gray-50 px-4 py-2.5 border-t border-gray-100 flex items-center justify-between">
+        <span className="text-[11px] text-gray-500">
+          Showing matching products, brands &amp; grades
+        </span>
+        <button
+          type="button"
+          onClick={onSubmit}
+          className="text-xs font-bold text-primary hover:underline cursor-pointer"
+        >
+          View in Explorer &rarr;
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export const Header: React.FC = () => {
   const router = useRouter();
@@ -68,6 +225,45 @@ export const Header: React.FC = () => {
     setMobileMenuOpen(false);
   };
 
+  // Predictive search matches across brands, categories and grade numbers
+  const searchResults = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return { categories: [], brands: [], grades: [] };
+
+    const matchedCategories = SEARCH_CATEGORIES.filter((cat) => {
+      return (
+        cat.code.toLowerCase().includes(q) ||
+        cat.name.toLowerCase().includes(q) ||
+        cat.keywords.some((kw) => kw.includes(q) || q.includes(kw))
+      );
+    }).slice(0, 3);
+
+    const matchedBrands = MAJOR_BRANDS.filter((b) => {
+      return (
+        b.name.toLowerCase().includes(q) ||
+        b.fullName.toLowerCase().includes(q) ||
+        b.origin.toLowerCase().includes(q) ||
+        b.categories.some((c) => c.toLowerCase().includes(q))
+      );
+    }).slice(0, 4);
+
+    const matchedGrades = CANDIDATE_GRADES.filter((g) => {
+      return (
+        g.grade.toLowerCase().includes(q) ||
+        g.brand.toLowerCase().includes(q) ||
+        g.category.toLowerCase().includes(q) ||
+        g.subCategory.toLowerCase().includes(q) ||
+        g.application.toLowerCase().includes(q)
+      );
+    }).slice(0, 8);
+
+    return {
+      categories: matchedCategories,
+      brands: matchedBrands,
+      grades: matchedGrades,
+    };
+  }, [searchQuery]);
+
   // Filter navigation items for desktop (exclude Contact Us since it is now the right CTA button)
   const desktopNavItems = MAIN_NAVIGATION.filter(
     (item) => !item.isCTA && item.name.toLowerCase() !== "contact us"
@@ -87,7 +283,7 @@ export const Header: React.FC = () => {
           {/* MOBILE FULL-HEADER SEARCH BAR (Only when search is open on mobile) */}
           {/* ══════════════════════════════════════════════════════════════ */}
           {isSearchOpen && (
-            <div className="flex xl:hidden items-center w-full h-full px-3 sm:px-4 animate-news-fade">
+            <div className="flex xl:hidden items-center w-full h-full px-3 sm:px-4 animate-news-fade relative">
               <form
                 onSubmit={handleSearchSubmit}
                 className="flex items-center gap-2 w-full bg-gray-50 border border-primary/50 ring-2 ring-primary/20 rounded-xl px-3 py-2 shadow-sm"
@@ -98,7 +294,7 @@ export const Header: React.FC = () => {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search polymer grades (PP, HDPE, SABIC...)"
+                  placeholder="Search brand, category, grade (SABIC, HDPE, H312)..."
                   className="w-full bg-transparent text-sm text-gray-900 placeholder-gray-500 focus:outline-none"
                   autoFocus
                 />
@@ -130,6 +326,20 @@ export const Header: React.FC = () => {
                   <Icon name="close" className="w-5 h-5" />
                 </button>
               </form>
+
+              {searchQuery.trim().length >= 1 && (
+                <div className="fixed top-16 left-3 right-3 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden z-50 text-left normal-case max-h-[75vh] overflow-y-auto animate-news-fade">
+                  <SearchResultsDropdown
+                    results={searchResults}
+                    query={searchQuery}
+                    onSelect={() => {
+                      setIsSearchOpen(false);
+                      setMobileMenuOpen(false);
+                    }}
+                    onSubmit={handleSearchSubmit}
+                  />
+                </div>
+              )}
             </div>
           )}
 
@@ -166,7 +376,7 @@ export const Header: React.FC = () => {
             {/* ══════════════════════════════════════════════════════════════ */}
             {isSearchOpen ? (
               /* Expanded Full Search Bar on Desktop replacing desktop menu */
-              <div className="hidden xl:block flex-1 max-w-3xl mx-6 animate-news-fade">
+              <div className="hidden xl:block flex-1 max-w-3xl mx-6 animate-news-fade relative">
                 <form
                   onSubmit={handleSearchSubmit}
                   className="flex items-center gap-2 bg-gray-100 hover:bg-gray-100/90 rounded-xl px-3.5 py-2 sm:py-2.5 border border-primary/40 bg-white ring-2 ring-primary/15 shadow-sm transition-all"
@@ -177,7 +387,7 @@ export const Header: React.FC = () => {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search polymer grades (e.g. PP, HDPE, SABIC, Injection, MFI...)"
+                    placeholder="Search by brand, category, or grade (e.g. SABIC, HDPE, H312, 500P)..."
                     className="w-full bg-transparent text-xs sm:text-sm text-gray-900 placeholder-gray-500 focus:outline-none"
                   />
                   {searchQuery && (
@@ -206,6 +416,20 @@ export const Header: React.FC = () => {
                     <Icon name="close" className="w-5 h-5" />
                   </button>
                 </form>
+
+                {searchQuery.trim().length >= 1 && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden z-50 text-left normal-case max-h-[75vh] overflow-y-auto animate-news-fade">
+                    <SearchResultsDropdown
+                      results={searchResults}
+                      query={searchQuery}
+                      onSelect={() => {
+                        setIsSearchOpen(false);
+                        setMobileMenuOpen(false);
+                      }}
+                      onSubmit={handleSearchSubmit}
+                    />
+                  </div>
+                )}
               </div>
             ) : (
               /* Normal Desktop Navigation Menu */
