@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Icon } from "./Icons";
 import { MAIN_NAVIGATION } from "@/data/siteNavigation";
-import { CANDIDATE_GRADES, MAJOR_BRANDS } from "@/data/gradesCatalog";
+import { CANDIDATE_GRADES, MAJOR_BRANDS, type PolymerGrade } from "@/data/gradesCatalog";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 const SEARCH_CATEGORIES = [
@@ -30,9 +30,9 @@ function SearchResultsDropdown({
   onSubmit,
 }: {
   results: {
-    categories: typeof SEARCH_CATEGORIES;
-    brands: typeof MAJOR_BRANDS;
-    grades: typeof CANDIDATE_GRADES;
+    categories: Array<{ name: string; code: string; slug: string; keywords: string[] }>;
+    brands: Array<{ id: string; name: string; fullName: string; origin: string; categories: string[]; logoUrl?: string }>;
+    grades: PolymerGrade[];
   };
   query: string;
   onSelect: () => void;
@@ -226,12 +226,69 @@ export const Header: React.FC = () => {
     setMobileMenuOpen(false);
   };
 
-  // Predictive search matches across brands, categories and grade numbers
+  const [liveGrades, setLiveGrades] = useState<PolymerGrade[]>(CANDIDATE_GRADES);
+
+  useEffect(() => {
+    fetch("/api/grades", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data.grades) && data.grades.length > 0) {
+          setLiveGrades(data.grades);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  // Dynamically combine default major brands with all distinct brands from live grades
+  const allBrandsForSearch = useMemo(() => {
+    const brandMap = new Map<
+      string,
+      { id: string; name: string; fullName: string; origin: string; categories: string[]; logoUrl?: string }
+    >();
+    MAJOR_BRANDS.forEach((mb) => {
+      brandMap.set(mb.name.toLowerCase(), { ...mb });
+    });
+    liveGrades.forEach((g) => {
+      if (!g.brand) return;
+      const lower = g.brand.toLowerCase();
+      if (!brandMap.has(lower)) {
+        brandMap.set(lower, {
+          id: g.brand.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+          name: g.brand,
+          fullName: `${g.brand} Petrochemicals`,
+          origin: g.origin || "International",
+          categories: g.category ? [g.category] : [],
+        });
+      } else {
+        const existing = brandMap.get(lower)!;
+        if (g.category && !existing.categories.includes(g.category)) {
+          existing.categories.push(g.category);
+        }
+      }
+    });
+    return Array.from(brandMap.values());
+  }, [liveGrades]);
+
+  // Predictive search matches across brands, categories and grade numbers (dynamic)
   const searchResults = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     if (!q) return { categories: [], brands: [], grades: [] };
 
-    const matchedCategories = SEARCH_CATEGORIES.filter((cat) => {
+    // Dynamically include any custom categories present in live grades
+    const customCategories = liveGrades
+      .map((g) => g.category)
+      .filter((cat, idx, arr) => cat && arr.indexOf(cat) === idx)
+      .filter((cat) => !SEARCH_CATEGORIES.some((sc) => sc.code.toLowerCase() === cat.toLowerCase()))
+      .map((cat) => ({
+        name: cat,
+        code: cat,
+        slug: cat.toLowerCase(),
+        keywords: [cat.toLowerCase()],
+      }));
+
+    const allSearchCategories = [...SEARCH_CATEGORIES, ...customCategories];
+
+    const matchedCategories = allSearchCategories.filter((cat) => {
       return (
         cat.code.toLowerCase().includes(q) ||
         cat.name.toLowerCase().includes(q) ||
@@ -239,7 +296,7 @@ export const Header: React.FC = () => {
       );
     }).slice(0, 3);
 
-    const matchedBrands = MAJOR_BRANDS.filter((b) => {
+    const matchedBrands = allBrandsForSearch.filter((b) => {
       return (
         b.name.toLowerCase().includes(q) ||
         b.fullName.toLowerCase().includes(q) ||
@@ -248,7 +305,7 @@ export const Header: React.FC = () => {
       );
     }).slice(0, 4);
 
-    const matchedGrades = CANDIDATE_GRADES.filter((g) => {
+    const matchedGrades = liveGrades.filter((g) => {
       return (
         g.grade.toLowerCase().includes(q) ||
         g.brand.toLowerCase().includes(q) ||
@@ -263,7 +320,7 @@ export const Header: React.FC = () => {
       brands: matchedBrands,
       grades: matchedGrades,
     };
-  }, [searchQuery]);
+  }, [searchQuery, liveGrades, allBrandsForSearch]);
 
   const { settings } = useSiteSettings();
 
@@ -279,11 +336,10 @@ export const Header: React.FC = () => {
     <>
       <header className="fixed w-full z-40 top-0">
         <nav
-          className={`relative flex items-center w-full h-16 md:h-20 transition-all duration-300 ${
-            scrolled
-              ? "bg-white/95 backdrop-blur-md shadow-md text-gray-900"
-              : "bg-white/95 backdrop-blur-md shadow-[0_4px_14px_rgba(0,0,0,0.06)] text-gray-900"
-          }`}
+          className={`relative flex items-center w-full h-16 md:h-20 transition-all duration-300 ${scrolled
+            ? "bg-white/95 backdrop-blur-md shadow-md text-gray-900"
+            : "bg-white/95 backdrop-blur-md shadow-[0_4px_14px_rgba(0,0,0,0.06)] text-gray-900"
+            }`}
         >
           {/* ══════════════════════════════════════════════════════════════ */}
           {/* MOBILE FULL-HEADER SEARCH BAR (Only when search is open on mobile) */}
@@ -353,9 +409,8 @@ export const Header: React.FC = () => {
           {/* MAIN HEADER ROW (Hidden on mobile when mobile search is open)  */}
           {/* ══════════════════════════════════════════════════════════════ */}
           <div
-            className={`${
-              isSearchOpen ? "hidden xl:flex" : "flex"
-            } flex-row justify-between items-center w-full px-3.5 sm:px-6 lg:px-8 h-full text-xs`}
+            className={`${isSearchOpen ? "hidden xl:flex" : "flex"
+              } flex-row justify-between items-center w-full px-3.5 sm:px-6 lg:px-8 h-full text-xs`}
           >
             {/* Left: Brand Logo */}
             <div className="flex items-center shrink-0">
@@ -466,9 +521,8 @@ export const Header: React.FC = () => {
                       {/* 2-Column Mega Dropdown Menu */}
                       {hasSub && (
                         <div
-                          className={`hidden group-hover:block absolute top-full pt-2 z-50 animate-news-fade ${
-                            isRightHalf ? "right-0" : "left-0"
-                          }`}
+                          className={`hidden group-hover:block absolute top-full pt-2 z-50 animate-news-fade ${isRightHalf ? "right-0" : "left-0"
+                            }`}
                         >
                           <div className="bg-white text-gray-900 shadow-2xl rounded-2xl border-t-4 border-primary p-4 min-w-[540px] max-w-[620px] grid grid-cols-2 gap-2 text-left normal-case">
                             {item.subItems!.map((sub) => (
@@ -571,9 +625,8 @@ export const Header: React.FC = () => {
           />
         )}
         <nav
-          className={`fixed left-0 top-0 w-[85vw] max-w-[360px] h-screen bg-white text-gray-900 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out overflow-y-auto ${
-            mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+          className={`fixed left-0 top-0 w-[85vw] max-w-[360px] h-screen bg-white text-gray-900 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out overflow-y-auto ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
           aria-label="Mobile navigation"
         >
           <div className="min-h-full pt-5 px-5 pb-8 flex flex-col justify-between">
@@ -652,9 +705,8 @@ export const Header: React.FC = () => {
                           >
                             <Icon
                               name="chevron-down"
-                              className={`w-4 h-4 transition-transform duration-200 ${
-                                isExpanded ? "rotate-180" : ""
-                              }`}
+                              className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""
+                                }`}
                             />
                           </button>
                         )}

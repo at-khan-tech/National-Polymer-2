@@ -4,14 +4,46 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Icon } from "@/components/Icons";
-import { getAllProducts } from "@/lib/content-store";
+import { getAllProducts, getAllGrades } from "@/lib/content-store";
 import { GradeCatalogExplorer } from "@/components/GradeCatalogExplorer";
 import { MAJOR_BRANDS } from "@/data/gradesCatalog";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProductsPage() {
-  const products = await getAllProducts();
+  const [products, allGrades] = await Promise.all([
+    getAllProducts(),
+    getAllGrades(),
+  ]);
+
+  // Combine default major brands with all distinct brands from live grades
+  const distinctBrands = (() => {
+    const brandMap = new Map<
+      string,
+      { id: string; name: string; origin: string; logoUrl?: string; categories: string[] }
+    >();
+    MAJOR_BRANDS.forEach((mb) => {
+      brandMap.set(mb.name.toLowerCase(), { ...mb });
+    });
+    allGrades.forEach((g) => {
+      if (!g.brand) return;
+      const lower = g.brand.toLowerCase();
+      if (!brandMap.has(lower)) {
+        brandMap.set(lower, {
+          id: g.brand.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+          name: g.brand,
+          origin: g.origin || "International",
+          categories: g.category ? [g.category] : [],
+        });
+      } else {
+        const existing = brandMap.get(lower)!;
+        if (g.category && !existing.categories.includes(g.category)) {
+          existing.categories.push(g.category);
+        }
+      }
+    });
+    return Array.from(brandMap.values());
+  })();
 
   return (
     <>
@@ -97,7 +129,7 @@ export default async function ProductsPage() {
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-              {MAJOR_BRANDS.map((brand) => (
+              {distinctBrands.map((brand) => (
                 <Link
                   key={brand.id}
                   href={`/products?brand=${encodeURIComponent(brand.name)}#grades-explorer`}
@@ -105,13 +137,19 @@ export default async function ProductsPage() {
                 >
                   <div>
                     <div className="relative w-full h-8 mb-2 flex items-center justify-start">
-                      <Image
-                        src={brand.logoUrl}
-                        alt={`${brand.name} logo`}
-                        width={80}
-                        height={32}
-                        className="object-contain max-h-8 w-auto filter group-hover:scale-105 transition-transform"
-                      />
+                      {brand.logoUrl ? (
+                        <Image
+                          src={brand.logoUrl}
+                          alt={`${brand.name} logo`}
+                          width={80}
+                          height={32}
+                          className="object-contain max-h-8 w-auto filter group-hover:scale-105 transition-transform"
+                        />
+                      ) : (
+                        <span className="font-extrabold text-xs text-primary bg-primary/10 px-2 py-1 rounded">
+                          {brand.name.slice(0, 4)}
+                        </span>
+                      )}
                     </div>
                     <div className="flex items-start justify-between gap-1 mb-1">
                       <span className="font-extrabold text-sm sm:text-[15px] text-navy group-hover:text-primary transition-colors leading-tight">
@@ -158,7 +196,7 @@ export default async function ProductsPage() {
                 </div>
               }
             >
-              <GradeCatalogExplorer />
+              <GradeCatalogExplorer initialGrades={allGrades} />
             </Suspense>
           </section>
 

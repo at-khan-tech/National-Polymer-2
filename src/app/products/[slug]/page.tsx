@@ -5,8 +5,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Icon } from "@/components/Icons";
-import { getAllProducts } from "@/lib/content-store";
-import { CANDIDATE_GRADES } from "@/data/gradesCatalog";
+import { getAllProducts, getAllGrades } from "@/lib/content-store";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +15,11 @@ interface PageProps {
 
 export default async function ProductInnerPage({ params }: PageProps) {
   const { slug } = await params;
-  const product = (await getAllProducts()).find((p) => p.slug === slug);
+  const [products, allGrades] = await Promise.all([
+    getAllProducts(),
+    getAllGrades(),
+  ]);
+  const product = products.find((p) => p.slug === slug);
 
   if (!product) {
     notFound();
@@ -29,7 +32,7 @@ export default async function ProductInnerPage({ params }: PageProps) {
       ? ["HDPE", "LDPE", "LLDPE"]
       : [slug.toUpperCase()];
 
-  const matchingGrades = CANDIDATE_GRADES.filter((g) =>
+  const matchingGrades = allGrades.filter((g) =>
     categoryKeywords.some((k) => g.category.toUpperCase().includes(k))
   );
 

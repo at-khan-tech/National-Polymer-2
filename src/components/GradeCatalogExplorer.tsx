@@ -14,12 +14,14 @@ import { ExternalLink, FileText } from "lucide-react";
 interface GradeCatalogExplorerProps {
   initialBrand?: string;
   initialCategory?: string;
+  initialGrades?: PolymerGrade[];
   compact?: boolean;
 }
 
 export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
   initialBrand,
   initialCategory,
+  initialGrades,
   compact = false,
 }) => {
   const searchParams = useSearchParams();
@@ -32,6 +34,9 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
   const [selectedCategory, setSelectedCategory] = useState(urlCategory);
   const [selectedApp, setSelectedApp] = useState("all");
   const [activeTdsGrade, setActiveTdsGrade] = useState<PolymerGrade | null>(null);
+  const [gradesList, setGradesList] = useState<PolymerGrade[]>(
+    initialGrades && initialGrades.length > 0 ? initialGrades : CANDIDATE_GRADES
+  );
 
   // Sync state if URL search parameters change
   useEffect(() => {
@@ -40,19 +45,67 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
     if (urlSearch) setSearchQuery(urlSearch);
   }, [urlBrand, urlCategory, urlSearch]);
 
-  // Extract unique applications
-  const allApplications = useMemo(() => {
-    const set = new Set<string>();
-    CANDIDATE_GRADES.forEach((g) => {
-      const parts = g.application.split("/").map((p) => p.trim());
-      parts.forEach((p) => set.add(p));
-    });
-    return Array.from(set).sort();
+  // Keep grades dynamic from database / API
+  useEffect(() => {
+    fetch("/api/grades", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data.grades) && data.grades.length > 0) {
+          setGradesList(data.grades);
+        }
+      })
+      .catch(() => {});
   }, []);
 
-  // Filtered grades list
+  // Dynamically extract all brands from live grades (seeded with MAJOR_BRANDS)
+  const dynamicBrands = useMemo(() => {
+    const brandMap = new Map<string, { id: string; name: string; origin: string }>();
+    MAJOR_BRANDS.forEach((mb) => {
+      brandMap.set(mb.name.toLowerCase(), {
+        id: mb.id,
+        name: mb.name,
+        origin: mb.origin,
+      });
+    });
+    gradesList.forEach((g) => {
+      if (g.brand && !brandMap.has(g.brand.toLowerCase())) {
+        brandMap.set(g.brand.toLowerCase(), {
+          id: g.brand.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+          name: g.brand,
+          origin: g.origin || "Global",
+        });
+      }
+    });
+    return Array.from(brandMap.values());
+  }, [gradesList]);
+
+  // Dynamically extract all categories from live grades
+  const dynamicCategories = useMemo(() => {
+    const defaultCats = ["PP", "HDPE", "LDPE", "LLDPE", "PVC", "EVA", "Recycled", "Engineering"];
+    const set = new Set(defaultCats);
+    gradesList.forEach((g) => {
+      if (g.category) set.add(g.category.trim());
+    });
+    return ["all", ...Array.from(set)];
+  }, [gradesList]);
+
+  // Extract unique applications dynamically
+  const allApplications = useMemo(() => {
+    const set = new Set<string>();
+    gradesList.forEach((g) => {
+      if (g.application) {
+        const parts = g.application.split(/[\/,]/).map((p) => p.trim());
+        parts.forEach((p) => {
+          if (p) set.add(p);
+        });
+      }
+    });
+    return Array.from(set).sort();
+  }, [gradesList]);
+
+  // Filtered grades list from dynamic grades
   const filteredGrades = useMemo(() => {
-    return CANDIDATE_GRADES.filter((g) => {
+    return gradesList.filter((g) => {
       // Search query filter
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase().trim();
@@ -145,15 +198,14 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
               <button
                 type="button"
                 onClick={() => setSelectedBrand("all")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                  !selectedBrand || selectedBrand === "all"
-                    ? "bg-navy text-white shadow-xs"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${!selectedBrand || selectedBrand === "all"
+                  ? "bg-navy text-white shadow-xs"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
               >
                 All Brands
               </button>
-              {MAJOR_BRANDS.map((b) => {
+              {dynamicBrands.map((b) => {
                 const isActive =
                   selectedBrand.toLowerCase() === b.name.toLowerCase() ||
                   selectedBrand.toLowerCase() === b.id.toLowerCase();
@@ -162,11 +214,10 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
                     key={b.id}
                     type="button"
                     onClick={() => setSelectedBrand(b.name)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 ${
-                      isActive
-                        ? "bg-primary text-white shadow-xs"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900"
-                    }`}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 ${isActive
+                      ? "bg-primary text-white shadow-xs"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900"
+                      }`}
                   >
                     <span>{b.name}</span>
                     <span className="text-[10px] opacity-75 font-normal">({b.origin.split(" ")[0]})</span>
@@ -184,16 +235,15 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
                 Polymer Category:
               </span>
               <div className="flex flex-wrap gap-1.5">
-                {["all", "PP", "HDPE", "LDPE", "LLDPE"].map((cat) => (
+                {dynamicCategories.map((cat) => (
                   <button
                     key={cat}
                     type="button"
                     onClick={() => setSelectedCategory(cat === "all" ? "" : cat)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                      (cat === "all" && !selectedCategory) || selectedCategory.toUpperCase() === cat.toUpperCase()
-                        ? "bg-primary text-white shadow-xs"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${(cat === "all" && !selectedCategory) || selectedCategory.toUpperCase() === cat.toUpperCase()
+                      ? "bg-primary text-white shadow-xs"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
                   >
                     {cat === "all" ? "All Categories" : cat}
                   </button>
