@@ -4,6 +4,7 @@ import "./globals.css";
 import { AOSProvider } from "@/components/AOSProvider";
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { SiteSettingsProvider } from "@/context/SiteSettingsContext";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 const montserrat = Montserrat({
@@ -41,12 +42,14 @@ export default function RootLayout({
     <html lang="en" className={montserrat.variable}>
       <body className="font-montserrat antialiased bg-white text-gray-900 overflow-x-hidden min-h-screen w-full relative selection:bg-primary selection:text-white">
         <ThemeProvider>
-          <SmoothScrollProvider>
-            <AOSProvider>
-              {children}
-              <WhatsAppButton />
-            </AOSProvider>
-          </SmoothScrollProvider>
+          <SiteSettingsProvider>
+            <SmoothScrollProvider>
+              <AOSProvider>
+                {children}
+                <WhatsAppButton />
+              </AOSProvider>
+            </SmoothScrollProvider>
+          </SiteSettingsProvider>
         </ThemeProvider>
       </body>
     </html>

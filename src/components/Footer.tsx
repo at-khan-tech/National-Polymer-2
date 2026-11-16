@@ -4,8 +4,10 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "./Icons";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 export const Footer: React.FC = () => {
+  const { settings } = useSiteSettings();
   return (
     <footer id="contact" className="w-full bg-primary text-white transition-colors duration-300">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-14 pb-24 md:pb-14">
@@ -212,11 +214,13 @@ export const Footer: React.FC = () => {
                     Global Markets
                   </Link>
                 </li>
-                <li>
-                  <Link href="/blogs" className="text-white/80 hover:text-white transition-colors block py-0.5">
-                    Industry Insights
-                  </Link>
-                </li>
+                {settings.blogsEnabled && (
+                  <li>
+                    <Link href="/blogs" className="text-white/80 hover:text-white transition-colors block py-0.5">
+                      Industry Insights
+                    </Link>
+                  </li>
+                )}
                 <li>
                   <Link href="/contact" className="text-white/80 hover:text-white transition-colors block py-0.5">
                     Contact &amp; Map

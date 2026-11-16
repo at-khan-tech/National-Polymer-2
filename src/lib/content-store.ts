@@ -18,6 +18,10 @@ export type { OrderStatus };
 
 export type EnquiryStatus = "new" | "contacted" | "quoted" | "closed";
 
+export interface SiteSettings {
+  blogsEnabled: boolean;
+}
+
 export interface AdminEnquiry {
   id: string;
   fullName: string;
@@ -380,7 +384,74 @@ export async function deleteAdminEnquiry(id: string): Promise<void> {
   throwIfDatabaseError(error);
 }
 
+const SETTINGS_STORAGE_PATH = "settings/site_settings.json";
+const DEFAULT_SETTINGS: SiteSettings = {
+  blogsEnabled: false, // Default invisible as requested
+};
+
+let cachedSettings: SiteSettings | null = null;
+let cachedSettingsTime = 0;
+
+export async function getSiteSettings(): Promise<SiteSettings> {
+  const now = Date.now();
+  if (cachedSettings && now - cachedSettingsTime < 5000) {
+    return cachedSettings;
+  }
+
+  const supabase = getSupabaseAdmin();
+  try {
+    const { data, error } = await supabase.storage
+      .from("uploads")
+      .download(SETTINGS_STORAGE_PATH);
+
+    if (!error && data) {
+      const text = await data.text();
+      const parsed = JSON.parse(text);
+      if (typeof parsed === "object" && parsed !== null && "blogsEnabled" in parsed) {
+        cachedSettings = { blogsEnabled: Boolean(parsed.blogsEnabled) };
+        cachedSettingsTime = now;
+        return cachedSettings;
+      }
+    }
+  } catch (err) {
+    console.warn("Could not read site settings from Supabase Storage, using defaults:", err);
+  }
+
+  cachedSettings = DEFAULT_SETTINGS;
+  cachedSettingsTime = now;
+  return DEFAULT_SETTINGS;
+}
+
+export async function updateSiteSettings(settings: Partial<SiteSettings>): Promise<SiteSettings> {
+  const current = await getSiteSettings();
+  const updated: SiteSettings = {
+    ...current,
+    ...settings,
+  };
+
+  const supabase = getSupabaseAdmin();
+  const { error } = await supabase.storage
+    .from("uploads")
+    .upload(SETTINGS_STORAGE_PATH, Buffer.from(JSON.stringify(updated, null, 2)), {
+      contentType: "application/json",
+      upsert: true,
+    });
+
+  if (error) {
+    throw new Error(`Failed to save settings to storage: ${error.message}`);
+  }
+
+  cachedSettings = updated;
+  cachedSettingsTime = Date.now();
+  return updated;
+}
+
 export async function getAllBlogs(): Promise<BlogPost[]> {
+  const settings = await getSiteSettings();
+  if (!settings.blogsEnabled) {
+    return [];
+  }
+
   try {
     const { data, error } = await getSupabaseAdmin()
       .from("blogs")

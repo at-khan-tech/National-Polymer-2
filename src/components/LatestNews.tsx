@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "./Icons";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 interface NewsItem {
   id: number;
@@ -58,7 +59,10 @@ const newsData: NewsItem[] = [
 ];
 
 export const LatestNews: React.FC = () => {
+  const { settings } = useSiteSettings();
   const [activeIndex, setActiveIndex] = useState(0);
+
+  if (!settings.blogsEnabled) return null;
 
   const activeStory = newsData[activeIndex];
 

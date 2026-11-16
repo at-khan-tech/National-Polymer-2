@@ -1,14 +1,20 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Icon } from "@/components/Icons";
-import { getAllBlogs } from "@/lib/content-store";
+import { getAllBlogs, getSiteSettings } from "@/lib/content-store";
 
 export const dynamic = "force-dynamic";
 
 export default async function BlogsPage() {
+  const settings = await getSiteSettings();
+  if (!settings.blogsEnabled) {
+    redirect("/");
+  }
+
   const posts = await getAllBlogs();
   return (
     <>

@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "./Icons";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 interface ArticleItem {
   title: string;
@@ -40,6 +41,9 @@ const articles: ArticleItem[] = [
 ];
 
 export const LatestInsights: React.FC = () => {
+  const { settings } = useSiteSettings();
+  if (!settings.blogsEnabled) return null;
+
   return (
     <section
       className="w-full bg-gray-50 py-16 md:py-20"

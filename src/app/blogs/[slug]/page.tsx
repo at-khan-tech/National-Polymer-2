@@ -1,11 +1,11 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Icon } from "@/components/Icons";
-import { getAllBlogs } from "@/lib/content-store";
+import { getAllBlogs, getSiteSettings } from "@/lib/content-store";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +14,11 @@ interface PageProps {
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
+  const settings = await getSiteSettings();
+  if (!settings.blogsEnabled) {
+    redirect("/");
+  }
+
   const { slug } = await params;
   const post = (await getAllBlogs()).find((p) => p.slug === slug);
 

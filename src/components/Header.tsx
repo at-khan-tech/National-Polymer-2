@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Icon } from "./Icons";
 import { MAIN_NAVIGATION } from "@/data/siteNavigation";
 import { CANDIDATE_GRADES, MAJOR_BRANDS } from "@/data/gradesCatalog";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 const SEARCH_CATEGORIES = [
   { name: "Polypropylene (PP)", code: "PP", slug: "pp", keywords: ["pp", "polypropylene", "homopolymer", "copolymer", "raffia", "bopp"] },
@@ -264,9 +265,14 @@ export const Header: React.FC = () => {
     };
   }, [searchQuery]);
 
-  // Filter navigation items for desktop (exclude Contact Us since it is now the right CTA button)
+  const { settings } = useSiteSettings();
+
+  // Filter navigation items for desktop (exclude Contact Us since it is now the right CTA button, and exclude Blogs if disabled)
   const desktopNavItems = MAIN_NAVIGATION.filter(
-    (item) => !item.isCTA && item.name.toLowerCase() !== "contact us"
+    (item) =>
+      !item.isCTA &&
+      item.name.toLowerCase() !== "contact us" &&
+      (settings.blogsEnabled || item.href !== "/blogs")
   );
 
   return (
@@ -606,7 +612,9 @@ export const Header: React.FC = () => {
 
               {/* Navigation Items with Accordions */}
               <ul className="mt-4 space-y-1">
-                {MAIN_NAVIGATION.map((item) => {
+                {MAIN_NAVIGATION.filter(
+                  (item) => settings.blogsEnabled || item.href !== "/blogs"
+                ).map((item) => {
                   const hasSub = item.subItems && item.subItems.length > 0;
                   const isExpanded = activeMobileDropdown === item.name;
 

@@ -38,7 +38,7 @@ import {
 import type { BlogPost } from "@/data/blogsData";
 import type { ProductDetail } from "@/data/productsData";
 import type { PolymerGrade } from "@/data/gradesCatalog";
-import type { AdminEnquiry, AdminOrder, ContentCategory, EnquiryStatus, OrderStatus } from "@/lib/content-store";
+import type { AdminEnquiry, AdminOrder, ContentCategory, EnquiryStatus, OrderStatus, SiteSettings } from "@/lib/content-store";
 import { ImageUploadField } from "@/components/ImageUploadField";
 
 type View = "dashboard" | "blogs" | "products" | "grades" | "categories" | "orders" | "enquiries" | "settings";
@@ -203,6 +203,8 @@ export default function AdminPanelPage() {
   const [enquiryStatusFilter, setEnquiryStatusFilter] = useState<string>("all");
   const [enquiryNotice, setEnquiryNotice] = useState<Notice>(null);
   const [isUpdatingEnquiry, setIsUpdatingEnquiry] = useState(false);
+  const [siteSettings, setSiteSettings] = useState<SiteSettings>({ blogsEnabled: false });
+  const [isTogglingBlogs, setIsTogglingBlogs] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [search, setSearch] = useState("");
@@ -233,13 +235,14 @@ export default function AdminPanelPage() {
   const loadData = useCallback(async () => {
     setLoadError("");
     try {
-      const [blogResult, productResult, categoryResult, orderResult, gradeResult, enquiryResult] = await Promise.all([
+      const [blogResult, productResult, categoryResult, orderResult, gradeResult, enquiryResult, settingsResult] = await Promise.all([
         fetch("/api/admin/blogs", { cache: "no-store" }).then((response) => readResponse(response, "Unable to load posts.")),
         fetch("/api/products", { cache: "no-store" }).then((response) => readResponse(response, "Unable to load products.")),
         fetch("/api/admin/categories", { cache: "no-store" }).then((response) => readResponse(response, "Unable to load categories.")),
         fetch("/api/admin/orders", { cache: "no-store" }).then((response) => readResponse(response, "Unable to load orders.")),
         fetch("/api/grades", { cache: "no-store" }).then((response) => readResponse(response, "Unable to load grades.")).catch(() => ({ grades: [] })),
         fetch("/api/admin/enquiries", { cache: "no-store" }).then((response) => readResponse(response, "Unable to load enquiries.")).catch(() => ({ enquiries: [] })),
+        fetch("/api/settings", { cache: "no-store" }).then((response) => readResponse(response, "Unable to load settings.")).catch(() => ({ settings: { blogsEnabled: false } })),
       ]);
       setPosts(blogResult.blogs as BlogPost[]);
       setProducts(productResult.products as ProductDetail[]);
@@ -247,6 +250,7 @@ export default function AdminPanelPage() {
       setOrders(orderResult.orders as AdminOrder[]);
       setGrades((gradeResult.grades as PolymerGrade[]) || []);
       setEnquiries((enquiryResult.enquiries as AdminEnquiry[]) || []);
+      setSiteSettings((settingsResult.settings as SiteSettings) || { blogsEnabled: false });
     } catch (error) {
       setLoadError(error instanceof Error ? error.message : "Unable to load admin data.");
     } finally {
@@ -255,6 +259,17 @@ export default function AdminPanelPage() {
   }, []);
 
   useEffect(() => { void loadData(); }, [loadData]);
+
+  // Lock background body scroll when RFQ modal or Blog editor drawer is open
+  useEffect(() => {
+    if (selectedEnquiry || blogEditorOpen) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prevOverflow;
+      };
+    }
+  }, [selectedEnquiry, blogEditorOpen]);
 
   const filteredPosts = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -626,6 +641,35 @@ export default function AdminPanelPage() {
     }
   };
 
+  const toggleBlogVisibility = async (enable: boolean) => {
+    setIsTogglingBlogs(true);
+    setBlogNotice(null);
+    try {
+      const result = await readResponse(
+        await fetch("/api/admin/settings", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ blogsEnabled: enable }),
+        }),
+        "Unable to update blog settings."
+      );
+      setSiteSettings(result.settings as SiteSettings);
+      setBlogNotice({
+        type: "success",
+        message:
+          result.message ??
+          `Blog system has been ${enable ? "enabled and is now visible" : "disabled and completely hidden from website"}.`,
+      });
+    } catch (error) {
+      setBlogNotice({
+        type: "error",
+        message: error instanceof Error ? error.message : "Unable to update blog settings.",
+      });
+    } finally {
+      setIsTogglingBlogs(false);
+    }
+  };
+
   const pageTitle = navigation.find((item) => item.id === activeView)?.label ?? "Settings";
   const searchPlaceholder =
     activeView === "enquiries"
@@ -653,6 +697,11 @@ export default function AdminPanelPage() {
               {id === "enquiries" && enquiries.filter((e) => e.status === "new").length > 0 ? (
                 <span className="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">
                   {enquiries.filter((e) => e.status === "new").length} New
+                </span>
+              ) : null}
+              {id === "blogs" && !siteSettings.blogsEnabled ? (
+                <span className="ml-auto rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-500">
+                  Hidden
                 </span>
               ) : null}
               {id === "orders" && orders.filter((order) => order.status === "pending").length > 0 ? <span className="ml-auto rounded-full bg-indigo-100 px-2 py-0.5 text-[10px] font-semibold text-indigo-700">{orders.filter((order) => order.status === "pending").length}</span> : null}
@@ -826,7 +875,96 @@ export default function AdminPanelPage() {
 
           {!isLoading && activeView === "blogs" ? (
             <div>
-              <SectionHeading eyebrow="Content management" title="Blogs & articles" description="Create, edit, and publish the insights on your website." action={<button onClick={openNewBlog} className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700"><Plus size={17} /> New article</button>} />
+              <SectionHeading
+                eyebrow="Content management"
+                title="Blogs & articles"
+                description="Create, edit, and publish the insights on your website."
+                action={
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      disabled={isTogglingBlogs}
+                      onClick={() => void toggleBlogVisibility(!siteSettings.blogsEnabled)}
+                      className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-bold uppercase tracking-wider transition cursor-pointer shadow-xs disabled:opacity-50 ${
+                        siteSettings.blogsEnabled
+                          ? "bg-red-50 text-red-700 border border-red-300 hover:bg-red-100"
+                          : "bg-emerald-600 text-white hover:bg-emerald-700"
+                      }`}
+                    >
+                      {isTogglingBlogs
+                        ? "Saving..."
+                        : siteSettings.blogsEnabled
+                        ? "Disable Public Blogs"
+                        : "Enable Public Blogs"}
+                    </button>
+                    <button
+                      onClick={openNewBlog}
+                      className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 cursor-pointer"
+                    >
+                      <Plus size={17} /> New article
+                    </button>
+                  </div>
+                }
+              />
+
+              {/* Master Blog Visibility Control Card */}
+              <div
+                className={`mb-6 rounded-xl border p-4 sm:p-5 shadow-xs transition ${
+                  siteSettings.blogsEnabled
+                    ? "border-emerald-200 bg-emerald-50/50"
+                    : "border-amber-200 bg-amber-50/60"
+                }`}
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div className="flex items-start gap-3">
+                    <span
+                      className={`mt-1 flex h-3 w-3 shrink-0 rounded-full ${
+                        siteSettings.blogsEnabled ? "bg-emerald-500 animate-pulse" : "bg-amber-500"
+                      }`}
+                    />
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-sm font-bold text-slate-900">
+                          {siteSettings.blogsEnabled
+                            ? "Blog Module: ACTIVE on Public Website"
+                            : "Blog Module: DISABLED & INVISIBLE"}
+                        </h3>
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                            siteSettings.blogsEnabled
+                              ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                              : "bg-amber-100 text-amber-900 border border-amber-300"
+                          }`}
+                        >
+                          {siteSettings.blogsEnabled ? "Live" : "Hidden"}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-xs text-slate-600 leading-relaxed">
+                        {siteSettings.blogsEnabled
+                          ? "Blogs are visible to public visitors in Navbar, Footer, and at /blogs. All published articles are live."
+                          : "All blog-related content is completely hidden from public visitors across the website. The /blogs page, navbar link, and footer link are disabled. You can still manage drafts here in admin."}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={isTogglingBlogs}
+                    onClick={() => void toggleBlogVisibility(!siteSettings.blogsEnabled)}
+                    className={`shrink-0 rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-wider transition cursor-pointer shadow-xs disabled:opacity-50 ${
+                      siteSettings.blogsEnabled
+                        ? "bg-red-600 text-white hover:bg-red-700"
+                        : "bg-emerald-600 text-white hover:bg-emerald-700"
+                    }`}
+                  >
+                    {isTogglingBlogs
+                      ? "Updating..."
+                      : siteSettings.blogsEnabled
+                      ? "Turn OFF Blogs on Website"
+                      : "Turn ON Blogs on Website"}
+                  </button>
+                </div>
+              </div>
+
               <NoticeBanner notice={blogNotice && !blogEditorOpen ? blogNotice : null} />
               <div className="mt-5 overflow-hidden rounded-xl border border-slate-200 bg-white">
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-5 py-4"><div><h2 className="text-sm font-semibold">All articles</h2><p className="mt-1 text-xs text-slate-500">{filteredPosts.length} articles · {posts.filter((post) => post.status === "draft").length} drafts</p></div><label className="relative sm:hidden"><Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search posts" className="w-44 rounded-lg border border-slate-200 py-2 pl-9 pr-3 text-xs outline-none focus:border-indigo-400" /></label></div>
@@ -1454,8 +1592,16 @@ export default function AdminPanelPage() {
 
               {/* Inquiry Detail Modal */}
               {selectedEnquiry ? (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-sm">
-                  <div className="relative w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl sm:p-7 max-h-[90vh] overflow-y-auto">
+                <div
+                  className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/60 backdrop-blur-sm overflow-y-auto overscroll-none"
+                  onClick={(e) => {
+                    if (e.target === e.currentTarget) setSelectedEnquiry(null);
+                  }}
+                >
+                  <div
+                    className="relative w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl sm:p-7 max-h-[85vh] overflow-y-auto overscroll-contain"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <div className="flex items-start justify-between border-b border-slate-100 pb-4">
                       <div>
                         <div className="flex items-center gap-2">
@@ -1609,7 +1755,47 @@ export default function AdminPanelPage() {
           ) : null}
 
           {!isLoading && activeView === "settings" ? (
-            <div><SectionHeading eyebrow="Workspace preferences" title="Settings" description="Manage workspace details and content storage." /><div className="max-w-3xl space-y-5"><section className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6"><div className="flex items-center gap-3"><span className="rounded-lg bg-indigo-50 p-2.5 text-indigo-600"><Settings size={19} /></span><div><h2 className="text-sm font-semibold">Admin workspace</h2><p className="mt-1 text-xs text-slate-500">National Polymers content management</p></div></div><div className="mt-5 grid gap-4 border-t border-slate-100 pt-5 sm:grid-cols-2"><div><p className="text-xs text-slate-500">Authentication</p><p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-emerald-700"><Check size={15} /> Protected admin session</p></div><div><p className="text-xs text-slate-500">Session duration</p><p className="mt-1 text-sm font-medium text-slate-800">8 hours</p></div></div></section><section className="rounded-xl border border-amber-200 bg-amber-50 p-5 sm:p-6"><h2 className="text-sm font-semibold text-amber-900">Content storage</h2><p className="mt-2 text-sm leading-6 text-amber-800">The admin workspace stores content in a local JSON file. Production deployments need a persistent writable filesystem, or content changes may not survive restarts or be shared across multiple server instances.</p></section>{logoutError ? <NoticeBanner notice={{ type: "error", message: logoutError }} /> : null}<button onClick={() => void handleLogout()} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:border-red-200 hover:text-red-600"><LogOut size={16} /> Log out of admin</button></div></div>
+            <div>
+              <SectionHeading eyebrow="Workspace preferences" title="Settings" description="Manage workspace details and content storage." />
+              <div className="max-w-3xl space-y-5">
+                <section className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6 shadow-xs">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="rounded-lg bg-indigo-50 p-2 text-indigo-600"><BookOpen size={17} /></span>
+                        <h2 className="text-sm font-semibold text-slate-900">Public Blog Module</h2>
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                          siteSettings.blogsEnabled
+                            ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                            : "bg-amber-100 text-amber-900 border border-amber-300"
+                        }`}>
+                          {siteSettings.blogsEnabled ? "Active & Live" : "Disabled (Hidden)"}
+                        </span>
+                      </div>
+                      <p className="mt-1.5 text-xs text-slate-500 leading-relaxed max-w-xl">
+                        When disabled, all blog-related content (Navbar link, Footer link, /blogs page, articles) is completely invisible to public website visitors.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      disabled={isTogglingBlogs}
+                      onClick={() => void toggleBlogVisibility(!siteSettings.blogsEnabled)}
+                      className={`shrink-0 rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-wider transition cursor-pointer shadow-xs disabled:opacity-50 ${
+                        siteSettings.blogsEnabled
+                          ? "bg-red-50 text-red-700 border border-red-300 hover:bg-red-100"
+                          : "bg-emerald-600 text-white hover:bg-emerald-700"
+                      }`}
+                    >
+                      {isTogglingBlogs
+                        ? "Saving..."
+                        : siteSettings.blogsEnabled
+                        ? "Disable Blogs"
+                        : "Enable Blogs"}
+                    </button>
+                  </div>
+                </section>
+
+                <section className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6"><div className="flex items-center gap-3"><span className="rounded-lg bg-indigo-50 p-2.5 text-indigo-600"><Settings size={19} /></span><div><h2 className="text-sm font-semibold">Admin workspace</h2><p className="mt-1 text-xs text-slate-500">National Polymers content management</p></div></div><div className="mt-5 grid gap-4 border-t border-slate-100 pt-5 sm:grid-cols-2"><div><p className="text-xs text-slate-500">Authentication</p><p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-emerald-700"><Check size={15} /> Protected admin session</p></div><div><p className="text-xs text-slate-500">Session duration</p><p className="mt-1 text-sm font-medium text-slate-800">8 hours</p></div></div></section><section className="rounded-xl border border-amber-200 bg-amber-50 p-5 sm:p-6"><h2 className="text-sm font-semibold text-amber-900">Content storage</h2><p className="mt-2 text-sm leading-6 text-amber-800">The admin workspace stores content in a local JSON file. Production deployments need a persistent writable filesystem, or content changes may not survive restarts or be shared across multiple server instances.</p></section>{logoutError ? <NoticeBanner notice={{ type: "error", message: logoutError }} /> : null}<button onClick={() => void handleLogout()} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:border-red-200 hover:text-red-600"><LogOut size={16} /> Log out of admin</button></div></div>
           ) : null}
         </main>
       </div>
