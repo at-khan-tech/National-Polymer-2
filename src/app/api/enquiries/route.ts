@@ -25,38 +25,60 @@ export async function POST(request: Request) {
     !requiredText(body.companyName, 160) ||
     !requiredText(body.email, 254) ||
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(body.email).trim()) ||
-    !requiredText(body.phone, 40) ||
-    !requiredText(body.destinationPort, 120) ||
-    !requiredText(body.country, 100) ||
-    !requiredText(body.productSlug, 100) ||
-    !requiredText(body.grade, 160) ||
-    !requiredText(body.volume, 80) ||
-    !requiredText(body.packaging, 100) ||
-    !(body.notes === undefined || (typeof body.notes === "string" && body.notes.length <= 2000))
+    !requiredText(body.phone, 40)
   ) {
-    return NextResponse.json({ message: "Please provide valid enquiry details." }, { status: 400 });
+    return NextResponse.json({ message: "Please provide valid contact details (Name, Company, Email, Phone)." }, { status: 400 });
   }
 
   try {
-    const productSlug = body.productSlug.trim();
-    const product = (await getAllProducts()).find((item) => item.slug === productSlug);
-    if (!product) {
-      return NextResponse.json({ message: "Please select a valid product." }, { status: 400 });
-    }
+    const rawSlug = typeof body.productSlug === "string" ? body.productSlug.trim() : "";
+    const allProducts = await getAllProducts();
+    const product = allProducts.find((item) => item.slug === rawSlug);
+
+    const productSlug = product ? product.slug : "general-inquiry";
+    const productName = product ? product.name : "General Commercial Inquiry";
+
+    const destinationPort =
+      typeof body.destinationPort === "string" && body.destinationPort.trim()
+        ? body.destinationPort.trim()
+        : "Dubai Trading Desk / Direct";
+
+    const country =
+      typeof body.country === "string" && body.country.trim()
+        ? body.country.trim()
+        : "UAE / International";
+
+    const grade =
+      typeof body.grade === "string" && body.grade.trim()
+        ? body.grade.trim()
+        : "Standard Grade / Inquire";
+
+    const volume =
+      typeof body.volume === "string" && body.volume.trim()
+        ? body.volume.trim()
+        : "Direct Consultation";
+
+    const packaging =
+      typeof body.packaging === "string" && body.packaging.trim()
+        ? body.packaging.trim()
+        : "Standard Export Bags / Bulk";
+
+    const notes = typeof body.notes === "string" ? body.notes.trim() : "";
 
     const { error } = await getSupabaseAdmin().from("enquiries").insert({
       full_name: body.fullName.trim(),
       company_name: body.companyName.trim(),
       email: body.email.trim(),
       phone: body.phone.trim(),
-      destination_port: body.destinationPort.trim(),
-      country: body.country.trim(),
-      product_slug: product.slug,
-      product_name: product.name,
-      grade: body.grade.trim(),
-      volume: body.volume.trim(),
-      packaging: body.packaging.trim(),
-      notes: typeof body.notes === "string" ? body.notes.trim() : "",
+      destination_port: destinationPort,
+      country: country,
+      product_slug: productSlug,
+      product_name: productName,
+      grade: grade,
+      volume: volume,
+      packaging: packaging,
+      notes: notes,
+      status: "new",
     });
     throwIfDatabaseError(error);
 

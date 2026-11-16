@@ -16,6 +16,26 @@ export interface ContentCategory {
 
 export type { OrderStatus };
 
+export type EnquiryStatus = "new" | "contacted" | "quoted" | "closed";
+
+export interface AdminEnquiry {
+  id: string;
+  fullName: string;
+  companyName: string;
+  email: string;
+  phone: string;
+  destinationPort: string;
+  country: string;
+  productSlug: string;
+  productName: string;
+  grade: string;
+  volume: string;
+  packaging: string;
+  notes: string;
+  status: EnquiryStatus;
+  createdAt: string;
+}
+
 export interface AdminOrder {
   id: string;
   orderNumber: string;
@@ -138,6 +158,42 @@ function toAdminOrder(row: {
     quantity: row.quantity,
     total: row.total,
     status: row.status,
+    createdAt: row.created_at,
+  };
+}
+
+function toAdminEnquiry(row: {
+  id: string;
+  full_name: string;
+  company_name: string;
+  email: string;
+  phone: string;
+  destination_port: string;
+  country: string;
+  product_slug: string;
+  product_name: string;
+  grade: string;
+  volume: string;
+  packaging: string;
+  notes: string | null;
+  status: EnquiryStatus;
+  created_at: string;
+}): AdminEnquiry {
+  return {
+    id: row.id,
+    fullName: row.full_name,
+    companyName: row.company_name,
+    email: row.email,
+    phone: row.phone,
+    destinationPort: row.destination_port,
+    country: row.country,
+    productSlug: row.product_slug,
+    productName: row.product_name,
+    grade: row.grade,
+    volume: row.volume,
+    packaging: row.packaging,
+    notes: row.notes || "",
+    status: row.status || "new",
     createdAt: row.created_at,
   };
 }
@@ -287,6 +343,41 @@ export async function updateAdminOrderStatus(id: string, status: OrderStatus) {
   throwIfDatabaseError(error);
   if (!data) throw new Error("Order not found.");
   return toAdminOrder(data);
+}
+
+export async function getAdminEnquiries(): Promise<AdminEnquiry[]> {
+  const { data, error } = await getSupabaseAdmin()
+    .from("enquiries")
+    .select("*")
+    .order("created_at", { ascending: false });
+  throwIfDatabaseError(error);
+  return (data ?? []).map(toAdminEnquiry);
+}
+
+export async function updateAdminEnquiryStatus(
+  id: string,
+  status: EnquiryStatus
+): Promise<AdminEnquiry> {
+  const validStatuses: EnquiryStatus[] = ["new", "contacted", "quoted", "closed"];
+  if (!validStatuses.includes(status)) throw new Error("Invalid enquiry status.");
+
+  const { data, error } = await getSupabaseAdmin()
+    .from("enquiries")
+    .update({ status })
+    .eq("id", id)
+    .select("*")
+    .maybeSingle();
+  throwIfDatabaseError(error);
+  if (!data) throw new Error("Enquiry not found.");
+  return toAdminEnquiry(data);
+}
+
+export async function deleteAdminEnquiry(id: string): Promise<void> {
+  const { error } = await getSupabaseAdmin()
+    .from("enquiries")
+    .delete()
+    .eq("id", id);
+  throwIfDatabaseError(error);
 }
 
 export async function getAllBlogs(): Promise<BlogPost[]> {

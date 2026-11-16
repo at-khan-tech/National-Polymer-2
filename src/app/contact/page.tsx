@@ -15,11 +15,45 @@ export default function ContactPage() {
     company: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setErrorMsg("");
+
+    try {
+      const res = await fetch("/api/enquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: formData.name,
+          companyName: formData.company,
+          email: formData.email,
+          phone: formData.phone,
+          notes: formData.message,
+          productSlug: "general-inquiry",
+          destinationPort: "Dubai Trading Desk / Direct",
+          country: "UAE / International",
+          grade: "Contact Form Message",
+          volume: "Direct Consultation",
+          packaging: "Export Standard",
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.message || "Failed to submit inquiry. Please try again.");
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : "Failed to submit inquiry.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -148,11 +182,18 @@ export default function ContactPage() {
                     />
                   </div>
 
+                  {errorMsg && (
+                    <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-xs text-red-600">
+                      {errorMsg}
+                    </div>
+                  )}
+
                   <button
                     type="submit"
-                    className="w-full rounded-lg bg-primary hover:bg-primary-darker text-white py-3 sm:py-3.5 text-xs font-bold uppercase tracking-wider shadow-md transition-all active:scale-98 cursor-pointer"
+                    disabled={isSubmitting}
+                    className="w-full rounded-lg bg-primary hover:bg-primary-darker disabled:opacity-50 text-white py-3 sm:py-3.5 text-xs font-bold uppercase tracking-wider shadow-md transition-all active:scale-98 cursor-pointer disabled:cursor-not-allowed"
                   >
-                    Send Message to Trading Desk
+                    {isSubmitting ? "Sending..." : "Send Message to Trading Desk"}
                   </button>
                 </form>
               )}

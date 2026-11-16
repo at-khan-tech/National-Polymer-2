@@ -9,14 +9,22 @@ import {
   ArrowUpRight,
   BookOpen,
   Boxes,
+  Building2,
   Check,
   ChevronDown,
   CircleDollarSign,
+  Clock,
+  ExternalLink,
+  Eye,
   FilePlus2,
+  Filter,
+  Inbox,
   Layers,
   LayoutDashboard,
   LogOut,
+  Mail,
   Menu,
+  MessageSquare,
   Package,
   Pencil,
   Plus,
@@ -30,10 +38,10 @@ import {
 import type { BlogPost } from "@/data/blogsData";
 import type { ProductDetail } from "@/data/productsData";
 import type { PolymerGrade } from "@/data/gradesCatalog";
-import type { AdminOrder, ContentCategory, OrderStatus } from "@/lib/content-store";
+import type { AdminEnquiry, AdminOrder, ContentCategory, EnquiryStatus, OrderStatus } from "@/lib/content-store";
 import { ImageUploadField } from "@/components/ImageUploadField";
 
-type View = "dashboard" | "blogs" | "products" | "grades" | "categories" | "orders" | "settings";
+type View = "dashboard" | "blogs" | "products" | "grades" | "categories" | "orders" | "enquiries" | "settings";
 type Notice = { type: "success" | "error"; message: string } | null;
 type BlogEditor = {
   title: string;
@@ -69,6 +77,7 @@ type GradeFormData = {
 
 const navigation: { id: View; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { id: "enquiries", label: "RFQs & Inquiries", icon: Inbox },
   { id: "products", label: "Products", icon: Package },
   { id: "grades", label: "Grades", icon: Layers },
   { id: "blogs", label: "Blogs", icon: BookOpen },
@@ -76,6 +85,7 @@ const navigation: { id: View; label: string; icon: typeof LayoutDashboard }[] = 
   { id: "orders", label: "Orders", icon: ShoppingBag },
 ];
 const statuses: OrderStatus[] = ["pending", "processing", "shipped", "completed", "cancelled"];
+const enquiryStatuses: EnquiryStatus[] = ["new", "contacted", "quoted", "closed"];
 const inputClass = "w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-50";
 const labelClass = "mb-1.5 block text-xs font-semibold text-slate-600";
 const initialProduct = {
@@ -171,6 +181,10 @@ function StatusPill({ status }: { status: string }) {
     draft: "bg-amber-50 text-amber-700",
     pending: "bg-amber-50 text-amber-700",
     cancelled: "bg-slate-100 text-slate-600",
+    new: "bg-amber-100 text-amber-800 font-bold border border-amber-300",
+    contacted: "bg-blue-50 text-blue-700 border border-blue-200",
+    quoted: "bg-purple-50 text-purple-700 border border-purple-200",
+    closed: "bg-slate-100 text-slate-600",
   };
   return <span className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold capitalize ${styles[status] ?? "bg-slate-100 text-slate-600"}`}>{status}</span>;
 }
@@ -184,6 +198,11 @@ export default function AdminPanelPage() {
   const [categories, setCategories] = useState<ContentCategory[]>([]);
   const [orders, setOrders] = useState<AdminOrder[]>([]);
   const [grades, setGrades] = useState<PolymerGrade[]>([]);
+  const [enquiries, setEnquiries] = useState<AdminEnquiry[]>([]);
+  const [selectedEnquiry, setSelectedEnquiry] = useState<AdminEnquiry | null>(null);
+  const [enquiryStatusFilter, setEnquiryStatusFilter] = useState<string>("all");
+  const [enquiryNotice, setEnquiryNotice] = useState<Notice>(null);
+  const [isUpdatingEnquiry, setIsUpdatingEnquiry] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [search, setSearch] = useState("");
@@ -214,18 +233,20 @@ export default function AdminPanelPage() {
   const loadData = useCallback(async () => {
     setLoadError("");
     try {
-      const [blogResult, productResult, categoryResult, orderResult, gradeResult] = await Promise.all([
+      const [blogResult, productResult, categoryResult, orderResult, gradeResult, enquiryResult] = await Promise.all([
         fetch("/api/admin/blogs", { cache: "no-store" }).then((response) => readResponse(response, "Unable to load posts.")),
         fetch("/api/products", { cache: "no-store" }).then((response) => readResponse(response, "Unable to load products.")),
         fetch("/api/admin/categories", { cache: "no-store" }).then((response) => readResponse(response, "Unable to load categories.")),
         fetch("/api/admin/orders", { cache: "no-store" }).then((response) => readResponse(response, "Unable to load orders.")),
         fetch("/api/grades", { cache: "no-store" }).then((response) => readResponse(response, "Unable to load grades.")).catch(() => ({ grades: [] })),
+        fetch("/api/admin/enquiries", { cache: "no-store" }).then((response) => readResponse(response, "Unable to load enquiries.")).catch(() => ({ enquiries: [] })),
       ]);
       setPosts(blogResult.blogs as BlogPost[]);
       setProducts(productResult.products as ProductDetail[]);
       setCategories(categoryResult.categories as ContentCategory[]);
       setOrders(orderResult.orders as AdminOrder[]);
       setGrades((gradeResult.grades as PolymerGrade[]) || []);
+      setEnquiries((enquiryResult.enquiries as AdminEnquiry[]) || []);
     } catch (error) {
       setLoadError(error instanceof Error ? error.message : "Unable to load admin data.");
     } finally {
@@ -251,6 +272,29 @@ export default function AdminPanelPage() {
     const query = search.trim().toLowerCase();
     return orders.filter((order) => !query || [order.orderNumber, order.customer, order.email, order.product].some((value) => value.toLowerCase().includes(query)));
   }, [orders, search]);
+  const filteredEnquiries = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return enquiries.filter((item) => {
+      const matchesSearch =
+        !query ||
+        [
+          item.fullName,
+          item.companyName,
+          item.email,
+          item.phone,
+          item.productName,
+          item.grade,
+          item.destinationPort,
+          item.country,
+          item.volume,
+          item.packaging,
+          item.notes,
+        ].some((val) => val?.toLowerCase().includes(query));
+      const matchesStatus =
+        enquiryStatusFilter === "all" || item.status === enquiryStatusFilter;
+      return matchesSearch && matchesStatus;
+    });
+  }, [enquiries, search, enquiryStatusFilter]);
 
   const setView = (view: View) => {
     setActiveView(view);
@@ -536,9 +580,57 @@ export default function AdminPanelPage() {
     }
   };
 
+  const updateEnquiryStatus = async (enquiry: AdminEnquiry, status: EnquiryStatus) => {
+    setIsUpdatingEnquiry(true);
+    setEnquiryNotice(null);
+    try {
+      const result = await readResponse(
+        await fetch(`/api/admin/enquiries/${encodeURIComponent(enquiry.id)}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status }),
+        }),
+        "Unable to update inquiry status."
+      );
+      setEnquiries((current) =>
+        current.map((item) => (item.id === enquiry.id ? (result.enquiry as AdminEnquiry) : item))
+      );
+      if (selectedEnquiry && selectedEnquiry.id === enquiry.id) {
+        setSelectedEnquiry(result.enquiry as AdminEnquiry);
+      }
+      setEnquiryNotice({ type: "success", message: `Inquiry status changed to ${status}.` });
+    } catch (error) {
+      setEnquiryNotice({ type: "error", message: error instanceof Error ? error.message : "Unable to update inquiry status." });
+    } finally {
+      setIsUpdatingEnquiry(false);
+    }
+  };
+
+  const deleteEnquiry = async (enquiry: AdminEnquiry) => {
+    if (!window.confirm(`Delete quotation request from "${enquiry.fullName} (${enquiry.companyName})"? This cannot be undone.`)) return;
+    setEnquiryNotice(null);
+    try {
+      await readResponse(
+        await fetch(`/api/admin/enquiries/${encodeURIComponent(enquiry.id)}`, {
+          method: "DELETE",
+        }),
+        "Unable to delete inquiry."
+      );
+      setEnquiries((current) => current.filter((item) => item.id !== enquiry.id));
+      if (selectedEnquiry && selectedEnquiry.id === enquiry.id) {
+        setSelectedEnquiry(null);
+      }
+      setEnquiryNotice({ type: "success", message: "Inquiry deleted successfully." });
+    } catch (error) {
+      setEnquiryNotice({ type: "error", message: error instanceof Error ? error.message : "Unable to delete inquiry." });
+    }
+  };
+
   const pageTitle = navigation.find((item) => item.id === activeView)?.label ?? "Settings";
   const searchPlaceholder =
-    activeView === "blogs"
+    activeView === "enquiries"
+      ? "Search RFQs (name, company, grade, port)..."
+      : activeView === "blogs"
       ? "Search posts..."
       : activeView === "products"
       ? "Search products..."
@@ -558,6 +650,11 @@ export default function AdminPanelPage() {
           {navigation.map(({ id, label, icon: Icon }) => (
             <button key={id} type="button" onClick={() => setView(id)} className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition ${activeView === id ? "bg-indigo-50 text-indigo-700" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"}`}>
               <Icon size={18} strokeWidth={1.8} /><span>{label}</span>
+              {id === "enquiries" && enquiries.filter((e) => e.status === "new").length > 0 ? (
+                <span className="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">
+                  {enquiries.filter((e) => e.status === "new").length} New
+                </span>
+              ) : null}
               {id === "orders" && orders.filter((order) => order.status === "pending").length > 0 ? <span className="ml-auto rounded-full bg-indigo-100 px-2 py-0.5 text-[10px] font-semibold text-indigo-700">{orders.filter((order) => order.status === "pending").length}</span> : null}
             </button>
           ))}
@@ -643,7 +740,8 @@ export default function AdminPanelPage() {
           {!isLoading && activeView === "dashboard" ? (
             <div>
               <SectionHeading eyebrow="Workspace overview" title="Good day, Administrator" description="Here’s what’s happening across your store and content." action={<button onClick={() => { setView("blogs"); openNewBlog(); }} className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700"><Plus size={17} /> Create post</button>} />
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+                <MetricCard title="Customer RFQs" value={enquiries.length} note={`${enquiries.filter((e) => e.status === "new").length} new RFQs pending`} icon={Inbox} trend={enquiries.filter((e) => e.status === "new").length > 0 ? "up" : undefined} />
                 <MetricCard title="Polymer grades" value={grades.length} note="Live technical grades" icon={Layers} trend="up" />
                 <MetricCard title="Total products" value={products.length} note="Across your product catalog" icon={Package} trend="up" />
                 <MetricCard title="Published articles" value={posts.filter((post) => post.status !== "draft").length} note={`${posts.filter((post) => post.status === "draft").length} drafts waiting`} icon={BookOpen} trend="up" />
@@ -651,14 +749,75 @@ export default function AdminPanelPage() {
                 <MetricCard title="Order value" value={orders.filter((order) => order.status !== "cancelled").reduce((sum, order) => sum + order.total, 0).toLocaleString("en-US", { minimumFractionDigits: 2 })} note="Total recorded order amount" icon={CircleDollarSign} trend="up" />
               </div>
               <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(300px,0.6fr)]">
-                <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-                  <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4"><div><h2 className="text-sm font-semibold">Recent orders</h2><p className="mt-1 text-xs text-slate-500">Latest activity in your order book</p></div><button onClick={() => setView("orders")} className="text-xs font-semibold text-indigo-600 hover:text-indigo-700">View all</button></div>
-                  {orders.length ? <div className="divide-y divide-slate-100">{orders.slice(0, 5).map((order) => <div key={order.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4"><div><p className="text-sm font-semibold text-slate-800">{order.orderNumber} <span className="font-normal text-slate-400">· {order.customer}</span></p><p className="mt-1 text-xs text-slate-500">{order.product} · {dateLabel(order.createdAt)}</p></div><div className="flex items-center gap-3"><StatusPill status={order.status} /><span className="text-sm font-semibold text-slate-800">{order.total.toLocaleString()}</span></div></div>)}</div> : <div className="p-10 text-center"><ShoppingBag className="mx-auto text-slate-300" size={25} /><p className="mt-3 text-sm font-medium text-slate-700">No orders yet</p><p className="mt-1 text-xs text-slate-500">Create a manual order to get started.</p><button onClick={() => { setView("orders"); setOrderFormOpen(true); }} className="mt-4 text-xs font-semibold text-indigo-600">Add first order</button></div>}
-                </section>
-                <section className="rounded-xl border border-slate-200 bg-white p-5">
+                <div className="space-y-6">
+                  {/* Recent Customer RFQs */}
+                  <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+                    <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h2 className="text-sm font-semibold text-slate-900">Recent Customer RFQs</h2>
+                          {enquiries.filter((e) => e.status === "new").length > 0 ? (
+                            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">
+                              {enquiries.filter((e) => e.status === "new").length} New
+                            </span>
+                          ) : null}
+                        </div>
+                        <p className="mt-1 text-xs text-slate-500">Live inquiries submitted by customers via website</p>
+                      </div>
+                      <button onClick={() => setView("enquiries")} className="text-xs font-semibold text-indigo-600 hover:text-indigo-700">View all ({enquiries.length})</button>
+                    </div>
+                    {enquiries.length ? (
+                      <div className="divide-y divide-slate-100">
+                        {enquiries.slice(0, 4).map((enq) => (
+                          <div key={enq.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 hover:bg-slate-50/50 transition">
+                            <div>
+                              <p className="text-sm font-semibold text-slate-800">
+                                {enq.fullName} <span className="font-normal text-slate-400">· {enq.companyName}</span>
+                              </p>
+                              <p className="mt-1 text-xs text-slate-500">
+                                <span className="font-medium text-slate-700">{enq.grade}</span> ({enq.productName}) · {enq.volume} · {dateLabel(enq.createdAt)}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <StatusPill status={enq.status} />
+                              <button
+                                type="button"
+                                onClick={() => { setSelectedEnquiry(enq); setView("enquiries"); }}
+                                className="rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                              >
+                                View RFQ
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="p-8 text-center">
+                        <Inbox className="mx-auto text-slate-300" size={24} />
+                        <p className="mt-2 text-sm font-medium text-slate-700">No customer RFQs yet</p>
+                        <p className="mt-1 text-xs text-slate-500">New quotation requests from the website will appear here.</p>
+                      </div>
+                    )}
+                  </section>
+
+                  {/* Recent Orders */}
+                  <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+                    <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4"><div><h2 className="text-sm font-semibold">Recent orders</h2><p className="mt-1 text-xs text-slate-500">Latest activity in your order book</p></div><button onClick={() => setView("orders")} className="text-xs font-semibold text-indigo-600 hover:text-indigo-700">View all</button></div>
+                    {orders.length ? <div className="divide-y divide-slate-100">{orders.slice(0, 4).map((order) => <div key={order.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4"><div><p className="text-sm font-semibold text-slate-800">{order.orderNumber} <span className="font-normal text-slate-400">· {order.customer}</span></p><p className="mt-1 text-xs text-slate-500">{order.product} · {dateLabel(order.createdAt)}</p></div><div className="flex items-center gap-3"><StatusPill status={order.status} /><span className="text-sm font-semibold text-slate-800">{order.total.toLocaleString()}</span></div></div>)}</div> : <div className="p-10 text-center"><ShoppingBag className="mx-auto text-slate-300" size={25} /><p className="mt-3 text-sm font-medium text-slate-700">No orders yet</p><p className="mt-1 text-xs text-slate-500">Create a manual order to get started.</p><button onClick={() => { setView("orders"); setOrderFormOpen(true); }} className="mt-4 text-xs font-semibold text-indigo-600">Add first order</button></div>}
+                  </section>
+                </div>
+
+                <section className="rounded-xl border border-slate-200 bg-white p-5 self-start">
                   <h2 className="text-sm font-semibold">Quick actions</h2><p className="mt-1 text-xs text-slate-500">Common tasks, all in one place.</p>
                   <div className="mt-4 space-y-2">
-                    {[{ label: "Manage polymer grades", icon: Layers, view: "grades" as View }, { label: "Write a new blog post", icon: BookOpen, view: "blogs" as View }, { label: "Add a product", icon: Package, view: "products" as View }, { label: "Manage categories", icon: Boxes, view: "categories" as View }, { label: "Create an order", icon: ShoppingBag, view: "orders" as View }].map(({ label, icon: Icon, view }) => <button key={label} onClick={() => { setView(view); if (view === "blogs") openNewBlog(); if (view === "orders") setOrderFormOpen(true); }} className="flex w-full items-center gap-3 rounded-lg border border-slate-100 p-3 text-left text-sm font-medium text-slate-700 transition hover:border-indigo-100 hover:bg-indigo-50/60"><span className="rounded-md bg-slate-100 p-2 text-slate-600"><Icon size={16} /></span>{label}<ArrowUpRight className="ml-auto text-slate-400" size={15} /></button>)}
+                    {[
+                      { label: "Review RFQs & Inquiries", icon: Inbox, view: "enquiries" as View },
+                      { label: "Manage polymer grades", icon: Layers, view: "grades" as View },
+                      { label: "Write a new blog post", icon: BookOpen, view: "blogs" as View },
+                      { label: "Add a product", icon: Package, view: "products" as View },
+                      { label: "Manage categories", icon: Boxes, view: "categories" as View },
+                      { label: "Create an order", icon: ShoppingBag, view: "orders" as View },
+                    ].map(({ label, icon: Icon, view }) => <button key={label} onClick={() => { setView(view); if (view === "blogs") openNewBlog(); if (view === "orders") setOrderFormOpen(true); }} className="flex w-full items-center gap-3 rounded-lg border border-slate-100 p-3 text-left text-sm font-medium text-slate-700 transition hover:border-indigo-100 hover:bg-indigo-50/60"><span className="rounded-md bg-slate-100 p-2 text-slate-600"><Icon size={16} /></span>{label}<ArrowUpRight className="ml-auto text-slate-400" size={15} /></button>)}
                   </div>
                 </section>
               </div>
@@ -1044,6 +1203,408 @@ export default function AdminPanelPage() {
               <div className="mt-5 grid gap-4 sm:grid-cols-3"><MetricCard title="All orders" value={orders.length} note="Recorded in the order book" icon={ShoppingBag} /><MetricCard title="Awaiting action" value={orders.filter((order) => order.status === "pending").length} note="Pending orders" icon={CircleDollarSign} /><MetricCard title="Fulfilled" value={orders.filter((order) => order.status === "completed").length} note="Completed orders" icon={Check} /></div>
               {orderFormOpen ? <section className="mt-6 rounded-xl border border-indigo-100 bg-white p-5 shadow-sm"><div className="mb-5 flex items-start justify-between"><div><p className="text-xs font-semibold uppercase tracking-wider text-indigo-600">Manual entry</p><h2 className="mt-1 text-lg font-semibold">Create an order</h2></div><button onClick={() => setOrderFormOpen(false)} aria-label="Close order form" className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"><X size={18} /></button></div><form onSubmit={saveOrder} className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5"><div><label className={labelClass} htmlFor="order-customer">Customer</label><input id="order-customer" className={inputClass} value={orderForm.customer} onChange={(event) => setOrderForm((current) => ({ ...current, customer: event.target.value }))} required /></div><div><label className={labelClass} htmlFor="order-email">Email</label><input id="order-email" type="email" className={inputClass} value={orderForm.email} onChange={(event) => setOrderForm((current) => ({ ...current, email: event.target.value }))} required /></div><div><label className={labelClass} htmlFor="order-product">Product</label><select id="order-product" className={inputClass} value={orderForm.product} onChange={(event) => setOrderForm((current) => ({ ...current, product: event.target.value }))} required><option value="">Select product</option>{products.map((product) => <option key={product.slug} value={product.name}>{product.name}</option>)}</select></div><div><label className={labelClass} htmlFor="order-quantity">Quantity</label><input id="order-quantity" type="number" min="1" step="1" className={inputClass} value={orderForm.quantity} onChange={(event) => setOrderForm((current) => ({ ...current, quantity: event.target.value }))} required /></div><div><label className={labelClass} htmlFor="order-total">Total amount</label><input id="order-total" type="number" min="0" step="0.01" className={inputClass} value={orderForm.total} onChange={(event) => setOrderForm((current) => ({ ...current, total: event.target.value }))} required /></div><div className="sm:col-span-2 xl:col-span-5"><NoticeBanner notice={orderNotice} /><button disabled={isSavingOrder} className="mt-3 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60">{isSavingOrder ? "Creating..." : "Create order"}</button></div></form></section> : null}
               <section className="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white"><div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-5 py-4"><div><h2 className="text-sm font-semibold">Order book</h2><p className="mt-1 text-xs text-slate-500">{filteredOrders.length} orders · status updates save automatically</p></div><label className="relative sm:hidden"><Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search orders" className="w-40 rounded-lg border border-slate-200 py-2 pl-9 pr-2 text-xs" /></label></div>{filteredOrders.length ? <div className="overflow-x-auto"><table className="w-full min-w-[820px] text-left"><thead className="bg-slate-50 text-[11px] font-semibold uppercase tracking-wider text-slate-500"><tr><th className="px-5 py-3">Order</th><th className="px-5 py-3">Customer</th><th className="px-5 py-3">Product</th><th className="px-5 py-3">Qty</th><th className="px-5 py-3">Total</th><th className="px-5 py-3">Status</th></tr></thead><tbody className="divide-y divide-slate-100">{filteredOrders.map((order) => <tr key={order.id}><td className="px-5 py-4"><p className="text-sm font-semibold text-slate-800">{order.orderNumber}</p><p className="mt-1 text-xs text-slate-500">{dateLabel(order.createdAt)}</p></td><td className="px-5 py-4"><p className="text-sm text-slate-700">{order.customer}</p><p className="mt-1 text-xs text-slate-500">{order.email}</p></td><td className="px-5 py-4 text-sm text-slate-600">{order.product}</td><td className="px-5 py-4 text-sm text-slate-600">{order.quantity}</td><td className="px-5 py-4 text-sm font-semibold text-slate-800">{order.total.toLocaleString()}</td><td className="px-5 py-4"><select aria-label={`Update status for ${order.orderNumber}`} value={order.status} onChange={(event) => void updateOrder(order, event.target.value as OrderStatus)} className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium capitalize text-slate-700 outline-none focus:border-indigo-400">{statuses.map((status) => <option key={status} value={status}>{status}</option>)}</select></td></tr>)}</tbody></table></div> : <div className="p-12 text-center"><ShoppingBag className="mx-auto text-slate-300" size={25} /><p className="mt-3 text-sm font-medium">No orders found</p><p className="mt-1 text-xs text-slate-500">Orders you create will be tracked here.</p></div>}</section>
+            </div>
+          ) : null}
+
+          {!isLoading && activeView === "enquiries" ? (
+            <div>
+              <SectionHeading
+                eyebrow="Commercial Trading Desk"
+                title="Customer RFQs & Inquiries"
+                description="Review container allocation quotation requests, polymer inquiries, and messages from customers."
+                action={
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-slate-500">
+                      Total {enquiries.length} requests
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => void loadData()}
+                      className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm"
+                    >
+                      Refresh
+                    </button>
+                  </div>
+                }
+              />
+
+              {/* Status summary cards */}
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 mb-6">
+                <button
+                  type="button"
+                  onClick={() => setEnquiryStatusFilter("all")}
+                  className={`cursor-pointer rounded-xl border p-4 shadow-sm text-left transition ${
+                    enquiryStatusFilter === "all"
+                      ? "border-indigo-400 bg-indigo-50/50 ring-2 ring-indigo-200"
+                      : "border-slate-200 bg-white hover:border-slate-300"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-medium text-slate-500">All Inquiries</p>
+                    <span className="rounded-lg bg-slate-100 p-2 text-slate-600"><Inbox size={16} /></span>
+                  </div>
+                  <p className="mt-2 text-2xl font-bold text-slate-900">{enquiries.length}</p>
+                  <p className="mt-1 text-[11px] text-slate-500">All customer submissions</p>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setEnquiryStatusFilter("new")}
+                  className={`cursor-pointer rounded-xl border p-4 shadow-sm text-left transition ${
+                    enquiryStatusFilter === "new"
+                      ? "border-amber-400 bg-amber-50/50 ring-2 ring-amber-200"
+                      : "border-slate-200 bg-white hover:border-slate-300"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-bold text-amber-800">New / Unprocessed</p>
+                    <span className="rounded-lg bg-amber-100 p-2 text-amber-700"><Clock size={16} /></span>
+                  </div>
+                  <p className="mt-2 text-2xl font-bold text-amber-900">
+                    {enquiries.filter((e) => e.status === "new").length}
+                  </p>
+                  <p className="mt-1 text-[11px] text-amber-700">Needs commercial review</p>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setEnquiryStatusFilter("contacted")}
+                  className={`cursor-pointer rounded-xl border p-4 shadow-sm text-left transition ${
+                    enquiryStatusFilter === "contacted"
+                      ? "border-blue-400 bg-blue-50/50 ring-2 ring-blue-200"
+                      : "border-slate-200 bg-white hover:border-slate-300"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-bold text-blue-800">Contacted</p>
+                    <span className="rounded-lg bg-blue-100 p-2 text-blue-700"><Mail size={16} /></span>
+                  </div>
+                  <p className="mt-2 text-2xl font-bold text-blue-900">
+                    {enquiries.filter((e) => e.status === "contacted").length}
+                  </p>
+                  <p className="mt-1 text-[11px] text-blue-700">In communication</p>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setEnquiryStatusFilter("quoted")}
+                  className={`cursor-pointer rounded-xl border p-4 shadow-sm text-left transition ${
+                    enquiryStatusFilter === "quoted"
+                      ? "border-purple-400 bg-purple-50/50 ring-2 ring-purple-200"
+                      : "border-slate-200 bg-white hover:border-slate-300"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-bold text-purple-800">Quoted</p>
+                    <span className="rounded-lg bg-purple-100 p-2 text-purple-700"><CircleDollarSign size={16} /></span>
+                  </div>
+                  <p className="mt-2 text-2xl font-bold text-purple-900">
+                    {enquiries.filter((e) => e.status === "quoted").length}
+                  </p>
+                  <p className="mt-1 text-[11px] text-purple-700">Official quote dispatched</p>
+                </button>
+              </div>
+
+              <NoticeBanner notice={enquiryNotice} />
+
+              {/* Main table container */}
+              <div className="mt-5 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-5 py-4">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-sm font-semibold text-slate-900">Quotation Requests</h2>
+                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-600">
+                      {filteredEnquiries.length} records
+                    </span>
+                  </div>
+
+                  {/* Filter tabs */}
+                  <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                    {(["all", "new", "contacted", "quoted", "closed"] as const).map((st) => (
+                      <button
+                        key={st}
+                        type="button"
+                        onClick={() => setEnquiryStatusFilter(st)}
+                        className={`rounded-lg px-3 py-1.5 font-medium capitalize transition cursor-pointer ${
+                          enquiryStatusFilter === st
+                            ? "bg-slate-900 text-white"
+                            : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                        }`}
+                      >
+                        {st}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {filteredEnquiries.length ? (
+                  <div className="overflow-x-auto">
+                    <table className="w-full min-w-[950px] text-left">
+                      <thead className="bg-slate-50 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                        <tr>
+                          <th className="px-5 py-3">Customer / Company</th>
+                          <th className="px-4 py-3">Polymer & Grade</th>
+                          <th className="px-4 py-3">Volume & Packaging</th>
+                          <th className="px-4 py-3">Port / Destination</th>
+                          <th className="px-4 py-3">Date</th>
+                          <th className="px-4 py-3">Status</th>
+                          <th className="px-5 py-3 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 text-sm">
+                        {filteredEnquiries.map((enq) => (
+                          <tr key={enq.id} className="hover:bg-slate-50/70 transition">
+                            <td className="px-5 py-3.5">
+                              <p className="font-semibold text-slate-900">{enq.fullName}</p>
+                              <p className="text-xs font-medium text-slate-600 flex items-center gap-1 mt-0.5">
+                                <Building2 size={13} className="text-slate-400" />
+                                {enq.companyName}
+                              </p>
+                              <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-500">
+                                <span>{enq.email}</span>
+                                <span>·</span>
+                                <span>{enq.phone}</span>
+                              </div>
+                            </td>
+                            <td className="px-4 py-3.5">
+                              <p className="font-semibold text-slate-900">{enq.grade}</p>
+                              <p className="text-xs text-slate-500">{enq.productName}</p>
+                            </td>
+                            <td className="px-4 py-3.5">
+                              <p className="text-xs font-semibold text-slate-800">{enq.volume}</p>
+                              <p className="text-[11px] text-slate-500">{enq.packaging}</p>
+                            </td>
+                            <td className="px-4 py-3.5">
+                              <p className="text-xs font-medium text-slate-800 flex items-center gap-1">
+                                <span className="text-primary font-bold">📍</span>
+                                {enq.destinationPort}
+                              </p>
+                              <p className="text-[11px] text-slate-500 pl-4">{enq.country}</p>
+                            </td>
+                            <td className="px-4 py-3.5 text-xs text-slate-500">
+                              {dateLabel(enq.createdAt)}
+                            </td>
+                            <td className="px-4 py-3.5">
+                              <select
+                                value={enq.status}
+                                onChange={(e) => void updateEnquiryStatus(enq, e.target.value as EnquiryStatus)}
+                                className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold capitalize text-slate-800 outline-none focus:border-indigo-400 cursor-pointer shadow-sm"
+                              >
+                                {enquiryStatuses.map((st) => (
+                                  <option key={st} value={st}>
+                                    {st}
+                                  </option>
+                                ))}
+                              </select>
+                            </td>
+                            <td className="px-5 py-3.5 text-right">
+                              <div className="flex items-center justify-end gap-1">
+                                <button
+                                  type="button"
+                                  onClick={() => setSelectedEnquiry(enq)}
+                                  title="View Full RFQ Details"
+                                  className="rounded-md p-1.5 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 transition cursor-pointer"
+                                >
+                                  <Eye size={16} />
+                                </button>
+                                <a
+                                  href={`mailto:${enq.email}?subject=National%20Polymers%20Quotation%20-%20${encodeURIComponent(enq.grade)}&body=Dear%20${encodeURIComponent(enq.fullName)},%0D%0A%0D%0AThank%20you%20for%20your%20inquiry%20regarding%20${encodeURIComponent(enq.grade)}%20(${encodeURIComponent(enq.volume)}).`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  title="Send Email Quote"
+                                  className="rounded-md p-1.5 text-slate-500 hover:bg-blue-50 hover:text-blue-600 transition"
+                                >
+                                  <Mail size={16} />
+                                </a>
+                                {enq.phone ? (
+                                  <a
+                                    href={`https://wa.me/${enq.phone.replace(/[^0-9]/g, "")}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    title="WhatsApp Customer"
+                                    className="rounded-md p-1.5 text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 transition"
+                                  >
+                                    <MessageSquare size={16} />
+                                  </a>
+                                ) : null}
+                                <button
+                                  type="button"
+                                  onClick={() => void deleteEnquiry(enq)}
+                                  title="Delete Inquiry"
+                                  className="rounded-md p-1.5 text-slate-500 hover:bg-red-50 hover:text-red-600 transition cursor-pointer"
+                                >
+                                  <Trash2 size={16} />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="p-12 text-center">
+                    <Inbox className="mx-auto text-slate-300" size={28} />
+                    <p className="mt-3 text-sm font-medium text-slate-700">No quotation requests found</p>
+                    <p className="mt-1 text-xs text-slate-500">
+                      When customers submit RFQs on the website, they will appear here in real-time.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Inquiry Detail Modal */}
+              {selectedEnquiry ? (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-sm">
+                  <div className="relative w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl sm:p-7 max-h-[90vh] overflow-y-auto">
+                    <div className="flex items-start justify-between border-b border-slate-100 pb-4">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
+                            RFQ #{selectedEnquiry.id.slice(0, 8)}
+                          </span>
+                          <StatusPill status={selectedEnquiry.status} />
+                        </div>
+                        <h3 className="mt-2 text-xl font-bold text-slate-900">
+                          {selectedEnquiry.fullName}
+                        </h3>
+                        <p className="text-xs text-slate-500">
+                          {selectedEnquiry.companyName} · Submitted on {dateLabel(selectedEnquiry.createdAt)}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedEnquiry(null)}
+                        className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 cursor-pointer"
+                      >
+                        <X size={20} />
+                      </button>
+                    </div>
+
+                    <div className="mt-5 space-y-4">
+                      {/* Customer Contact */}
+                      <div className="rounded-xl bg-slate-50 p-4 border border-slate-100">
+                        <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                          Customer Contact
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                          <div>
+                            <span className="text-slate-400 block">Full Name:</span>
+                            <span className="font-semibold text-slate-800">{selectedEnquiry.fullName}</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400 block">Company:</span>
+                            <span className="font-semibold text-slate-800">{selectedEnquiry.companyName}</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400 block">Email:</span>
+                            <a href={`mailto:${selectedEnquiry.email}`} className="font-semibold text-indigo-600 hover:underline">
+                              {selectedEnquiry.email}
+                            </a>
+                          </div>
+                          <div>
+                            <span className="text-slate-400 block">Phone / WhatsApp:</span>
+                            <span className="font-semibold text-slate-800">{selectedEnquiry.phone}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Product & Specifications */}
+                      <div className="rounded-xl bg-slate-50 p-4 border border-slate-100">
+                        <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                          Polymer & Volume Requirements
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                          <div>
+                            <span className="text-slate-400 block">Polymer Grade:</span>
+                            <span className="font-bold text-slate-900 text-sm">{selectedEnquiry.grade}</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400 block">Product Category:</span>
+                            <span className="font-semibold text-slate-800">{selectedEnquiry.productName}</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400 block">Monthly / Spot Volume:</span>
+                            <span className="font-semibold text-slate-800">{selectedEnquiry.volume}</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400 block">Packaging Preference:</span>
+                            <span className="font-semibold text-slate-800">{selectedEnquiry.packaging}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Logistics & Delivery */}
+                      <div className="rounded-xl bg-slate-50 p-4 border border-slate-100">
+                        <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                          Logistics & Discharge
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                          <div>
+                            <span className="text-slate-400 block">Destination Port:</span>
+                            <span className="font-semibold text-slate-800">{selectedEnquiry.destinationPort}</span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400 block">Country:</span>
+                            <span className="font-semibold text-slate-800">{selectedEnquiry.country}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Customer Notes */}
+                      {selectedEnquiry.notes ? (
+                        <div className="rounded-xl bg-amber-50/60 p-4 border border-amber-200/60">
+                          <p className="text-xs font-bold uppercase tracking-wider text-amber-900 mb-1">
+                            Client Message / Notes:
+                          </p>
+                          <p className="text-xs text-slate-800 leading-relaxed whitespace-pre-wrap">
+                            {selectedEnquiry.notes}
+                          </p>
+                        </div>
+                      ) : null}
+
+                      {/* Status Update Control inside modal */}
+                      <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-100">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-semibold text-slate-600">Update Status:</span>
+                          <select
+                            value={selectedEnquiry.status}
+                            disabled={isUpdatingEnquiry}
+                            onChange={(e) => void updateEnquiryStatus(selectedEnquiry, e.target.value as EnquiryStatus)}
+                            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold capitalize text-slate-800 outline-none focus:border-indigo-400 cursor-pointer"
+                          >
+                            {enquiryStatuses.map((st) => (
+                              <option key={st} value={st}>
+                                {st}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <a
+                            href={`mailto:${selectedEnquiry.email}?subject=National%20Polymers%20Quotation%20-%20${encodeURIComponent(selectedEnquiry.grade)}&body=Dear%20${encodeURIComponent(selectedEnquiry.fullName)},%0D%0A%0D%0AThank%20you%20for%20your%20inquiry%20regarding%20${encodeURIComponent(selectedEnquiry.grade)}%20(${encodeURIComponent(selectedEnquiry.volume)}).`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-bold text-white hover:bg-indigo-700 transition"
+                          >
+                            <Mail size={14} /> Send Email
+                          </a>
+                          {selectedEnquiry.phone ? (
+                            <a
+                              href={`https://wa.me/${selectedEnquiry.phone.replace(/[^0-9]/g, "")}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white hover:bg-emerald-700 transition"
+                            >
+                              <MessageSquare size={14} /> WhatsApp
+                            </a>
+                          ) : null}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
             </div>
           ) : null}
 
