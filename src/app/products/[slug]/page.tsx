@@ -190,7 +190,7 @@ export default async function ProductInnerPage({ params }: PageProps) {
                           <td className="py-4 px-5 font-bold text-gray-900">{sub.name}</td>
                           <td className="py-4 px-4 font-mono text-xs text-gray-600">{sub.mfi}</td>
                           <td className="py-4 px-4 font-mono text-xs text-gray-600">{sub.density}</td>
-                          <td className="py-4 px-4 text-xs text-gray-600">{sub.useCase}</td>
+                          <td className="py-4 px-4 text-xs text-gray-600 max-w-[260px] leading-relaxed">{sub.useCase}</td>
                           <td className="py-4 px-4 text-right">
                             <Link
                               href={`/enquiry?product=${product.slug}&grade=${encodeURIComponent(sub.name)}`}
@@ -264,7 +264,10 @@ export default async function ProductInnerPage({ params }: PageProps) {
                             <td className="py-3.5 px-4 text-xs text-gray-600">{g.subCategory}</td>
                             <td className="py-3.5 px-4 font-mono text-xs text-gray-600">{g.mfi}</td>
                             <td className="py-3.5 px-4">
-                              <span className="text-xs text-gray-600 bg-gray-50 border border-gray-200 px-2 py-0.5 rounded-md">
+                              <span
+                                className="inline-block text-xs text-gray-600 bg-gray-50 border border-gray-200 px-2 py-0.5 rounded-md max-w-[200px] truncate"
+                                title={g.application}
+                              >
                                 {g.application}
                               </span>
                             </td>
@@ -313,11 +316,14 @@ export default async function ProductInnerPage({ params }: PageProps) {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   {product.specs.map((sp, idx) => (
-                    <div key={idx} className="flex items-start justify-between gap-4 p-4 rounded-xl bg-gray-50 border border-gray-200">
-                      <span className="text-xs text-gray-500 font-medium leading-relaxed">
+                    <div
+                      key={idx}
+                      className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex flex-col justify-between gap-1.5 min-w-0 transition-colors hover:border-primary/40 hover:bg-gray-50/80"
+                    >
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 block leading-tight">
                         {sp.property}
                       </span>
-                      <span className="text-sm font-bold text-gray-900 text-right shrink-0">
+                      <span className="text-sm sm:text-base font-bold text-gray-900 leading-snug break-words block">
                         {sp.value}
                       </span>
                     </div>

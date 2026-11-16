@@ -50,36 +50,36 @@ export const UpcomingEvents: React.FC = () => {
               >
                 Next up
               </div>
-              <div>
-                <p className="pr-24 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-darker">
+              <div className="pr-20 sm:pr-24">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-darker">
                   National Polymers FZ LLC
                 </p>
-                <h3 className="mt-2 text-2xl font-normal leading-tight text-gray-900">
+                <h3 className="mt-2 text-2xl font-normal leading-tight text-gray-900 break-words">
                   ArabPlast 2027
                 </h3>
               </div>
               <dl className="grid grid-cols-2 gap-x-4 gap-y-3 border-t border-gray-200 pt-4 text-sm sm:grid-cols-3">
-                <div className="col-span-2 sm:col-span-1">
+                <div className="col-span-2 sm:col-span-1 min-w-0">
                   <dt className="text-[10px] uppercase tracking-[0.14em] text-gray-500">
                     Venue
                   </dt>
-                  <dd className="mt-1 font-semibold text-gray-900 text-xs sm:text-sm">
+                  <dd className="mt-1 font-semibold text-gray-900 text-xs sm:text-sm break-words">
                     Dubai World Trade Centre
                   </dd>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <dt className="text-[10px] uppercase tracking-[0.14em] text-gray-500">
                     City
                   </dt>
-                  <dd className="mt-1 font-semibold text-gray-900 text-xs sm:text-sm">
+                  <dd className="mt-1 font-semibold text-gray-900 text-xs sm:text-sm break-words">
                     Dubai, UAE
                   </dd>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <dt className="text-[10px] uppercase tracking-[0.14em] text-gray-500">
                     Meeting Point
                   </dt>
-                  <dd className="mt-1 font-semibold text-primary-darker text-xs sm:text-sm">
+                  <dd className="mt-1 font-semibold text-primary-darker text-xs sm:text-sm break-words">
                     Trading Delegation
                   </dd>
                 </div>
@@ -130,35 +130,35 @@ export const UpcomingEvents: React.FC = () => {
             {/* Right Details */}
             <div className="relative flex flex-col justify-between gap-5 p-6">
               <div>
-                <p className="pr-24 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-darker">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-darker">
                   National Polymers FZ LLC
                 </p>
-                <h3 className="mt-2 text-2xl font-normal leading-tight text-gray-900">
+                <h3 className="mt-2 text-2xl font-normal leading-tight text-gray-900 break-words">
                   Global Polymers Trading Forum
                 </h3>
               </div>
               <dl className="grid grid-cols-2 gap-x-4 gap-y-3 border-t border-gray-200 pt-4 text-sm sm:grid-cols-3">
-                <div className="col-span-2 sm:col-span-1">
+                <div className="col-span-2 sm:col-span-1 min-w-0">
                   <dt className="text-[10px] uppercase tracking-[0.14em] text-gray-500">
                     Sourcing Region
                   </dt>
-                  <dd className="mt-1 font-semibold text-gray-900 text-xs sm:text-sm">
+                  <dd className="mt-1 font-semibold text-gray-900 text-xs sm:text-sm break-words">
                     USA &amp; Far East Hubs
                   </dd>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <dt className="text-[10px] uppercase tracking-[0.14em] text-gray-500">
                     Destination
                   </dt>
-                  <dd className="mt-1 font-semibold text-gray-900 text-xs sm:text-sm">
+                  <dd className="mt-1 font-semibold text-gray-900 text-xs sm:text-sm break-words">
                     Indian Sub-Continent &amp; Africa
                   </dd>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <dt className="text-[10px] uppercase tracking-[0.14em] text-gray-500">
                     Trading Desk
                   </dt>
-                  <dd className="mt-1 font-semibold text-primary-darker text-xs sm:text-sm">
+                  <dd className="mt-1 font-semibold text-primary-darker text-xs sm:text-sm break-words">
                     Dubai Head Office
                   </dd>
                 </div>

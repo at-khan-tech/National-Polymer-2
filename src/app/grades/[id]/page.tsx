@@ -170,21 +170,21 @@ export default async function GradeDetailPage({ params }: GradePageProps) {
                 </div>
 
                 <div className="mt-4 space-y-2.5 text-xs text-gray-600">
-                  <div className="flex items-center justify-between py-1 border-b border-gray-100">
-                    <span className="font-medium text-gray-500">Allocation Status:</span>
-                    <span className="font-semibold text-gray-800">{grade.availability}</span>
+                  <div className="flex items-center justify-between gap-2 py-1 border-b border-gray-100">
+                    <span className="font-medium text-gray-500 shrink-0">Allocation Status:</span>
+                    <span className="font-semibold text-gray-800 text-right break-words min-w-0">{grade.availability}</span>
                   </div>
-                  <div className="flex items-center justify-between py-1 border-b border-gray-100">
-                    <span className="font-medium text-gray-500">Shipment Mode:</span>
-                    <span className="font-semibold text-gray-800">FCL Container / Break-bulk</span>
+                  <div className="flex items-center justify-between gap-2 py-1 border-b border-gray-100">
+                    <span className="font-medium text-gray-500 shrink-0">Shipment Mode:</span>
+                    <span className="font-semibold text-gray-800 text-right break-words min-w-0">FCL Container / Break-bulk</span>
                   </div>
-                  <div className="flex items-center justify-between py-1 border-b border-gray-100">
-                    <span className="font-medium text-gray-500">Standard Packaging:</span>
-                    <span className="font-semibold text-gray-800">25kg Valve Bags / 1000kg FIBC</span>
+                  <div className="flex items-center justify-between gap-2 py-1 border-b border-gray-100">
+                    <span className="font-medium text-gray-500 shrink-0">Standard Packaging:</span>
+                    <span className="font-semibold text-gray-800 text-right break-words min-w-0">25kg Valve Bags / 1000kg FIBC</span>
                   </div>
-                  <div className="flex items-center justify-between py-1">
-                    <span className="font-medium text-gray-500">Quality Certificate:</span>
-                    <span className="font-semibold text-emerald-700">COA &amp; TDS Provided</span>
+                  <div className="flex items-center justify-between gap-2 py-1">
+                    <span className="font-medium text-gray-500 shrink-0">Quality Certificate:</span>
+                    <span className="font-semibold text-emerald-700 text-right break-words min-w-0">COA &amp; TDS Provided</span>
                   </div>
                 </div>
               </div>
@@ -208,38 +208,38 @@ export default async function GradeDetailPage({ params }: GradePageProps) {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  <div className="flex items-start justify-between gap-4 p-4 rounded-xl bg-gray-50 border border-gray-200">
-                    <span className="text-xs text-gray-500 font-medium leading-relaxed">
+                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex flex-col justify-between gap-1.5 min-w-0 transition-colors hover:border-primary/40">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 block leading-tight">
                       Melt Flow Rate (MFI/MFR)
                     </span>
-                    <span className="text-sm font-mono font-bold text-gray-900 text-right shrink-0">
+                    <span className="text-sm sm:text-base font-mono font-bold text-navy leading-snug break-words block">
                       {grade.mfi}
                     </span>
                   </div>
 
-                  <div className="flex items-start justify-between gap-4 p-4 rounded-xl bg-gray-50 border border-gray-200">
-                    <span className="text-xs text-gray-500 font-medium leading-relaxed">
+                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex flex-col justify-between gap-1.5 min-w-0 transition-colors hover:border-primary/40">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 block leading-tight">
                       Polymer Density
                     </span>
-                    <span className="text-sm font-mono font-bold text-gray-900 text-right shrink-0">
+                    <span className="text-sm sm:text-base font-mono font-bold text-navy leading-snug break-words block">
                       {grade.density}
                     </span>
                   </div>
 
-                  <div className="flex items-start justify-between gap-4 p-4 rounded-xl bg-gray-50 border border-gray-200">
-                    <span className="text-xs text-gray-500 font-medium leading-relaxed">
+                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex flex-col justify-between gap-1.5 min-w-0 transition-colors hover:border-primary/40">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 block leading-tight">
                       Polymer Classification
                     </span>
-                    <span className="text-sm font-bold text-gray-900 text-right shrink-0">
+                    <span className="text-sm sm:text-base font-bold text-navy leading-snug break-words block">
                       {grade.category} ({grade.subCategory})
                     </span>
                   </div>
 
-                  <div className="flex items-start justify-between gap-4 p-4 rounded-xl bg-gray-50 border border-gray-200">
-                    <span className="text-xs text-gray-500 font-medium leading-relaxed">
+                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex flex-col justify-between gap-1.5 min-w-0 transition-colors hover:border-primary/40">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 block leading-tight">
                       Country of Production
                     </span>
-                    <span className="text-sm font-bold text-gray-900 text-right shrink-0">
+                    <span className="text-sm sm:text-base font-bold text-navy leading-snug break-words block">
                       {grade.origin}
                     </span>
                   </div>

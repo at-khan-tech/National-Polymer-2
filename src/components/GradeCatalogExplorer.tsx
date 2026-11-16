@@ -423,8 +423,11 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
                       </td>
 
                       {/* Application */}
-                      <td className="py-3.5 px-4">
-                        <span className="inline-block px-2.5 py-0.5 rounded-full bg-gray-100 text-[11px] font-medium text-gray-700">
+                      <td className="py-3.5 px-4 max-w-[220px]">
+                        <span
+                          className="inline-block px-2.5 py-0.5 rounded-full bg-gray-100 text-[11px] font-medium text-gray-700 max-w-full truncate"
+                          title={g.application}
+                        >
                           {g.application}
                         </span>
                       </td>
