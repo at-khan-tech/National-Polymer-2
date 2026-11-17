@@ -19,6 +19,7 @@ import {
   ExternalLink,
   Eye,
   FilePlus2,
+  FileSpreadsheet,
   FileText,
   Filter,
   Inbox,
@@ -1072,18 +1073,29 @@ export default function AdminPanelPage() {
                 title="Polymer Grades"
                 description="Manage technical polymer grades in real-time. Changes sync immediately to dynamic product and grade detail pages."
                 action={
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEditingGradeId(null);
-                      setGradeForm(initialGrade);
-                      setGradeNotice(null);
-                      setGradeDrawerOpen(true);
-                    }}
-                    className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition cursor-pointer"
-                  >
-                    <Plus size={17} /> Add New Grade
-                  </button>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <a
+                      href="/api/admin/export-catalog"
+                      download="National_Polymers_Product_Catalog_Review.xlsx"
+                      className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-xs font-semibold text-slate-700 shadow-xs hover:bg-slate-50 hover:text-slate-900 transition"
+                      title="Download complete product catalog & grades in Excel (.xlsx) format"
+                    >
+                      <FileSpreadsheet size={15} className="text-emerald-600" />
+                      <span>Export to Excel (.xlsx)</span>
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingGradeId(null);
+                        setGradeForm(initialGrade);
+                        setGradeNotice(null);
+                        setGradeDrawerOpen(true);
+                      }}
+                      className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition cursor-pointer"
+                    >
+                      <Plus size={17} /> Add New Grade
+                    </button>
+                  </div>
                 }
               />
 
