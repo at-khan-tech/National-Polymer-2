@@ -60,6 +60,7 @@ function EnquiryFormContent() {
     phone: "",
     destinationPort: "",
     country: "United Arab Emirates",
+    incoterm: "CIF (Cost, Insurance & Freight)",
     notes: "",
   });
 
@@ -160,6 +161,7 @@ function EnquiryFormContent() {
           brand: selectedBrand || undefined,
           volume: finalVolume,
           packaging: selectedPacking,
+          incoterm: formData.incoterm,
         }),
       });
       const result = (await response.json()) as { message?: string };
@@ -556,17 +558,39 @@ function EnquiryFormContent() {
                   </div>
                 </div>
 
-                {/* ─── DESTINATION PORT & COUNTRY ─── */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* ─── INCOTERM, DESTINATION PORT & COUNTRY ─── */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
-                      Destination Discharge Port (for CIF calculation) *
+                      Preferred Incoterm *
+                    </label>
+                    <select
+                      value={formData.incoterm}
+                      onChange={(e) =>
+                        setFormData({ ...formData, incoterm: e.target.value })
+                      }
+                      className="w-full rounded-lg border border-gray-300 bg-white p-3 text-sm focus:border-primary focus:outline-none font-medium text-gray-800"
+                    >
+                      <option value="CIF (Cost, Insurance & Freight)">CIF (Cost, Insurance & Freight)</option>
+                      <option value="CFR (Cost & Freight)">CFR (Cost & Freight)</option>
+                      <option value="FOB (Free on Board)">FOB (Free on Board)</option>
+                      <option value="EXW (Ex Works)">EXW (Ex Works - UAE / Origin)</option>
+                      <option value="DAP (Delivered at Place)">DAP (Delivered at Place)</option>
+                    </select>
+                    <span className="text-[10px] text-gray-400 mt-1 block">
+                      Commercial trade delivery terms
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+                      Discharge Port *
                     </label>
                     <input
                       type="text"
                       list="destination-ports-list"
                       required
-                      placeholder="e.g. Jebel Ali, Nhava Sheva, Mundra, Chittagong"
+                      placeholder="e.g. Jebel Ali, Nhava Sheva, Mombasa"
                       value={formData.destinationPort}
                       onChange={(e) =>
                         setFormData({ ...formData, destinationPort: e.target.value })
@@ -578,8 +602,8 @@ function EnquiryFormContent() {
                         <option key={p} value={p} />
                       ))}
                     </datalist>
-                    <span className="text-[10.5px] text-gray-400 mt-1 block">
-                      Type your port name or select from international trade hubs
+                    <span className="text-[10px] text-gray-400 mt-1 block">
+                      Destination discharge port
                     </span>
                   </div>
 
@@ -590,13 +614,16 @@ function EnquiryFormContent() {
                     <input
                       type="text"
                       required
-                      placeholder="e.g. India, United Arab Emirates, Egypt, Kenya"
+                      placeholder="e.g. India, UAE, Kenya, Turkey"
                       value={formData.country}
                       onChange={(e) =>
                         setFormData({ ...formData, country: e.target.value })
                       }
                       className="w-full rounded-lg border border-gray-300 p-3 text-sm focus:border-primary focus:outline-none"
                     />
+                    <span className="text-[10px] text-gray-400 mt-1 block">
+                      Target destination country
+                    </span>
                   </div>
                 </div>
 

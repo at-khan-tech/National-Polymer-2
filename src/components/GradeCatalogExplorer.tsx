@@ -33,6 +33,8 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
   const [selectedBrand, setSelectedBrand] = useState(urlBrand);
   const [selectedCategory, setSelectedCategory] = useState(urlCategory);
   const [selectedApp, setSelectedApp] = useState("all");
+  const [selectedMfiRange, setSelectedMfiRange] = useState("all");
+  const [selectedDensityRange, setSelectedDensityRange] = useState("all");
   const [activeTdsGrade, setActiveTdsGrade] = useState<PolymerGrade | null>(null);
   const [gradesList, setGradesList] = useState<PolymerGrade[]>(
     initialGrades && initialGrades.length > 0 ? initialGrades : CANDIDATE_GRADES
@@ -103,6 +105,15 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
     return Array.from(set).sort();
   }, [gradesList]);
 
+  // Helper to parse numeric values from MFI/Density strings (e.g. "0.05", "1.8", "57-70")
+  const parseNumeric = (str: string | undefined): number | null => {
+    if (!str) return null;
+    const match = str.match(/([0-9]+(?:\.[0-9]+)?)/);
+    if (!match) return null;
+    const val = parseFloat(match[1]);
+    return isNaN(val) ? null : val;
+  };
+
   // Filtered grades list from dynamic grades
   const filteredGrades = useMemo(() => {
     return gradesList.filter((g) => {
@@ -144,9 +155,30 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
         }
       }
 
+      // MFI / MFR Range filter
+      if (selectedMfiRange && selectedMfiRange !== "all") {
+        const mfi = parseNumeric(g.mfi);
+        if (mfi !== null) {
+          if (selectedMfiRange === "under-1" && !(mfi < 1.0)) return false;
+          if (selectedMfiRange === "1-5" && !(mfi >= 1.0 && mfi <= 5.0)) return false;
+          if (selectedMfiRange === "5-20" && !(mfi > 5.0 && mfi <= 20.0)) return false;
+          if (selectedMfiRange === "over-20" && !(mfi > 20.0)) return false;
+        }
+      }
+
+      // Density Range filter
+      if (selectedDensityRange && selectedDensityRange !== "all") {
+        const density = parseNumeric(g.density);
+        if (density !== null) {
+          if (selectedDensityRange === "under-0.925" && !(density < 0.925)) return false;
+          if (selectedDensityRange === "0.925-0.940" && !(density >= 0.925 && density <= 0.940)) return false;
+          if (selectedDensityRange === "over-0.940" && !(density > 0.940)) return false;
+        }
+      }
+
       return true;
     });
-  }, [searchQuery, selectedBrand, selectedCategory, selectedApp]);
+  }, [searchQuery, selectedBrand, selectedCategory, selectedApp, selectedMfiRange, selectedDensityRange, gradesList]);
 
   return (
     <div className="w-full">
@@ -227,28 +259,25 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
             </div>
           </div>
 
-          {/* Filter Pills Row: Polymer Category & Application */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+          {/* Filter Pills Row: Polymer Category, Application, MFI Range & Density Range */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-gray-100">
             {/* Category */}
             <div>
               <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-gray-500 block mb-2">
                 Polymer Category:
               </span>
-              <div className="flex flex-wrap gap-1.5">
-                {dynamicCategories.map((cat) => (
-                  <button
-                    key={cat}
-                    type="button"
-                    onClick={() => setSelectedCategory(cat === "all" ? "" : cat)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${(cat === "all" && !selectedCategory) || selectedCategory.toUpperCase() === cat.toUpperCase()
-                      ? "bg-primary text-white shadow-xs"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
-                  >
-                    {cat === "all" ? "All Categories" : cat}
-                  </button>
+              <select
+                value={selectedCategory || "all"}
+                onChange={(e) => setSelectedCategory(e.target.value === "all" ? "" : e.target.value)}
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs sm:text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition font-medium"
+              >
+                <option value="all">All Categories (PP, HDPE, LDPE...)</option>
+                {dynamicCategories.filter((c) => c !== "all").map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
                 ))}
-              </div>
+              </select>
             </div>
 
             {/* Application */}
@@ -261,12 +290,47 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
                 onChange={(e) => setSelectedApp(e.target.value)}
                 className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs sm:text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
               >
-                <option value="all">All Applications (Blow, Injection, Film, Pipes...)</option>
+                <option value="all">All Applications (Blow, Injection, Film...)</option>
                 {allApplications.map((app) => (
                   <option key={app} value={app}>
                     {app}
                   </option>
                 ))}
+              </select>
+            </div>
+
+            {/* MFI / MFR Range */}
+            <div>
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-gray-500 block mb-2">
+                MFI / MFR Range (g/10 min):
+              </span>
+              <select
+                value={selectedMfiRange}
+                onChange={(e) => setSelectedMfiRange(e.target.value)}
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs sm:text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition font-medium"
+              >
+                <option value="all">All MFI Rates</option>
+                <option value="under-1">&lt; 1.0 (Blow / Extrusion / Pipe)</option>
+                <option value="1-5">1.0 – 5.0 (Film / Raffia / Tape)</option>
+                <option value="5-20">5.0 – 20.0 (Standard Injection)</option>
+                <option value="over-20">&gt; 20.0 (High Flow / Thin-wall)</option>
+              </select>
+            </div>
+
+            {/* Density Range */}
+            <div>
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-gray-500 block mb-2">
+                Density Range (g/cm³):
+              </span>
+              <select
+                value={selectedDensityRange}
+                onChange={(e) => setSelectedDensityRange(e.target.value)}
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs sm:text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition font-medium"
+              >
+                <option value="all">All Density Ranges</option>
+                <option value="under-0.925">&lt; 0.925 (VLDPE / LLDPE / Film)</option>
+                <option value="0.925-0.940">0.925 – 0.940 (MDPE / PP)</option>
+                <option value="over-0.940">&gt; 0.940 (HDPE Resins)</option>
               </select>
             </div>
           </div>
@@ -278,7 +342,7 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
         <span className="text-xs font-semibold text-gray-600">
           Showing <span className="text-primary font-bold">{filteredGrades.length}</span> polymer candidate grades
         </span>
-        {(searchQuery || (selectedBrand && selectedBrand !== "all") || (selectedCategory && selectedCategory !== "all") || (selectedApp && selectedApp !== "all")) && (
+        {(searchQuery || (selectedBrand && selectedBrand !== "all") || (selectedCategory && selectedCategory !== "all") || (selectedApp && selectedApp !== "all") || (selectedMfiRange && selectedMfiRange !== "all") || (selectedDensityRange && selectedDensityRange !== "all")) && (
           <button
             type="button"
             onClick={() => {
@@ -286,6 +350,8 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
               setSelectedBrand("all");
               setSelectedCategory("all");
               setSelectedApp("all");
+              setSelectedMfiRange("all");
+              setSelectedDensityRange("all");
             }}
             className="text-xs font-semibold text-primary hover:underline cursor-pointer"
           >

@@ -6,39 +6,6 @@ import Link from "next/link";
 import { Icon } from "./Icons";
 import { MAJOR_BRANDS, BrandInfo } from "@/data/gradesCatalog";
 
-interface SupplierLogo {
-  id: number;
-  src: string;
-  alt: string;
-}
-
-const suppliers: SupplierLogo[] = [
-  { id: 1, src: "/images/suppliers/1.png", alt: "Supplier Partner 1" },
-  { id: 2, src: "/images/suppliers/2.png", alt: "Supplier Partner 2" },
-  { id: 3, src: "/images/suppliers/3.jpeg", alt: "Supplier Partner 3" },
-  { id: 4, src: "/images/suppliers/4.png", alt: "Supplier Partner 4" },
-  { id: 5, src: "/images/suppliers/5.png", alt: "Supplier Partner 5" },
-  { id: 6, src: "/images/suppliers/6.png", alt: "Supplier Partner 6" },
-  { id: 7, src: "/images/suppliers/7.png", alt: "Supplier Partner 7" },
-  { id: 8, src: "/images/suppliers/8.png", alt: "Supplier Partner 8" },
-  { id: 9, src: "/images/suppliers/9.png", alt: "Supplier Partner 9" },
-  { id: 10, src: "/images/suppliers/10.png", alt: "Supplier Partner 10" },
-  { id: 11, src: "/images/suppliers/11.png", alt: "Supplier Partner 11" },
-  { id: 12, src: "/images/suppliers/12.png", alt: "Supplier Partner 12" },
-  { id: 13, src: "/images/suppliers/13.png", alt: "Supplier Partner 13" },
-  { id: 14, src: "/images/suppliers/14.svg", alt: "Supplier Partner 14" },
-  { id: 15, src: "/images/suppliers/15.webp", alt: "Supplier Partner 15" },
-];
-
-const getOriginPill = (origin: string) => {
-  if (origin.includes("Saudi")) return "sa Saudi Arabia";
-  if (origin.includes("Korea")) return "kr South Korea";
-  if (origin.includes("USA") || origin.includes("United States")) return "us USA";
-  if (origin.includes("Vietnam")) return "vn Vietnam";
-  if (origin.includes("Egypt")) return "eg Egypt";
-  return origin;
-};
-
 interface TripletUnitProps {
   brands: [BrandInfo, BrandInfo, BrandInfo];
 }
@@ -153,48 +120,28 @@ const TripletUnit: React.FC<TripletUnitProps> = ({ brands }) => {
         <circle cx="330" cy="170" r="5" fill="#ea580c" />
       </svg>
 
-      {/* HTML Overlays for each Brand inside the 3 Hexagons */}
+      {/* HTML Overlays for each Brand inside the 3 Hexagons - Clean Logo Only Display */}
       {brands.map((brand, idx) => (
         <Link
           key={brand.id}
           href={`/products?brand=${encodeURIComponent(brand.name)}#grades-explorer`}
           onMouseEnter={() => setHoveredHex(idx)}
           onMouseLeave={() => setHoveredHex(null)}
-          className="group absolute flex flex-col items-center justify-between p-2 sm:p-2.5 xl:p-3 text-center focus:outline-none transition-transform duration-200 active:scale-95"
+          className="group absolute flex items-center justify-center p-3 sm:p-4 xl:p-5 text-center focus:outline-none transition-transform duration-200 active:scale-95"
           style={overlayStyles[idx]}
-          aria-label={`View ${brand.name} candidate grades`}
+          aria-label={brand.fullName || brand.name}
+          title={brand.fullName || brand.name}
         >
-          {/* Origin Pill (e.g. 🟢 sa Saudi Arabia) */}
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-100/95 group-hover:bg-primary/10 transition-colors border border-slate-200/60 shadow-2xs">
-            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 shrink-0"></span>
-            <span className="text-[9px] sm:text-[10px] xl:text-[11px] font-bold text-slate-700 group-hover:text-primary transition-colors tracking-tight line-clamp-1">
-              {getOriginPill(brand.origin)}
-            </span>
-          </div>
-
-          {/* 2X Super-Sized High-Visibility Refinery Logo */}
-          <div className="relative w-full h-14 sm:h-18 md:h-20 xl:h-22 my-1 flex items-center justify-center px-1">
+          {/* Official Refinery Brand Logo Only (No text, descriptions or pills underneath) */}
+          <div className="relative w-full h-full max-h-[75%] flex items-center justify-center p-1.5 sm:p-2">
             <Image
               src={brand.logoUrl}
-              alt={`${brand.name} logo`}
+              alt={`${brand.name} official logo`}
               fill
-              sizes="(max-width: 640px) 180px, (max-width: 1024px) 240px, 300px"
-              className="object-contain filter group-hover:scale-110 transition-transform duration-300 drop-shadow-xs"
+              sizes="(max-width: 640px) 160px, (max-width: 1024px) 220px, 260px"
+              className="object-contain filter group-hover:scale-110 transition-transform duration-300 drop-shadow-sm"
+              priority={idx === 0}
             />
-          </div>
-
-          {/* Brand Name, Categories & View Action */}
-          <div className="w-full flex flex-col items-center">
-            <h4 className="font-black text-xs sm:text-sm xl:text-base text-slate-900 group-hover:text-primary transition-colors line-clamp-1 leading-tight">
-              {brand.name}
-            </h4>
-            <p className="text-[9px] sm:text-[10px] xl:text-[11px] text-slate-600 font-semibold line-clamp-1 mt-0.5">
-              {brand.categories.join(" · ")}
-            </p>
-            <div className="mt-0.5 sm:mt-1 flex items-center gap-1 text-[9px] sm:text-[10px] xl:text-[11px] font-bold text-primary group-hover:gap-1.5 transition-all">
-              <span>View Grades</span>
-              <span className="inline-block transition-transform duration-200 group-hover:translate-x-0.5">→</span>
-            </div>
           </div>
         </Link>
       ))}
@@ -315,24 +262,27 @@ export const SuppliersSection: React.FC = () => {
             </div>
           </div>
 
-          {/* Continuous Infinite Smooth Auto-Scrolling Marquee Slider */}
-          <div className="relative w-full overflow-hidden py-2 before:pointer-events-none before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-8 sm:before:w-24 before:bg-gradient-to-r before:from-white before:to-transparent after:pointer-events-none after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-8 sm:after:w-24 after:bg-gradient-to-l after:from-white after:to-transparent">
+          {/* Continuous Infinite Smooth Auto-Scrolling Marquee Slider - Official Brand Logos Only */}
+          <div className="relative w-full overflow-hidden py-3 before:pointer-events-none before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-10 sm:before:w-28 before:bg-gradient-to-r before:from-white before:to-transparent after:pointer-events-none after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-10 sm:after:w-28 after:bg-gradient-to-l after:from-white after:to-transparent">
             <div className="animate-marquee-left flex items-center gap-4 sm:gap-6">
-              {[...suppliers, ...suppliers].map((supplier, idx) => (
-                <div
-                  key={`${supplier.id}-${idx}`}
-                  className="flex h-16 w-32 sm:h-22 sm:w-40 shrink-0 items-center justify-center rounded-xl border border-gray-200/70 bg-white p-3 sm:p-4 shadow-2xs transition-all duration-300 hover:border-primary/50 hover:shadow-md"
+              {[...MAJOR_BRANDS, ...MAJOR_BRANDS].map((brand, idx) => (
+                <Link
+                  key={`${brand.id}-${idx}`}
+                  href={`/products?brand=${encodeURIComponent(brand.name)}#grades-explorer`}
+                  title={brand.fullName}
+                  aria-label={brand.fullName}
+                  className="flex h-16 w-36 sm:h-20 sm:w-44 shrink-0 items-center justify-center rounded-2xl border border-gray-200/80 bg-white p-3.5 sm:p-4 shadow-2xs transition-all duration-300 hover:border-primary hover:shadow-md group"
                 >
                   <div className="relative h-full w-full">
                     <Image
-                      src={supplier.src}
-                      alt={supplier.alt}
+                      src={brand.logoUrl}
+                      alt={`${brand.name} official logo`}
                       fill
-                      sizes="(max-width: 640px) 120px, 160px"
-                      className="object-contain filter grayscale hover:grayscale-0 opacity-80 hover:opacity-100 transition-all duration-300"
+                      sizes="(max-width: 640px) 140px, 180px"
+                      className="object-contain filter grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300"
                     />
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

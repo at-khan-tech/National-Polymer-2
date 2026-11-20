@@ -65,22 +65,63 @@ export async function POST(request: Request) {
 
     const notes = typeof body.notes === "string" ? body.notes.trim() : "";
 
+    const incoterm =
+      typeof body.incoterm === "string" && body.incoterm.trim()
+        ? body.incoterm.trim()
+        : "CIF";
+
+    const formattedPort = incoterm && !destinationPort.toLowerCase().includes(incoterm.toLowerCase())
+      ? `${destinationPort} [${incoterm}]`
+      : destinationPort;
+
+    const formattedNotes = incoterm
+      ? `Preferred Incoterm: ${incoterm}\n${notes}`.trim()
+      : notes;
+
     const { error } = await getSupabaseAdmin().from("enquiries").insert({
       full_name: body.fullName.trim(),
       company_name: body.companyName.trim(),
       email: body.email.trim(),
       phone: body.phone.trim(),
-      destination_port: destinationPort,
+      destination_port: formattedPort,
       country: country,
       product_slug: productSlug,
       product_name: productName,
       grade: grade,
       volume: volume,
       packaging: packaging,
-      notes: notes,
+      notes: formattedNotes,
       status: "new",
     });
     throwIfDatabaseError(error);
+
+    // Optional email dispatch / notification webhook hook
+    try {
+      const webhookUrl = process.env.ENQUIRY_NOTIFICATION_WEBHOOK;
+      if (webhookUrl) {
+        await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            event: "new_rfq_enquiry",
+            fullName: body.fullName.trim(),
+            companyName: body.companyName.trim(),
+            email: body.email.trim(),
+            phone: body.phone.trim(),
+            product: productName,
+            grade: grade,
+            volume: volume,
+            incoterm: incoterm,
+            destinationPort: destinationPort,
+            country: country,
+            notes: notes,
+            timestamp: new Date().toISOString(),
+          }),
+        }).catch(() => {});
+      }
+    } catch {
+      // Non-blocking notification
+    }
 
     return NextResponse.json({ message: "Enquiry submitted successfully." }, { status: 201 });
   } catch (error) {
