@@ -40,6 +40,21 @@ function findHeaderIndex(headers: string[], keywords: string[]): number {
   });
 }
 
+function getProductSlugForCategory(cat: string): string {
+  const c = (cat || "").toUpperCase();
+  if (c.includes("PP")) return "pp";
+  if (c.includes("HDPE") || c.includes("LDPE") || c.includes("LLDPE") || c.includes("PE")) return "pe";
+  if (c.includes("PVC")) return "pvc";
+  if (c.includes("PET")) return "pet";
+  if (c.includes("PS")) return "ps";
+  if (c.includes("ENGINEERING") || c.includes("PC") || c.includes("ABS")) return "engineering-plastics";
+  if (c.includes("RECYCLED")) return "recycled";
+  if (c.includes("MASTERBATCH") || c.includes("ADDITIVE")) return "masterbatch-additives";
+  if (c.includes("NEAR-PRIME")) return "near-prime";
+  if (c.includes("OFF-GRADE")) return "off-grade";
+  return c.toLowerCase();
+}
+
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();
@@ -71,155 +86,169 @@ export async function POST(request: Request) {
       await workbook.xlsx.load(buffer as any);
     }
 
-    // Determine target sheet
-    let worksheet = workbook.worksheets[0];
-    if (workbook.worksheets.length > 1) {
-      if (targetOverride === "products") {
-        const prodSheet = workbook.worksheets.find((w) =>
-          w.name.toLowerCase().includes("product")
-        );
-        if (prodSheet) worksheet = prodSheet;
-      } else {
-        const gradeSheet = workbook.worksheets.find((w) =>
-          w.name.toLowerCase().includes("grade")
-        );
-        if (gradeSheet) worksheet = gradeSheet;
+    const isExplicitProducts = targetOverride === "products";
+
+    if (!isExplicitProducts) {
+      const parsedGrades: (PolymerGrade & { productSlug?: string })[] = [];
+      const warnings: string[] = [];
+
+      for (const sheet of workbook.worksheets) {
+        if (!sheet || sheet.rowCount < 2) continue;
+
+        const rawHeaders: string[] = [];
+        sheet.getRow(1).eachCell({ includeEmpty: false }, (cell, colNumber) => {
+          rawHeaders[colNumber] = getCellString(cell.value);
+        });
+
+        const brandIdx = findHeaderIndex(rawHeaders, ["brand", "refiner", "producer", "manufacturer"]);
+        const gradeIdx = findHeaderIndex(rawHeaders, ["grade", "gradecode", "code", "sku"]);
+
+        // If sheet doesn't have brand or grade columns, skip this sheet
+        if (brandIdx === -1 && gradeIdx === -1) continue;
+
+        const categoryIdx = findHeaderIndex(rawHeaders, ["category", "polymercategory"]);
+        const subCategoryIdx = findHeaderIndex(rawHeaders, ["subcategory", "classification", "subtype"]);
+        const originIdx = findHeaderIndex(rawHeaders, ["origin", "country", "origincountry"]);
+        const mfiIdx = findHeaderIndex(rawHeaders, ["mfi", "mfr", "meltflow", "meltindex"]);
+        const densityIdx = findHeaderIndex(rawHeaders, ["density", "specificgravity"]);
+        const appIdx = findHeaderIndex(rawHeaders, ["application", "targetapplication", "usecase"]);
+        const availIdx = findHeaderIndex(rawHeaders, ["stock", "availability", "stockavailability"]);
+        const tdsIdx = findHeaderIndex(rawHeaders, ["tdslink", "tdsurl", "tds", "datasheet", "pdf"]);
+        const notesIdx = findHeaderIndex(rawHeaders, ["notes", "remarks", "technicalnotes"]);
+        const featuresIdx = findHeaderIndex(rawHeaders, ["feature", "features", "productfeatures"]);
+
+        // Infer default category from sheet name if sheet is named e.g. "PP Homo", "HDPE Blow", etc.
+        const sheetNameUpper = sheet.name.toUpperCase();
+        let defaultCategory = "PP";
+        if (sheetNameUpper.includes("HDPE")) defaultCategory = "HDPE";
+        else if (sheetNameUpper.includes("LLDPE")) defaultCategory = "LLDPE";
+        else if (sheetNameUpper.includes("LDPE")) defaultCategory = "LDPE";
+        else if (sheetNameUpper.includes("PVC")) defaultCategory = "PVC";
+        else if (sheetNameUpper.includes("PET")) defaultCategory = "PET";
+        else if (sheetNameUpper.includes("PS")) defaultCategory = "PS";
+        else if (sheetNameUpper.includes("EVA")) defaultCategory = "EVA";
+        else if (sheetNameUpper.includes("RECYCLED")) defaultCategory = "Recycled";
+        else if (sheetNameUpper.includes("ENGINEERING")) defaultCategory = "Engineering";
+
+        for (let r = 2; r <= sheet.rowCount; r++) {
+          const row = sheet.getRow(r);
+          const brand = brandIdx !== -1 ? getCellString(row.getCell(brandIdx).value) : "";
+          const gradeCode = gradeIdx !== -1 ? getCellString(row.getCell(gradeIdx).value) : "";
+
+          if (!brand && !gradeCode) continue;
+
+          if (!brand || !gradeCode) {
+            warnings.push(`${sheet.name} Row ${r}: Skipped because Brand or Grade Code is missing.`);
+            continue;
+          }
+
+          const rawCategory = categoryIdx !== -1 ? getCellString(row.getCell(categoryIdx).value) : "";
+          const category = rawCategory || defaultCategory;
+          const subCategory = (subCategoryIdx !== -1 ? getCellString(row.getCell(subCategoryIdx).value) : sheet.name) || sheet.name;
+          const origin = (originIdx !== -1 ? getCellString(row.getCell(originIdx).value) : "Global") || "Global";
+          const mfi = (mfiIdx !== -1 ? getCellString(row.getCell(mfiIdx).value) : "N/A") || "N/A";
+          const density = (densityIdx !== -1 ? getCellString(row.getCell(densityIdx).value) : "N/A") || "N/A";
+          const application = (appIdx !== -1 ? getCellString(row.getCell(appIdx).value) : "General Processing") || "General Processing";
+          const availability = (availIdx !== -1 ? getCellString(row.getCell(availIdx).value) : "Available on request") || "Available on request";
+          
+          let tdsUrl = tdsIdx !== -1 ? getCellString(row.getCell(tdsIdx).value) : "";
+          if (tdsUrl && !tdsUrl.startsWith("http")) tdsUrl = "";
+
+          const notesVal = notesIdx !== -1 ? getCellString(row.getCell(notesIdx).value) : "";
+          const featuresVal = featuresIdx !== -1 ? getCellString(row.getCell(featuresIdx).value) : "";
+          const combinedNotes = [notesVal, featuresVal ? `Features: ${featuresVal}` : ""].filter(Boolean).join(" ");
+
+          const productSlug = getProductSlugForCategory(category);
+
+          parsedGrades.push({
+            id: `${toSlug(brand)}-${toSlug(gradeCode)}`,
+            brand,
+            grade: gradeCode,
+            category: category as any,
+            subCategory,
+            origin,
+            mfi,
+            density,
+            application,
+            availability,
+            status: "Verified",
+            tdsUrl: tdsUrl || undefined,
+            notes: combinedNotes || undefined,
+            productSlug,
+          });
+        }
+      }
+
+      if (parsedGrades.length > 0 || targetOverride === "grades") {
+        if (action === "preview") {
+          return NextResponse.json({
+            ok: true,
+            target: "grades",
+            totalRows: parsedGrades.length,
+            validRows: parsedGrades.length,
+            preview: parsedGrades.slice(0, 10),
+            warnings,
+          });
+        }
+
+        // Execute Commit
+        const currentGrades = await getAllGrades();
+        let finalGrades: PolymerGrade[] = [];
+        let added = 0;
+        let updated = 0;
+
+        if (mode === "replace") {
+          finalGrades = parsedGrades;
+          added = parsedGrades.length;
+        } else {
+          // Merge mode: update if exists, append if new
+          const map = new Map<string, PolymerGrade>();
+          currentGrades.forEach((g) => map.set(g.id.toLowerCase(), g));
+
+          parsedGrades.forEach((g) => {
+            if (map.has(g.id.toLowerCase())) {
+              map.set(g.id.toLowerCase(), { ...map.get(g.id.toLowerCase())!, ...g });
+              updated++;
+            } else {
+              map.set(g.id.toLowerCase(), g);
+              added++;
+            }
+          });
+
+          finalGrades = Array.from(map.values());
+        }
+
+        await saveAllGrades(finalGrades);
+
+        return NextResponse.json({
+          ok: true,
+          target: "grades",
+          count: parsedGrades.length,
+          added,
+          updated,
+          totalCatalogCount: finalGrades.length,
+          message: `Successfully processed ${parsedGrades.length} polymer grades (${added} added, ${updated} updated) across all sheets. All linked to parent products.`,
+        });
       }
     }
 
-    if (!worksheet || worksheet.rowCount < 2) {
+    // Otherwise Products Sheet
+    const prodSheet =
+      workbook.worksheets.find((w) => w.name.toLowerCase().includes("product")) ||
+      workbook.worksheets[0];
+
+    if (!prodSheet || prodSheet.rowCount < 2) {
       return NextResponse.json(
-        { message: "The uploaded spreadsheet is empty or has no data rows." },
+        { message: "No valid product data rows found in uploaded sheet." },
         { status: 400 }
       );
     }
 
-    // Read headers from row 1
     const rawHeaders: string[] = [];
-    const firstRow = worksheet.getRow(1);
-    firstRow.eachCell({ includeEmpty: false }, (cell, colNumber) => {
+    prodSheet.getRow(1).eachCell({ includeEmpty: false }, (cell, colNumber) => {
       rawHeaders[colNumber] = getCellString(cell.value);
     });
 
-    // Auto-detect target
-    const isGradesSheet =
-      targetOverride === "grades" ||
-      findHeaderIndex(rawHeaders, ["grade", "mfi", "brand", "mfr"]) !== -1;
-
-    if (isGradesSheet) {
-      // Map column indexes
-      const brandIdx = findHeaderIndex(rawHeaders, ["brand", "refiner", "producer", "manufacturer"]);
-      const gradeIdx = findHeaderIndex(rawHeaders, ["grade", "gradecode", "code", "sku"]);
-      const categoryIdx = findHeaderIndex(rawHeaders, ["category", "polymercategory"]);
-      const subCategoryIdx = findHeaderIndex(rawHeaders, ["subcategory", "classification", "subtype"]);
-      const originIdx = findHeaderIndex(rawHeaders, ["origin", "country", "origincountry"]);
-      const mfiIdx = findHeaderIndex(rawHeaders, ["mfi", "mfr", "meltflow", "meltindex"]);
-      const densityIdx = findHeaderIndex(rawHeaders, ["density", "specificgravity"]);
-      const appIdx = findHeaderIndex(rawHeaders, ["application", "targetapplication", "usecase"]);
-      const availIdx = findHeaderIndex(rawHeaders, ["stock", "availability", "stockavailability"]);
-      const tdsIdx = findHeaderIndex(rawHeaders, ["tdslink", "tdsurl", "tds", "datasheet", "pdf"]);
-      const notesIdx = findHeaderIndex(rawHeaders, ["notes", "remarks", "technicalnotes"]);
-      const featuresIdx = findHeaderIndex(rawHeaders, ["feature", "features", "productfeatures"]);
-
-      const parsedGrades: PolymerGrade[] = [];
-      const warnings: string[] = [];
-
-      for (let r = 2; r <= worksheet.rowCount; r++) {
-        const row = worksheet.getRow(r);
-        const brand = brandIdx !== -1 ? getCellString(row.getCell(brandIdx).value) : "";
-        const gradeCode = gradeIdx !== -1 ? getCellString(row.getCell(gradeIdx).value) : "";
-
-        if (!brand && !gradeCode) continue; // skip blank row
-
-        if (!brand || !gradeCode) {
-          warnings.push(`Row ${r}: Skipped because Brand or Grade Code is missing.`);
-          continue;
-        }
-
-        const category = (categoryIdx !== -1 ? getCellString(row.getCell(categoryIdx).value) : "PP") || "PP";
-        const subCategory = (subCategoryIdx !== -1 ? getCellString(row.getCell(subCategoryIdx).value) : "General Grade") || "General Grade";
-        const origin = (originIdx !== -1 ? getCellString(row.getCell(originIdx).value) : "Global") || "Global";
-        const mfi = (mfiIdx !== -1 ? getCellString(row.getCell(mfiIdx).value) : "N/A") || "N/A";
-        const density = (densityIdx !== -1 ? getCellString(row.getCell(densityIdx).value) : "N/A") || "N/A";
-        const application = (appIdx !== -1 ? getCellString(row.getCell(appIdx).value) : "General Processing") || "General Processing";
-        const availability = (availIdx !== -1 ? getCellString(row.getCell(availIdx).value) : "Available on request") || "Available on request";
-        
-        let tdsUrl = tdsIdx !== -1 ? getCellString(row.getCell(tdsIdx).value) : "";
-        if (tdsUrl && !tdsUrl.startsWith("http")) tdsUrl = "";
-
-        const notesVal = notesIdx !== -1 ? getCellString(row.getCell(notesIdx).value) : "";
-        const featuresVal = featuresIdx !== -1 ? getCellString(row.getCell(featuresIdx).value) : "";
-        const combinedNotes = [notesVal, featuresVal ? `Features: ${featuresVal}` : ""].filter(Boolean).join(" ");
-
-        parsedGrades.push({
-          id: `${toSlug(brand)}-${toSlug(gradeCode)}`,
-          brand,
-          grade: gradeCode,
-          category: (category.toUpperCase().includes("PE") && !category.toUpperCase().includes("PP") ? category : category) as any,
-          subCategory,
-          origin,
-          mfi,
-          density,
-          application,
-          availability,
-          status: "Verified",
-          tdsUrl: tdsUrl || undefined,
-          notes: combinedNotes || undefined,
-        });
-      }
-
-      if (action === "preview") {
-        return NextResponse.json({
-          ok: true,
-          target: "grades",
-          totalRows: parsedGrades.length,
-          validRows: parsedGrades.length,
-          preview: parsedGrades.slice(0, 8),
-          warnings,
-        });
-      }
-
-      // Execute Commit
-      const currentGrades = await getAllGrades();
-      let finalGrades: PolymerGrade[] = [];
-      let added = 0;
-      let updated = 0;
-
-      if (mode === "replace") {
-        finalGrades = parsedGrades;
-        added = parsedGrades.length;
-      } else {
-        // Merge mode: update if exists, append if new
-        const map = new Map<string, PolymerGrade>();
-        currentGrades.forEach((g) => map.set(g.id.toLowerCase(), g));
-
-        parsedGrades.forEach((g) => {
-          if (map.has(g.id.toLowerCase())) {
-            map.set(g.id.toLowerCase(), { ...map.get(g.id.toLowerCase())!, ...g });
-            updated++;
-          } else {
-            map.set(g.id.toLowerCase(), g);
-            added++;
-          }
-        });
-
-        finalGrades = Array.from(map.values());
-      }
-
-      await saveAllGrades(finalGrades);
-
-      return NextResponse.json({
-        ok: true,
-        target: "grades",
-        count: parsedGrades.length,
-        added,
-        updated,
-        totalCatalogCount: finalGrades.length,
-        message: `Successfully processed ${parsedGrades.length} grades (${added} added, ${updated} updated). Catalog now contains ${finalGrades.length} grades.`,
-      });
-    }
-
-    // Otherwise Products Sheet
     const nameIdx = findHeaderIndex(rawHeaders, ["name", "product", "productname", "family"]);
     const slugIdx = findHeaderIndex(rawHeaders, ["slug", "urlslug", "code"]);
     const categoryIdx = findHeaderIndex(rawHeaders, ["category", "categorycode"]);
@@ -232,8 +261,8 @@ export async function POST(request: Request) {
     const parsedProducts: ProductDetail[] = [];
     const warnings: string[] = [];
 
-    for (let r = 2; r <= worksheet.rowCount; r++) {
-      const row = worksheet.getRow(r);
+    for (let r = 2; r <= prodSheet.rowCount; r++) {
+      const row = prodSheet.getRow(r);
       const name = nameIdx !== -1 ? getCellString(row.getCell(nameIdx).value) : "";
       if (!name) continue;
 

@@ -38,11 +38,14 @@ export default async function GradeDetailPage({ params }: GradePageProps) {
 
   // Map category to parent product slug
   const parentProductSlug =
-    grade.category === "PP"
+    (grade as any).productSlug ||
+    (grade.category === "PP"
       ? "pp"
       : ["HDPE", "LDPE", "LLDPE"].includes(grade.category)
       ? "pe"
-      : grade.category.toLowerCase();
+      : grade.category === "Engineering"
+      ? "engineering-plastics"
+      : grade.category.toLowerCase());
 
   return (
     <>

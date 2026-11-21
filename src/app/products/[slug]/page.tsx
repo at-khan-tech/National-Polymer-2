@@ -29,11 +29,14 @@ export default async function ProductInnerPage({ params }: PageProps) {
     slug === "pp"
       ? ["PP"]
       : slug === "pe"
-      ? ["HDPE", "LDPE", "LLDPE"]
+      ? ["HDPE", "LDPE", "LLDPE", "PE"]
+      : slug === "engineering-plastics"
+      ? ["ENGINEERING"]
       : [slug.toUpperCase()];
 
   const matchingGrades = allGrades.filter((g) =>
-    categoryKeywords.some((k) => g.category.toUpperCase().includes(k))
+    (g as any).productSlug === slug ||
+    categoryKeywords.some((k) => (g.category || "").toUpperCase().includes(k))
   );
 
   return (
