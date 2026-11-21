@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Icon } from "./Icons";
 import { MAIN_NAVIGATION } from "@/data/siteNavigation";
 import { CANDIDATE_GRADES, MAJOR_BRANDS, type PolymerGrade } from "@/data/gradesCatalog";
@@ -167,6 +167,7 @@ function SearchResultsDropdown({
 
 export const Header: React.FC = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeMobileDropdown, setActiveMobileDropdown] = useState<string | null>(null);
@@ -175,6 +176,14 @@ export const Header: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-close search, mobile menu & reset body overflow when navigating to a new route
+  useEffect(() => {
+    setIsSearchOpen(false);
+    setMobileMenuOpen(false);
+    setActiveMobileDropdown(null);
+    document.body.style.overflow = "";
+  }, [pathname]);
 
   useEffect(() => {
     const handleScroll = () => {

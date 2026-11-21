@@ -156,6 +156,18 @@ body {
   will-change: opacity, transform;
 }
 
+[data-aos].aos-animate {
+  opacity: 1 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
 [data-aos="fade-up"] {
   transform: translate3d(0, 35px, 0);
 }

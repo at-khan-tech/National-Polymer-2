@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import { Icon } from "./Icons";
 
 export const SmoothScrollProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
+  const pathname = usePathname();
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const lenisRef = useRef<Lenis | null>(null);
@@ -81,14 +83,46 @@ export const SmoothScrollProvider: React.FC<{
       }
     };
 
+    const handleWindowResize = () => {
+      lenis.resize();
+    };
+
     document.addEventListener("click", handleAnchorClick);
+    window.addEventListener("resize", handleWindowResize);
 
     return () => {
       document.removeEventListener("click", handleAnchorClick);
+      window.removeEventListener("resize", handleWindowResize);
       cancelAnimationFrame(rafId);
       lenis.destroy();
     };
   }, []);
+
+  // Sync scroll position & page height across route navigation
+  useEffect(() => {
+    // If URL has hash, scroll to hash; else smoothly reset to top
+    const hash = typeof window !== "undefined" ? window.location.hash : "";
+    if (hash) {
+      const timer = setTimeout(() => {
+        const target = document.querySelector(hash);
+        if (target) {
+          if (lenisRef.current) {
+            lenisRef.current.scrollTo(target as HTMLElement, { offset: -80, immediate: false });
+          } else {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        }
+      }, 120);
+      return () => clearTimeout(timer);
+    } else {
+      if (lenisRef.current) {
+        lenisRef.current.scrollTo(0, { immediate: true });
+        lenisRef.current.resize();
+      } else {
+        window.scrollTo({ top: 0, left: 0 });
+      }
+    }
+  }, [pathname]);
 
   const scrollToTop = () => {
     if (lenisRef.current) {
