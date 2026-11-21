@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
+import React from "react";
 import { regions } from "@/data/content";
 
 const W = 1000,
@@ -190,14 +189,6 @@ function getLabelOffset(name: string): { dx: number; dy: number; anchor: "start"
 export function WorldMap({ compact = false }: { compact?: boolean }) {
   const hub = regions.hub;
   const [hx, hy] = proj(hub.lon, hub.lat);
-  const [activeTooltip, setActiveTooltip] = useState<{
-    name: string;
-    description?: string;
-    type: "sourcing" | "market" | "hub";
-    status?: "active" | "target";
-    countries?: string[];
-    ports?: string[];
-  } | null>(null);
 
   return (
     <div className="relative w-full overflow-hidden select-none rounded-2xl bg-white border border-slate-200/90 p-2 sm:p-4 shadow-sm">
@@ -269,7 +260,7 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
             stroke="#475569"
             strokeWidth="1.4"
             strokeDasharray="4 4"
-            className="opacity-50 hover:opacity-100 transition-opacity"
+            className="opacity-50"
           />
         ))}
 
@@ -285,7 +276,7 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
               stroke={strokeColor}
               strokeWidth={isTarget ? "1.6" : "1.8"}
               strokeDasharray={isTarget ? "3 4" : "5 5"}
-              className="opacity-80 hover:opacity-100 transition-opacity"
+              className="opacity-80"
             />
           );
         })}
@@ -295,27 +286,7 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
           const [x, y] = proj(s.lon, s.lat);
           const offset = getLabelOffset(s.name);
           return (
-            <g
-              key={s.name}
-              className="cursor-pointer transition-transform duration-200 hover:scale-125"
-              onMouseEnter={() =>
-                setActiveTooltip({
-                  name: s.name,
-                  description: s.description,
-                  type: "sourcing",
-                  ports: s.ports,
-                })
-              }
-              onMouseLeave={() => setActiveTooltip(null)}
-              onClick={() =>
-                setActiveTooltip({
-                  name: s.name,
-                  description: s.description,
-                  type: "sourcing",
-                  ports: s.ports,
-                })
-              }
-            >
+            <g key={s.name}>
               <circle
                 cx={x}
                 cy={y}
@@ -347,31 +318,7 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
           const offset = getLabelOffset(m.name);
 
           return (
-            <g
-              key={m.name}
-              className="cursor-pointer transition-transform duration-200 hover:scale-125"
-              onMouseEnter={() =>
-                setActiveTooltip({
-                  name: m.name,
-                  description: m.description,
-                  type: "market",
-                  status: m.status,
-                  countries: m.countries,
-                  ports: m.ports,
-                })
-              }
-              onMouseLeave={() => setActiveTooltip(null)}
-              onClick={() =>
-                setActiveTooltip({
-                  name: m.name,
-                  description: m.description,
-                  type: "market",
-                  status: m.status,
-                  countries: m.countries,
-                  ports: m.ports,
-                })
-              }
-            >
+            <g key={m.name}>
               {/* Pulse Ring */}
               <circle
                 cx={x}
@@ -412,28 +359,7 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
         })}
 
         {/* ─── DUBAI COMMERCIAL HQ (Central Golden Beacon) ─── */}
-        <g
-          className="cursor-pointer"
-          onMouseEnter={() =>
-            setActiveTooltip({
-              name: hub.name,
-              description: hub.description,
-              type: "hub",
-              status: "active",
-              ports: hub.ports,
-            })
-          }
-          onMouseLeave={() => setActiveTooltip(null)}
-          onClick={() =>
-            setActiveTooltip({
-              name: hub.name,
-              description: hub.description,
-              type: "hub",
-              status: "active",
-              ports: hub.ports,
-            })
-          }
-        >
+        <g>
           {/* Outer glow */}
           <circle cx={hx} cy={hy} r="24" fill="url(#hub-light-glow)" />
 
@@ -460,93 +386,6 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
           </text>
         </g>
       </svg>
-
-      {/* Floating Interactive Tooltip Card on Hover/Tap */}
-      {activeTooltip && (
-        <div className="absolute bottom-4 left-4 sm:left-6 max-w-sm rounded-xl border border-slate-200 bg-white/95 p-3.5 shadow-xl backdrop-blur-md transition-all duration-200 z-20">
-          <div className="flex items-center justify-between gap-2 pb-2 border-b border-slate-100">
-            <div className="flex items-center gap-2">
-              <span
-                className={`h-2.5 w-2.5 rounded-full ${
-                  activeTooltip.type === "hub"
-                    ? "bg-orange-500 ring-2 ring-orange-200"
-                    : activeTooltip.status === "target"
-                    ? "bg-emerald-500 ring-2 ring-emerald-200"
-                    : activeTooltip.type === "sourcing"
-                    ? "bg-slate-600"
-                    : "bg-blue-600 ring-2 ring-blue-200"
-                }`}
-              />
-              <span className="text-xs font-bold text-slate-900">{activeTooltip.name}</span>
-            </div>
-            <span
-              className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
-                activeTooltip.type === "hub"
-                  ? "bg-orange-100 text-orange-900"
-                  : activeTooltip.status === "target"
-                  ? "bg-emerald-100 text-emerald-800"
-                  : activeTooltip.type === "sourcing"
-                  ? "bg-slate-100 text-slate-800"
-                  : "bg-blue-100 text-blue-800"
-              }`}
-            >
-              {activeTooltip.type === "hub"
-                ? "Trading Hub"
-                : activeTooltip.status === "target"
-                ? "▲ Target Expansion"
-                : activeTooltip.type === "sourcing"
-                ? "Refinery Sourcing"
-                : "● Active Market"}
-            </span>
-          </div>
-
-          {activeTooltip.countries && activeTooltip.countries.length > 0 && (
-            <div className="mt-2">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">
-                Key Countries Covered:
-              </span>
-              <p className="text-[11px] font-semibold text-slate-800">
-                {activeTooltip.countries.join(", ")}
-              </p>
-            </div>
-          )}
-
-          {activeTooltip.description && (
-            <p className="mt-1.5 text-[11px] text-slate-600 leading-snug">
-              {activeTooltip.description}
-            </p>
-          )}
-
-          {activeTooltip.ports && activeTooltip.ports.length > 0 && (
-            <div className="mt-2 pt-1.5 border-t border-slate-100">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
-                Major Terminals / Ports:
-              </span>
-              <div className="flex flex-wrap gap-1">
-                {activeTooltip.ports.map((port, pIdx) => (
-                  <span
-                    key={pIdx}
-                    className="rounded bg-slate-100 border border-slate-200 px-1.5 py-0.5 text-[9px] font-mono text-slate-700 font-medium"
-                  >
-                    {port}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="mt-2.5 pt-1.5 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-[9px] text-slate-400 font-medium">Click / tap node for details</span>
-            <Link
-              href={`/enquiry?route=${encodeURIComponent(activeTooltip.name)}`}
-              className="text-[10px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-0.5"
-            >
-              <span>Request Quote</span>
-              <span>→</span>
-            </Link>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
