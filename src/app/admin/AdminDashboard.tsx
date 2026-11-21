@@ -36,6 +36,7 @@ import {
   Settings,
   ShoppingBag,
   Trash2,
+  Upload,
   X,
 } from "lucide-react";
 
@@ -44,6 +45,7 @@ import type { ProductDetail } from "@/data/productsData";
 import type { PolymerGrade } from "@/data/gradesCatalog";
 import type { AdminEnquiry, AdminOrder, ContentCategory, EnquiryStatus, OrderStatus, SiteSettings } from "@/lib/content-store";
 import { ImageUploadField } from "@/components/ImageUploadField";
+import { BulkUploadModal } from "./BulkUploadModal";
 
 type View = "dashboard" | "blogs" | "products" | "grades" | "categories" | "orders" | "enquiries" | "settings";
 type Notice = { type: "success" | "error"; message: string } | null;
@@ -239,6 +241,16 @@ export default function AdminPanelPage() {
   const [isSavingOrder, setIsSavingOrder] = useState(false);
   const [logoutError, setLogoutError] = useState("");
 
+  // Bulk Upload feature states
+  const [bulkUploadModalOpen, setBulkUploadModalOpen] = useState(false);
+  const [bulkUploadTarget, setBulkUploadTarget] = useState<"grades" | "products">("grades");
+  const [bulkUploadMode, setBulkUploadMode] = useState<"merge" | "replace">("merge");
+  const [bulkUploadFile, setBulkUploadFile] = useState<File | null>(null);
+  const [bulkUploadLoading, setBulkUploadLoading] = useState(false);
+  const [bulkUploadPreview, setBulkUploadPreview] = useState<any[] | null>(null);
+  const [bulkUploadSummary, setBulkUploadSummary] = useState<{ totalRows: number; validRows: number; target: string } | null>(null);
+  const [bulkUploadNotice, setBulkUploadNotice] = useState<Notice>(null);
+
   const loadData = useCallback(async () => {
     setLoadError("");
     try {
@@ -267,16 +279,94 @@ export default function AdminPanelPage() {
 
   useEffect(() => { void loadData(); }, [loadData]);
 
-  // Lock background body scroll when RFQ modal, Blog editor drawer, or Grade modal is open
+  const handleBulkFileSelect = async (file: File) => {
+    setBulkUploadFile(file);
+    setBulkUploadPreview(null);
+    setBulkUploadSummary(null);
+    setBulkUploadNotice(null);
+    setBulkUploadLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("action", "preview");
+      formData.append("target", bulkUploadTarget);
+      formData.append("mode", bulkUploadMode);
+
+      const res = await fetch("/api/admin/bulk-upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || "Unable to parse file.");
+      }
+
+      setBulkUploadPreview(data.preview || []);
+      setBulkUploadSummary({
+        totalRows: data.totalRows || 0,
+        validRows: data.validRows || 0,
+        target: data.target || bulkUploadTarget,
+      });
+    } catch (err) {
+      setBulkUploadNotice({
+        type: "error",
+        message: err instanceof Error ? err.message : "Failed to parse file.",
+      });
+    } finally {
+      setBulkUploadLoading(false);
+    }
+  };
+
+  const handleBulkImportSubmit = async () => {
+    if (!bulkUploadFile) return;
+    setBulkUploadLoading(true);
+    setBulkUploadNotice(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", bulkUploadFile);
+      formData.append("action", "import");
+      formData.append("target", bulkUploadTarget);
+      formData.append("mode", bulkUploadMode);
+
+      const res = await fetch("/api/admin/bulk-upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || "Import failed.");
+      }
+
+      setBulkUploadNotice({
+        type: "success",
+        message: data.message || "Bulk import completed successfully!",
+      });
+      setBulkUploadPreview(null);
+
+      // Refresh data across the entire admin dashboard
+      await loadData();
+    } catch (err) {
+      setBulkUploadNotice({
+        type: "error",
+        message: err instanceof Error ? err.message : "Failed to import file.",
+      });
+    } finally {
+      setBulkUploadLoading(false);
+    }
+  };
+
+  // Lock background body scroll when RFQ modal, Blog editor drawer, Grade modal, or Bulk Upload modal is open
   useEffect(() => {
-    if (selectedEnquiry || blogEditorOpen || gradeDrawerOpen) {
+    if (selectedEnquiry || blogEditorOpen || gradeDrawerOpen || bulkUploadModalOpen) {
       const prevOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
       return () => {
         document.body.style.overflow = prevOverflow;
       };
     }
-  }, [selectedEnquiry, blogEditorOpen, gradeDrawerOpen]);
+  }, [selectedEnquiry, blogEditorOpen, gradeDrawerOpen, bulkUploadModalOpen]);
 
   const filteredPosts = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -931,12 +1021,37 @@ export default function AdminPanelPage() {
                   <div className="mt-4 space-y-2">
                     {[
                       { label: "Review RFQs & Inquiries", icon: Inbox, view: "enquiries" as View },
+                      { label: "Bulk Upload Catalog (.xlsx)", icon: Upload, isBulkUpload: true },
                       { label: "Manage polymer grades", icon: Layers, view: "grades" as View },
                       { label: "Write a new blog post", icon: BookOpen, view: "blogs" as View },
                       { label: "Add a product", icon: Package, view: "products" as View },
                       { label: "Manage categories", icon: Boxes, view: "categories" as View },
                       { label: "Create an order", icon: ShoppingBag, view: "orders" as View },
-                    ].map(({ label, icon: Icon, view }) => <button key={label} onClick={() => { setView(view); if (view === "blogs") openNewBlog(); if (view === "orders") setOrderFormOpen(true); }} className="flex w-full items-center gap-3 rounded-lg border border-slate-100 p-3 text-left text-sm font-medium text-slate-700 transition hover:border-indigo-100 hover:bg-indigo-50/60"><span className="rounded-md bg-slate-100 p-2 text-slate-600"><Icon size={16} /></span>{label}<ArrowUpRight className="ml-auto text-slate-400" size={15} /></button>)}
+                    ].map((item) => (
+                      <button
+                        key={item.label}
+                        onClick={() => {
+                          if ("isBulkUpload" in item && item.isBulkUpload) {
+                            setBulkUploadTarget("grades");
+                            setBulkUploadFile(null);
+                            setBulkUploadPreview(null);
+                            setBulkUploadNotice(null);
+                            setBulkUploadModalOpen(true);
+                          } else if ("view" in item && item.view) {
+                            setView(item.view);
+                            if (item.view === "blogs") openNewBlog();
+                            if (item.view === "orders") setOrderFormOpen(true);
+                          }
+                        }}
+                        className="flex w-full items-center gap-3 rounded-lg border border-slate-100 p-3 text-left text-sm font-medium text-slate-700 transition hover:border-indigo-100 hover:bg-indigo-50/60"
+                      >
+                        <span className="rounded-md bg-slate-100 p-2 text-slate-600">
+                          <item.icon size={16} />
+                        </span>
+                        {item.label}
+                        <ArrowUpRight className="ml-auto text-slate-400" size={15} />
+                      </button>
+                    ))}
                   </div>
                 </section>
               </div>
@@ -1046,7 +1161,28 @@ export default function AdminPanelPage() {
 
           {!isLoading && activeView === "products" ? (
             <div>
-              <SectionHeading eyebrow="Catalog management" title="Products" description="Manage the materials shown in your public product catalog." />
+              <SectionHeading
+                eyebrow="Catalog management"
+                title="Products"
+                description="Manage the materials shown in your public product catalog."
+                action={
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setBulkUploadTarget("products");
+                      setBulkUploadFile(null);
+                      setBulkUploadPreview(null);
+                      setBulkUploadNotice(null);
+                      setBulkUploadModalOpen(true);
+                    }}
+                    className="inline-flex items-center gap-2 rounded-lg border border-indigo-200 bg-indigo-50/80 px-3.5 py-2.5 text-xs font-semibold text-indigo-700 shadow-xs hover:bg-indigo-100 transition cursor-pointer"
+                    title="Bulk upload multiple product families via Excel (.xlsx) or CSV"
+                  >
+                    <Upload size={15} />
+                    <span>Bulk Upload Products</span>
+                  </button>
+                }
+              />
               <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
                 <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
                   <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4"><div><h2 className="text-sm font-semibold">Product catalog</h2><p className="mt-1 text-xs text-slate-500">{filteredProducts.length} products</p></div><label className="relative sm:hidden"><Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search" className="w-36 rounded-lg border border-slate-200 py-2 pl-9 pr-2 text-xs" /></label></div>
@@ -1083,6 +1219,21 @@ export default function AdminPanelPage() {
                       <FileSpreadsheet size={15} className="text-emerald-600" />
                       <span>Export to Excel (.xlsx)</span>
                     </a>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setBulkUploadTarget("grades");
+                        setBulkUploadFile(null);
+                        setBulkUploadPreview(null);
+                        setBulkUploadNotice(null);
+                        setBulkUploadModalOpen(true);
+                      }}
+                      className="inline-flex items-center gap-2 rounded-lg border border-indigo-200 bg-indigo-50/80 px-3.5 py-2.5 text-xs font-semibold text-indigo-700 shadow-xs hover:bg-indigo-100 transition cursor-pointer"
+                      title="Bulk import polymer grades via Excel (.xlsx) or CSV"
+                    >
+                      <Upload size={15} />
+                      <span>Bulk Upload (.xlsx)</span>
+                    </button>
                     <button
                       type="button"
                       onClick={() => {
@@ -2145,6 +2296,33 @@ export default function AdminPanelPage() {
 
                 <section className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6"><div className="flex items-center gap-3"><span className="rounded-lg bg-indigo-50 p-2.5 text-indigo-600"><Settings size={19} /></span><div><h2 className="text-sm font-semibold">Admin workspace</h2><p className="mt-1 text-xs text-slate-500">National Polymers content management</p></div></div><div className="mt-5 grid gap-4 border-t border-slate-100 pt-5 sm:grid-cols-2"><div><p className="text-xs text-slate-500">Authentication</p><p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-emerald-700"><Check size={15} /> Protected admin session</p></div><div><p className="text-xs text-slate-500">Session duration</p><p className="mt-1 text-sm font-medium text-slate-800">8 hours</p></div></div></section><section className="rounded-xl border border-amber-200 bg-amber-50 p-5 sm:p-6"><h2 className="text-sm font-semibold text-amber-900">Content storage</h2><p className="mt-2 text-sm leading-6 text-amber-800">The admin workspace stores content in a local JSON file. Production deployments need a persistent writable filesystem, or content changes may not survive restarts or be shared across multiple server instances.</p></section>{logoutError ? <NoticeBanner notice={{ type: "error", message: logoutError }} /> : null}<button onClick={() => void handleLogout()} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:border-red-200 hover:text-red-600"><LogOut size={16} /> Log out of admin</button></div></div>
           ) : null}
+
+          <BulkUploadModal
+            isOpen={bulkUploadModalOpen}
+            onClose={() => {
+              setBulkUploadModalOpen(false);
+              setBulkUploadFile(null);
+              setBulkUploadPreview(null);
+              setBulkUploadSummary(null);
+              setBulkUploadNotice(null);
+            }}
+            target={bulkUploadTarget}
+            onTargetChange={(target) => {
+              setBulkUploadTarget(target);
+              setBulkUploadFile(null);
+              setBulkUploadPreview(null);
+              setBulkUploadSummary(null);
+            }}
+            mode={bulkUploadMode}
+            onModeChange={setBulkUploadMode}
+            file={bulkUploadFile}
+            onFileSelect={(file) => void handleBulkFileSelect(file)}
+            preview={bulkUploadPreview}
+            summary={bulkUploadSummary}
+            loading={bulkUploadLoading}
+            notice={bulkUploadNotice}
+            onSubmit={handleBulkImportSubmit}
+          />
         </main>
       </div>
     </div>

@@ -932,3 +932,58 @@ export async function deleteGrade(id: string): Promise<void> {
     await (supabase as any).from("grades").delete().eq("id", id);
   } catch {}
 }
+
+export async function saveAllGrades(grades: PolymerGrade[]): Promise<void> {
+  const supabase = getSupabaseAdmin();
+  const { error } = await supabase.storage
+    .from("uploads")
+    .upload(GRADES_STORAGE_PATH, Buffer.from(JSON.stringify(grades, null, 2)), {
+      contentType: "application/json",
+      upsert: true,
+    });
+  if (error) {
+    throw new Error(`Failed to save grades to Supabase: ${error.message}`);
+  }
+
+  try {
+    const tableRows = grades.map((g) => ({
+      id: g.id,
+      brand: g.brand,
+      origin: g.origin,
+      category: g.category,
+      sub_category: g.subCategory,
+      grade: g.grade,
+      application: g.application,
+      mfi: g.mfi,
+      density: g.density,
+      availability: g.availability,
+      status: g.status,
+      tds_url: g.tdsUrl || null,
+      notes: g.notes || null,
+    }));
+    await (supabase as any).from("grades").upsert(tableRows, { onConflict: "id" });
+  } catch {
+    // Table may not exist yet
+  }
+}
+
+export async function saveAllProducts(products: ProductDetail[]): Promise<void> {
+  const supabase = getSupabaseAdmin();
+  const productRows = products.map((p) => ({
+    slug: p.slug,
+    name: p.name,
+    category: p.category,
+    tagline: p.tagline,
+    description: p.description,
+    overview: p.overview,
+    specs: p.specs,
+    sub_types: p.subTypes,
+    applications: p.applications,
+    packaging: p.packaging,
+    image_url: p.imageUrl,
+  }));
+  const { error } = await supabase.from("products").upsert(productRows, { onConflict: "slug" });
+  if (error) {
+    throw new Error(`Failed to save products to Supabase: ${error.message}`);
+  }
+}
