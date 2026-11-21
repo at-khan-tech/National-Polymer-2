@@ -3,10 +3,11 @@ import { randomUUID } from "node:crypto";
 import { BLOGS_DATA, type BlogPost } from "@/data/blogsData";
 import { PRODUCTS_DATA, type ProductDetail } from "@/data/productsData";
 import { CANDIDATE_GRADES, type PolymerGrade } from "@/data/gradesCatalog";
+import { INITIAL_EXHIBITIONS, type TradeShowEvent } from "@/data/exhibitionsData";
 import type { CategoryType, OrderStatus } from "@/lib/database.types";
 import { getSupabaseAdmin, throwIfDatabaseError } from "@/lib/supabase";
 
-export type { PolymerGrade };
+export type { PolymerGrade, TradeShowEvent };
 
 export interface ContentCategory {
   id: string;
@@ -986,4 +987,78 @@ export async function saveAllProducts(products: ProductDetail[]): Promise<void> 
   if (error) {
     throw new Error(`Failed to save products to Supabase: ${error.message}`);
   }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TRADE SHOWS & EXHIBITIONS STORAGE & SYNC
+// ─────────────────────────────────────────────────────────────────────────────
+
+const EXHIBITIONS_STORAGE_PATH = "catalog/exhibitions.json";
+
+export async function getAllExhibitions(): Promise<TradeShowEvent[]> {
+  try {
+    const supabase = getSupabaseAdmin();
+    const { data, error } = await supabase.storage
+      .from("uploads")
+      .download(EXHIBITIONS_STORAGE_PATH);
+
+    if (error || !data) {
+      return INITIAL_EXHIBITIONS;
+    }
+
+    const text = await data.text();
+    const parsed = JSON.parse(text);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      return parsed as TradeShowEvent[];
+    }
+    return INITIAL_EXHIBITIONS;
+  } catch {
+    return INITIAL_EXHIBITIONS;
+  }
+}
+
+export async function saveAllExhibitions(events: TradeShowEvent[]): Promise<void> {
+  const supabase = getSupabaseAdmin();
+  const { error } = await supabase.storage
+    .from("uploads")
+    .upload(EXHIBITIONS_STORAGE_PATH, Buffer.from(JSON.stringify(events, null, 2)), {
+      contentType: "application/json",
+      upsert: true,
+    });
+  if (error) {
+    throw new Error(`Failed to save exhibitions to Supabase: ${error.message}`);
+  }
+}
+
+export async function createExhibition(input: Omit<TradeShowEvent, "id">): Promise<TradeShowEvent> {
+  const existing = await getAllExhibitions();
+  const id = `expo-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+  const newEvent: TradeShowEvent = {
+    ...input,
+    id,
+  };
+  const updated = [newEvent, ...existing];
+  await saveAllExhibitions(updated);
+  return newEvent;
+}
+
+export async function updateExhibition(
+  id: string,
+  updates: Partial<TradeShowEvent>
+): Promise<TradeShowEvent | null> {
+  const existing = await getAllExhibitions();
+  const index = existing.findIndex((e) => e.id === id);
+  if (index === -1) return null;
+
+  existing[index] = { ...existing[index], ...updates };
+  await saveAllExhibitions(existing);
+  return existing[index];
+}
+
+export async function deleteExhibition(id: string): Promise<boolean> {
+  const existing = await getAllExhibitions();
+  const filtered = existing.filter((e) => e.id !== id);
+  if (filtered.length === existing.length) return false;
+  await saveAllExhibitions(filtered);
+  return true;
 }

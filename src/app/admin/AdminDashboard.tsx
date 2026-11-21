@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import {
   ArrowDownRight,
   ArrowUpRight,
+  Award,
   BookOpen,
   Boxes,
   Building2,
@@ -46,8 +47,9 @@ import type { PolymerGrade } from "@/data/gradesCatalog";
 import type { AdminEnquiry, AdminOrder, ContentCategory, EnquiryStatus, OrderStatus, SiteSettings } from "@/lib/content-store";
 import { ImageUploadField } from "@/components/ImageUploadField";
 import { BulkUploadModal } from "./BulkUploadModal";
+import { ExhibitionsManager } from "./ExhibitionsManager";
 
-type View = "dashboard" | "blogs" | "products" | "grades" | "categories" | "orders" | "enquiries" | "settings";
+type View = "dashboard" | "blogs" | "products" | "grades" | "categories" | "orders" | "enquiries" | "exhibitions" | "settings";
 type Notice = { type: "success" | "error"; message: string } | null;
 type BlogEditor = {
   title: string;
@@ -86,6 +88,7 @@ const navigation: { id: View; label: string; icon: typeof LayoutDashboard }[] = 
   { id: "enquiries", label: "RFQs & Inquiries", icon: Inbox },
   { id: "products", label: "Products", icon: Package },
   { id: "grades", label: "Grades", icon: Layers },
+  { id: "exhibitions", label: "Trade Shows", icon: Award },
   { id: "blogs", label: "Blogs", icon: BookOpen },
   { id: "categories", label: "Categories", icon: Boxes },
   { id: "orders", label: "Orders", icon: ShoppingBag },
@@ -1023,6 +1026,7 @@ export default function AdminPanelPage() {
                       { label: "Review RFQs & Inquiries", icon: Inbox, view: "enquiries" as View },
                       { label: "Bulk Upload Catalog (.xlsx)", icon: Upload, isBulkUpload: true },
                       { label: "Manage polymer grades", icon: Layers, view: "grades" as View },
+                      { label: "Manage Trade Shows & Gallery", icon: Award, view: "exhibitions" as View },
                       { label: "Write a new blog post", icon: BookOpen, view: "blogs" as View },
                       { label: "Add a product", icon: Package, view: "products" as View },
                       { label: "Manage categories", icon: Boxes, view: "categories" as View },
@@ -1818,6 +1822,10 @@ export default function AdminPanelPage() {
                 </div>
               )}
             </div>
+          ) : null}
+
+          {!isLoading && activeView === "exhibitions" ? (
+            <ExhibitionsManager />
           ) : null}
 
           {!isLoading && activeView === "categories" ? (

@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Icon } from "@/components/Icons";
 import { AboutVideoPlayer } from "@/components/AboutVideoPlayer";
+import { TradeShowsGallery } from "@/components/TradeShowsGallery";
 
 export default function AboutPage() {
   return (
@@ -322,6 +323,9 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
+
+        {/* 9. Trade Shows & Exhibitions Showcase */}
+        <TradeShowsGallery />
       </main>
       <Footer />
     </>

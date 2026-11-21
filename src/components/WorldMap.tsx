@@ -2,14 +2,15 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { regions, type RegionPoint } from "@/data/content";
+import { regions } from "@/data/content";
 
-interface MobileRouteItem {
+export interface MobileRouteItem {
   id: string;
   name: string;
   region: string;
   type: "sourcing" | "market";
   status?: "active" | "target";
+  flag?: string;
   countries?: string[];
   ports: string[];
   description: string;
@@ -17,14 +18,16 @@ interface MobileRouteItem {
   materials: string;
 }
 
-const MOBILE_ROUTES: MobileRouteItem[] = [
-  // Sourcing Origins (Origins -> Dubai)
+export const GLOBAL_ROUTES: MobileRouteItem[] = [
+  // ──────────────── SOURCING ORIGINS (Refiners -> Dubai) ────────────────
   {
     id: "src-usa",
     name: "USA Gulf Coast & Refineries",
     region: "North America",
     type: "sourcing",
     status: "active",
+    flag: "🇺🇸",
+    countries: ["United States (Texas, Louisiana)"],
     ports: ["Houston", "Beaumont", "Corpus Christi"],
     description: "Direct off-take from world-scale ethylene crackers and refiners in Texas & Louisiana.",
     advantage: "Tier-1 refinery allocations & rail-to-vessel loading",
@@ -36,6 +39,8 @@ const MOBILE_ROUTES: MobileRouteItem[] = [
     region: "Canada",
     type: "sourcing",
     status: "active",
+    flag: "🇨🇦",
+    countries: ["Canada (Alberta)"],
     ports: ["Vancouver", "Prince Rupert"],
     description: "High-purity prime polyethylene resins sourced directly from Western Canadian producers.",
     advantage: "Direct producer contracts & bulk container packaging",
@@ -47,6 +52,8 @@ const MOBILE_ROUTES: MobileRouteItem[] = [
     region: "Europe",
     type: "sourcing",
     status: "active",
+    flag: "🇪🇺",
+    countries: ["Belgium", "Netherlands", "Germany"],
     ports: ["Antwerp", "Rotterdam", "Hamburg"],
     description: "European petrochemical refiners providing specialty prime grades and certified circular polymers.",
     advantage: "EU REACH compliance & low-carbon footprints",
@@ -58,57 +65,38 @@ const MOBILE_ROUTES: MobileRouteItem[] = [
     region: "Far East",
     type: "sourcing",
     status: "active",
+    flag: "🌏",
+    countries: ["South Korea", "Taiwan", "Japan"],
     ports: ["Ulsan", "Kaohsiung", "Ningbo", "Yokohama"],
-    description: "Leading petrochemical producers across South Korea, Taiwan, and Japan.",
-    advantage: "High MFI injection molding & Raffia grades",
+    description: "Leading petrochemical producers providing prime polyolefins and engineering compounds.",
+    advantage: "High MFI injection moulding & Raffia grades",
     materials: "PP Homopolymer, Copolymer, Suspension PVC",
   },
   {
     id: "src-australia",
-    name: "Australia & Oceania Desks",
+    name: "Australia Sourcing Desks",
     region: "Australia",
     type: "sourcing",
     status: "active",
+    flag: "🇦🇺",
+    countries: ["Australia"],
     ports: ["Melbourne", "Sydney", "Brisbane"],
-    description: "Direct supplier access for prime resins, industrial regrinds, and compounded materials.",
+    description: "Supplier access for prime rotomoulding resins, industrial regrinds, and compounded materials.",
     advantage: "Trans-Pacific shipping lanes with certified COA",
     materials: "Prime, Near-Prime & Circular Polymers",
   },
 
-  // Destination Markets (Dubai -> Customer Discharge Ports)
-  {
-    id: "mkt-india",
-    name: "Indian Subcontinent Corridors",
-    region: "South Asia",
-    type: "market",
-    status: "active",
-    countries: ["India", "Pakistan", "Bangladesh", "Sri Lanka"],
-    ports: ["Nhava Sheva (JNPT)", "Mundra", "Karachi", "Chittagong", "Colombo"],
-    description: "Our highest volume export corridor supplying hundreds of converting plants.",
-    advantage: "Extended 14-21 day free container detention for smooth ICD rail transit",
-    materials: "High-Volume PP, HDPE Film & Blow, LLDPE",
-  },
-  {
-    id: "mkt-gcc",
-    name: "Middle East & GCC Distribution",
-    region: "Middle East",
-    type: "market",
-    status: "active",
-    countries: ["UAE", "Saudi Arabia", "Oman", "Qatar", "Kuwait", "Bahrain"],
-    ports: ["Jebel Ali", "Dammam", "Jubail", "Sohar", "Hamad Port"],
-    description: "Regional distribution hub offering rapid trucking and bonded warehouse inventory in JAFZA.",
-    advantage: "Next-day road transport & local currency billing options",
-    materials: "Full Polymer Catalog & Buffer Inventories",
-  },
+  // ──────────────── EXISTING ACTIVE BUSINESS MARKETS ────────────────
   {
     id: "mkt-turkey",
     name: "Turkey & Anatolian Hubs",
     region: "Turkey / Eurasia",
     type: "market",
     status: "active",
+    flag: "🇹🇷",
     countries: ["Turkey"],
     ports: ["Mersin", "Istanbul (Ambarli)", "Izmir (Aliaga)", "Gebze"],
-    description: "Fast-transit Mediterranean sailings serving major Turkish woven bag, film, and compounders.",
+    description: "Fast-transit Mediterranean container sailings serving major Turkish woven bag, film, and compounders.",
     advantage: "Customs transit facilitation & direct CIF Mersin / Istanbul service",
     materials: "PP Raffia, HDPE Film, Pipe Grade PE100",
   },
@@ -118,6 +106,7 @@ const MOBILE_ROUTES: MobileRouteItem[] = [
     region: "Far East",
     type: "market",
     status: "active",
+    flag: "🇨🇳",
     countries: ["China", "Vietnam", "Malaysia", "Indonesia", "Taiwan"],
     ports: ["Shanghai", "Ningbo", "Qingdao", "Haiphong", "Port Klang"],
     description: "Supplying high-demand industrial packaging, film converters, and compounders across Far East markets.",
@@ -130,6 +119,7 @@ const MOBILE_ROUTES: MobileRouteItem[] = [
     region: "East Africa",
     type: "market",
     status: "active",
+    flag: "🌍",
     countries: ["Ethiopia", "Djibouti", "Kenya", "Tanzania", "Uganda"],
     ports: ["Mombasa", "Dar es Salaam", "Djibouti Port", "Inland ICDs"],
     description: "Serving key infrastructure, packaging, and agricultural converters across East Africa.",
@@ -137,28 +127,56 @@ const MOBILE_ROUTES: MobileRouteItem[] = [
     materials: "HDPE Blow & Pipe, PP Woven, LDPE Film",
   },
   {
-    id: "mkt-west-africa",
-    name: "West Africa Expansion Hubs",
-    region: "West Africa",
-    type: "market",
-    status: "target",
-    countries: ["Nigeria", "Ghana", "Côte d'Ivoire", "Senegal"],
-    ports: ["Lagos (Apapa / Tin Can)", "Tema", "Abidjan", "Dakar"],
-    description: "High-potential target growth markets for flexible packaging, raffia bags, and rigid containers.",
-    advantage: "Competitive freight rates from Middle East hubs with verified inspection certificates",
-    materials: "PP Yarn & Raffia, HDPE Blow Moulding, LLDPE",
-  },
-  {
-    id: "mkt-oceania",
-    name: "Australia & New Zealand",
+    id: "mkt-australia",
+    name: "Australia Industrial Corridors",
     region: "Oceania",
     type: "market",
     status: "active",
-    countries: ["Australia", "New Zealand"],
-    ports: ["Melbourne", "Sydney", "Brisbane", "Fremantle", "Auckland", "Tauranga"],
-    description: "Expanding container supply routes supporting industrial moulders and packaging manufacturers.",
+    flag: "🇦🇺",
+    countries: ["Australia"],
+    ports: ["Melbourne", "Sydney", "Brisbane", "Fremantle"],
+    description: "Expanding container supply routes supporting industrial moulders, packaging, and rotomoulding plants.",
     advantage: "Certified quality documentation, ISO standards, and reliable schedules",
-    materials: "Prime Rotomoulding, Injection, Circular Resins",
+    materials: "Prime Rotomoulding, Injection, Pipe PE100, Circular Resins",
+  },
+  {
+    id: "mkt-new-zealand",
+    name: "New Zealand Corridors",
+    region: "Oceania",
+    type: "market",
+    status: "active",
+    flag: "🇳🇿",
+    countries: ["New Zealand"],
+    ports: ["Auckland", "Tauranga", "Lyttelton"],
+    description: "Containerized deliveries serving Kiwi agricultural film, flexible packaging, and rigid container manufacturers.",
+    advantage: "Direct ocean liner schedules with phytosanitary & analysis documentation",
+    materials: "HDPE Film, LLDPE Stretch Film, PP Extrusion",
+  },
+  {
+    id: "mkt-india",
+    name: "Indian Subcontinent Corridors",
+    region: "South Asia",
+    type: "market",
+    status: "active",
+    flag: "🇮🇳",
+    countries: ["India", "Pakistan", "Bangladesh", "Sri Lanka"],
+    ports: ["Nhava Sheva (JNPT)", "Mundra", "Karachi", "Chittagong", "Colombo"],
+    description: "Our highest volume export corridor supplying hundreds of converting plants across the subcontinent.",
+    advantage: "Extended 14-21 day free container detention for smooth ICD rail transit",
+    materials: "High-Volume PP, HDPE Film & Blow, LLDPE",
+  },
+  {
+    id: "mkt-gcc",
+    name: "Middle East & GCC Distribution",
+    region: "Middle East",
+    type: "market",
+    status: "active",
+    flag: "🇦🇪",
+    countries: ["UAE", "Saudi Arabia", "Oman", "Qatar", "Kuwait", "Bahrain"],
+    ports: ["Jebel Ali", "Dammam", "Jubail", "Sohar", "Hamad Port"],
+    description: "Regional distribution hub offering rapid trucking and bonded warehouse inventory in JAFZA.",
+    advantage: "Next-day road transport & local currency billing options",
+    materials: "Full Polymer Catalog & Buffer Inventories",
   },
   {
     id: "mkt-europe-med",
@@ -166,18 +184,35 @@ const MOBILE_ROUTES: MobileRouteItem[] = [
     region: "Europe",
     type: "market",
     status: "active",
+    flag: "🇮🇹",
     countries: ["Italy", "Spain", "Greece", "Portugal"],
     ports: ["Genoa", "Valencia", "Barcelona", "Piraeus"],
     description: "High-spec prime polyolefins and compliant circular polymers for European converters.",
     advantage: "Full EU REACH & compliance certification provided with every container",
     materials: "Certified Prime Resins & Circular Granules",
   },
+
+  // ──────────────── POTENTIAL TARGET EXPANSION MARKETS ────────────────
+  {
+    id: "mkt-west-africa",
+    name: "West Africa Expansion Hubs",
+    region: "West Africa",
+    type: "market",
+    status: "target",
+    flag: "🇬🇭",
+    countries: ["Ghana", "Nigeria", "Côte d'Ivoire", "Senegal"],
+    ports: ["Tema (Ghana)", "Lagos (Apapa / Tin Can)", "Abidjan", "Dakar"],
+    description: "High-potential target growth markets for flexible packaging, raffia bags, and rigid containers.",
+    advantage: "Competitive freight rates from Middle East hubs with verified inspection certificates",
+    materials: "PP Yarn & Raffia, HDPE Blow Moulding, LLDPE",
+  },
   {
     id: "mkt-latam",
-    name: "Latin American Ports",
+    name: "Latin American Frontiers",
     region: "Latin America",
     type: "market",
     status: "target",
+    flag: "🇧🇷",
     countries: ["Brazil", "Colombia", "Peru", "Chile", "Mexico"],
     ports: ["Santos", "Paranagua", "Buenaventura", "Callao", "Manzanillo"],
     description: "Strategic expansion routes serving packaging, agriculture, and pipe manufacturers.",
@@ -351,10 +386,37 @@ function arc(
   return `M${x1},${y1} Q${mx},${my} ${x2},${y2}`;
 }
 
-export function WorldMap({ compact = false }: { compact?: boolean }) {
+// Coordinate label offsets to completely eliminate visual collisions
+function getLabelOffset(name: string): { dx: number; dy: number; anchor: "start" | "middle" | "end" } {
+  const lower = name.toLowerCase();
+  if (lower.includes("turkey")) return { dx: -10, dy: -8, anchor: "end" };
+  if (lower.includes("gcc") || lower.includes("middle east")) return { dx: -12, dy: 14, anchor: "end" };
+  if (lower.includes("west africa")) return { dx: -10, dy: 14, anchor: "end" };
+  if (lower.includes("east africa")) return { dx: 10, dy: 14, anchor: "start" };
+  if (lower.includes("india")) return { dx: 10, dy: 12, anchor: "start" };
+  if (lower.includes("china")) return { dx: 10, dy: 4, anchor: "start" };
+  if (lower.includes("new zealand")) return { dx: 10, dy: 12, anchor: "start" };
+  if (lower.includes("australia")) return { dx: 10, dy: 2, anchor: "start" };
+  if (lower.includes("europe")) return { dx: -10, dy: -8, anchor: "end" };
+  if (lower.includes("latin") || lower.includes("latam")) return { dx: 10, dy: 14, anchor: "start" };
+  if (lower.includes("usa")) return { dx: -10, dy: -8, anchor: "end" };
+  if (lower.includes("canada")) return { dx: -10, dy: -8, anchor: "end" };
+  return { dx: 8, dy: 10, anchor: "start" };
+}
+
+export function WorldMap({
+  compact = false,
+  selectedId = null,
+  onSelect = () => {},
+}: {
+  compact?: boolean;
+  selectedId?: string | null;
+  onSelect?: (id: string | null) => void;
+}) {
   const hub = regions.hub;
   const [hx, hy] = proj(hub.lon, hub.lat);
-  const [activeTooltip, setActiveTooltip] = useState<{
+  const [hoveredNode, setHoveredNode] = useState<{
+    id?: string;
     name: string;
     description?: string;
     type: "sourcing" | "market" | "hub";
@@ -363,151 +425,151 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
     ports?: string[];
   } | null>(null);
 
+  const activeNode =
+    hoveredNode ||
+    (selectedId
+      ? (() => {
+          const item = GLOBAL_ROUTES.find((r) => r.id === selectedId);
+          if (!item) return null;
+          return {
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            type: item.type,
+            status: item.status,
+            countries: item.countries,
+            ports: item.ports,
+          };
+        })()
+      : null);
+
   return (
-    <div className="relative w-full overflow-hidden select-none">
+    <div className="relative w-full overflow-hidden select-none rounded-2xl bg-gradient-to-b from-slate-900 via-[#0b132b] to-slate-950 p-2 sm:p-4 border border-slate-800 shadow-2xl">
       <svg
-        viewBox={`0 40 ${W} ${H - 80}`}
+        viewBox={`0 30 ${W} ${H - 60}`}
         className="h-auto w-full transition-all duration-300"
         role="img"
-        aria-label="World map of sourcing regions and international customer markets"
+        aria-label="World map of polymer trade corridors, existing markets and target expansion hubs"
       >
         <defs>
-          {/* Base gradient for continent shapes */}
-          <linearGradient id="continent-base-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#EFF6FF" stopOpacity="0.85" />
-            <stop offset="100%" stopColor="#DBEAFE" stopOpacity="0.65" />
+          {/* Continent Landmass Gradient */}
+          <linearGradient id="continent-dark-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#1e293b" stopOpacity="0.95" />
+            <stop offset="100%" stopColor="#0f172a" stopOpacity="0.95" />
           </linearGradient>
 
-          {/* High-tech modern dot grid pattern in rich brand blue */}
-          <pattern
-            id="world-dots"
-            width="8"
-            height="8"
-            patternUnits="userSpaceOnUse"
-          >
-            <circle
-              cx="4"
-              cy="4"
-              r="1.35"
-              fill="#2563EB"
-              fillOpacity="0.4"
-            />
+          {/* Grid pattern in ocean */}
+          <pattern id="ocean-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" strokeWidth="0.5" strokeOpacity="0.4" />
           </pattern>
 
-          {/* Gradients for Hub glow */}
-          <radialGradient id="hub-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="var(--color-primary)" stopOpacity="0.35" />
-            <stop offset="60%" stopColor="var(--color-primary)" stopOpacity="0.12" />
-            <stop offset="100%" stopColor="var(--color-primary)" stopOpacity="0" />
+          {/* Subtle Dots on Landmass */}
+          <pattern id="land-dots" width="7" height="7" patternUnits="userSpaceOnUse">
+            <circle cx="3.5" cy="3.5" r="1.1" fill="#38bdf8" fillOpacity="0.25" />
+          </pattern>
+
+          {/* Hub Aura */}
+          <radialGradient id="hub-aura" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#f97316" stopOpacity="0.5" />
+            <stop offset="60%" stopColor="#f97316" stopOpacity="0.15" />
+            <stop offset="100%" stopColor="#f97316" stopOpacity="0" />
           </radialGradient>
 
-          {/* Subtle drop shadow for node markers */}
-          <filter id="node-shadow" x="-50%" y="-50%" width="200%" height="200%">
-            <feDropShadow dx="0" dy="1" stdDeviation="1.5" floodColor="#000" floodOpacity="0.15" />
+          <filter id="glow-shadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="1" stdDeviation="2.5" floodColor="#000" floodOpacity="0.6" />
           </filter>
         </defs>
 
-        {/* Ocean Navigation Grid (Latitude & Longitude) */}
-        <g className="pointer-events-none opacity-40">
-          <line x1="20" y1="125" x2="980" y2="125" stroke="#BFDBFE" strokeWidth="0.8" strokeDasharray="3 5" />
-          <line x1="20" y1="185" x2="980" y2="185" stroke="#93C5FD" strokeWidth="1" strokeDasharray="4 6" />
-          <line x1="20" y1="250" x2="980" y2="250" stroke="#60A5FA" strokeWidth="1.2" strokeDasharray="6 6" />
-          <line x1="20" y1="315" x2="980" y2="315" stroke="#93C5FD" strokeWidth="1" strokeDasharray="4 6" />
-          <line x1="20" y1="375" x2="980" y2="375" stroke="#BFDBFE" strokeWidth="0.8" strokeDasharray="3 5" />
+        {/* Ocean Grid Background */}
+        <rect x="0" y="0" width={W} height={H} fill="url(#ocean-grid)" />
 
-          <line x1="167" y1="50" x2="167" y2="430" stroke="#BFDBFE" strokeWidth="0.8" strokeDasharray="3 5" />
-          <line x1="333" y1="50" x2="333" y2="430" stroke="#BFDBFE" strokeWidth="0.8" strokeDasharray="3 5" />
-          <line x1="500" y1="50" x2="500" y2="430" stroke="#93C5FD" strokeWidth="1" strokeDasharray="4 6" />
-          <line x1="667" y1="50" x2="667" y2="430" stroke="#BFDBFE" strokeWidth="0.8" strokeDasharray="3 5" />
-          <line x1="833" y1="50" x2="833" y2="430" stroke="#BFDBFE" strokeWidth="0.8" strokeDasharray="3 5" />
+        {/* Latitude & Longitude Navigation Coordinates */}
+        <g className="pointer-events-none opacity-20">
+          <line x1="20" y1="125" x2="980" y2="125" stroke="#38bdf8" strokeWidth="0.7" strokeDasharray="3 5" />
+          <line x1="20" y1="250" x2="980" y2="250" stroke="#38bdf8" strokeWidth="1" strokeDasharray="6 6" />
+          <line x1="20" y1="375" x2="980" y2="375" stroke="#38bdf8" strokeWidth="0.7" strokeDasharray="3 5" />
+          <line x1="250" y1="40" x2="250" y2="460" stroke="#38bdf8" strokeWidth="0.7" strokeDasharray="3 5" />
+          <line x1="500" y1="40" x2="500" y2="460" stroke="#38bdf8" strokeWidth="1" strokeDasharray="6 6" />
+          <line x1="750" y1="40" x2="750" y2="460" stroke="#38bdf8" strokeWidth="0.7" strokeDasharray="3 5" />
         </g>
 
-        {/* Continents: Base Landmass + Tech Dot Pattern */}
+        {/* Continents Shapes */}
         {continents.map((c, i) => (
           <g key={i}>
             <path
               d={path(c)}
-              fill="url(#continent-base-gradient)"
-              stroke="#BFDBFE"
+              fill="url(#continent-dark-grad)"
+              stroke="#334155"
               strokeWidth="1.2"
               strokeLinejoin="round"
             />
-            <path
-              d={path(c)}
-              fill="url(#world-dots)"
-              className="pointer-events-none"
-            />
+            <path d={path(c)} fill="url(#land-dots)" className="pointer-events-none" />
           </g>
         ))}
 
-        {/* Sourcing Arcs -> Dubai Hub (Inbound Corridors) */}
+        {/* ─── INBOUND SOURCING ARCS (Dotted Slate) ─── */}
         {regions.sourcing.map((s) => (
           <path
             key={`sourcing-${s.name}`}
             d={arc(s, hub)}
             fill="none"
-            stroke="var(--color-navy)"
-            strokeWidth="1.6"
-            strokeDasharray="5 5"
-            className="animate-dash opacity-75 hover:opacity-100 transition-opacity"
+            stroke="#64748b"
+            strokeWidth="1.4"
+            strokeDasharray="4 4"
+            className="opacity-40 hover:opacity-100 transition-opacity"
           />
         ))}
 
-        {/* Dubai Hub -> Active Market Arcs (Solid/Dashed Orange) */}
+        {/* ─── OUTBOUND MARKET ARCS ─── */}
         {regions.markets.map((m) => {
           const isTarget = m.status === "target";
+          const isHovered = activeNode?.name === m.name;
+          const strokeColor = isTarget ? "#10b981" : "#3b82f6";
+          const strokeWidth = isHovered ? "2.6" : isTarget ? "1.6" : "1.8";
+
           return (
             <path
               key={`market-${m.name}`}
               d={arc(hub, m)}
               fill="none"
-              stroke={isTarget ? "#10B981" : "var(--color-primary)"}
-              strokeWidth={isTarget ? "1.5" : "1.8"}
-              strokeDasharray={isTarget ? "3 4" : "5 5"}
-              className="animate-dash opacity-85 hover:opacity-100 transition-opacity"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeDasharray={isTarget ? "3 4" : "6 4"}
+              className={`transition-all duration-300 ${
+                isHovered
+                  ? "opacity-100 filter drop-shadow-[0_0_6px_rgba(59,130,246,0.8)]"
+                  : "opacity-65 hover:opacity-100"
+              }`}
             />
           );
         })}
 
-        {/* Sourcing Nodes */}
+        {/* ─── SOURCING NODES ─── */}
         {regions.sourcing.map((s) => {
           const [x, y] = proj(s.lon, s.lat);
+          const offset = getLabelOffset(s.name);
           return (
             <g
               key={s.name}
-              className="cursor-pointer transition-transform duration-200 hover:scale-110"
+              className="cursor-pointer transition-transform duration-200 hover:scale-125"
               onMouseEnter={() =>
-                setActiveTooltip({
+                setHoveredNode({
                   name: s.name,
                   description: s.description,
                   type: "sourcing",
                   ports: s.ports,
                 })
               }
-              onMouseLeave={() => setActiveTooltip(null)}
-              onClick={() =>
-                setActiveTooltip({
-                  name: s.name,
-                  description: s.description,
-                  type: "sourcing",
-                  ports: s.ports,
-                })
-              }
+              onMouseLeave={() => setHoveredNode(null)}
+              onClick={() => onSelect(s.name)}
             >
-              <circle
-                cx={x}
-                cy={y}
-                r="4.5"
-                fill="var(--color-navy)"
-                stroke="#ffffff"
-                strokeWidth="1.6"
-                filter="url(#node-shadow)"
-              />
+              <circle cx={x} cy={y} r="4" fill="#94a3b8" stroke="#0f172a" strokeWidth="1.5" />
               {!compact && (
                 <text
-                  x={x + 8}
-                  y={y + 4}
-                  className="fill-[var(--color-navy)] text-[10px] font-bold tracking-tight pointer-events-none select-none drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]"
+                  x={x + offset.dx}
+                  y={y + offset.dy}
+                  textAnchor={offset.anchor}
+                  className="fill-slate-400 text-[9.5px] font-semibold tracking-tight pointer-events-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"
                 >
                   {s.name}
                 </text>
@@ -516,18 +578,20 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
           );
         })}
 
-        {/* Customer Market Nodes (Active = Orange, Target = Emerald) */}
+        {/* ─── CUSTOMER MARKET NODES (Active = Royal Blue, Target = Emerald) ─── */}
         {regions.markets.map((m) => {
           const [x, y] = proj(m.lon, m.lat);
           const isTarget = m.status === "target";
-          const nodeColor = isTarget ? "#10B981" : "var(--color-primary)";
+          const isSelected = activeNode?.name === m.name;
+          const nodeColor = isTarget ? "#10b981" : "#3b82f6";
+          const offset = getLabelOffset(m.name);
 
           return (
             <g
               key={m.name}
-              className="cursor-pointer transition-transform duration-200 hover:scale-110"
+              className="cursor-pointer transition-transform duration-200 hover:scale-125"
               onMouseEnter={() =>
-                setActiveTooltip({
+                setHoveredNode({
                   name: m.name,
                   description: m.description,
                   type: "market",
@@ -536,56 +600,55 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
                   ports: m.ports,
                 })
               }
-              onMouseLeave={() => setActiveTooltip(null)}
-              onClick={() =>
-                setActiveTooltip({
-                  name: m.name,
-                  description: m.description,
-                  type: "market",
-                  status: m.status,
-                  countries: m.countries,
-                  ports: m.ports,
-                })
-              }
+              onMouseLeave={() => setHoveredNode(null)}
+              onClick={() => onSelect(m.name)}
             >
+              {/* Pulsing ring for high visibility */}
               <circle
                 cx={x}
                 cy={y}
-                r={isTarget ? "4.5" : "5"}
+                r={isSelected ? "11" : isTarget ? "8" : "7"}
+                fill="none"
+                stroke={nodeColor}
+                strokeWidth={isSelected ? "2" : "1"}
+                strokeDasharray={isTarget ? "2 2" : undefined}
+                className="animate-ping opacity-50"
+              />
+
+              {/* Core Node */}
+              <circle
+                cx={x}
+                cy={y}
+                r={isSelected ? "6" : isTarget ? "5" : "5"}
                 fill={nodeColor}
                 stroke="#ffffff"
                 strokeWidth="1.6"
-                filter="url(#node-shadow)"
+                filter="url(#glow-shadow)"
               />
-              <circle
-                cx={x}
-                cy={y}
-                r={isTarget ? "6" : "5"}
-                fill="none"
-                stroke={nodeColor}
-                strokeDasharray={isTarget ? "2 2" : undefined}
-                className="animate-pulse-ring"
-              />
+
               {!compact && (
-                <text
-                  x={x + 8}
-                  y={y + 12}
-                  className={`${
-                    isTarget ? "fill-emerald-800" : "fill-[var(--color-primary)]"
-                  } text-[10.5px] font-bold tracking-tight pointer-events-none select-none drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]`}
-                >
-                  {m.name}
-                </text>
+                <g className="pointer-events-none select-none">
+                  <text
+                    x={x + offset.dx}
+                    y={y + offset.dy}
+                    textAnchor={offset.anchor}
+                    className={`${
+                      isTarget ? "fill-emerald-400 font-bold" : "fill-blue-300 font-bold"
+                    } text-[10px] tracking-tight drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]`}
+                  >
+                    {m.name}
+                  </text>
+                </g>
               )}
             </g>
           );
         })}
 
-        {/* Dubai HQ Trading Hub */}
+        {/* ─── DUBAI HQ TRADING HUB (Central Golden Epicenter) ─── */}
         <g
           className="cursor-pointer"
           onMouseEnter={() =>
-            setActiveTooltip({
+            setHoveredNode({
               name: hub.name,
               description: hub.description,
               type: "hub",
@@ -593,119 +656,100 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
               ports: hub.ports,
             })
           }
-          onMouseLeave={() => setActiveTooltip(null)}
-          onClick={() =>
-            setActiveTooltip({
-              name: hub.name,
-              description: hub.description,
-              type: "hub",
-              status: "active",
-              ports: hub.ports,
-            })
-          }
+          onMouseLeave={() => setHoveredNode(null)}
         >
-          {/* Outer glow aura */}
-          <circle cx={hx} cy={hy} r="24" fill="url(#hub-glow)" />
+          {/* Radiant Aura */}
+          <circle cx={hx} cy={hy} r="26" fill="url(#hub-aura)" />
 
-          {/* Pulsing ring */}
-          <circle
-            cx={hx}
-            cy={hy}
-            r="8"
-            fill="none"
-            stroke="var(--color-primary)"
-            className="animate-pulse-ring"
-          />
+          {/* Pulse ring */}
+          <circle cx={hx} cy={hy} r="9" fill="none" stroke="#f97316" strokeWidth="1.5" className="animate-ping" />
 
-          {/* Core circle */}
-          <circle
-            cx={hx}
-            cy={hy}
-            r="6.5"
-            fill="var(--color-primary)"
-            stroke="var(--color-navy)"
-            strokeWidth="2.5"
-            filter="url(#node-shadow)"
-          />
+          {/* Beacon Core */}
+          <circle cx={hx} cy={hy} r="7" fill="#f97316" stroke="#ffffff" strokeWidth="2" filter="url(#glow-shadow)" />
 
           <text
             x={hx + 12}
-            y={hy - 8}
-            className="fill-gray-950 text-[12px] font-extrabold tracking-normal pointer-events-none drop-shadow-[0_1px_3px_rgba(255,255,255,0.95)]"
+            y={hy - 10}
+            className="fill-amber-300 text-[11px] font-black tracking-normal pointer-events-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)]"
           >
-            Dubai Commercial HQ
+            Dubai Commercial HQ (JAFZA)
           </text>
         </g>
       </svg>
 
-      {/* Interactive Tooltip Card on Hover/Click */}
-      {activeTooltip && (
-        <div className="absolute bottom-4 left-4 sm:left-6 max-w-sm rounded-xl border border-gray-200 bg-white/95 p-3.5 shadow-xl backdrop-blur-md transition-all duration-200 z-20">
-          <div className="flex items-center justify-between gap-2 pb-2 border-b border-gray-100">
+      {/* Floating Interactive Tooltip Card on Hover/Tap */}
+      {activeNode && (
+        <div className="absolute bottom-4 left-4 sm:left-6 max-w-sm rounded-xl border border-slate-700 bg-slate-900/95 p-4 shadow-2xl backdrop-blur-md text-white transition-all duration-200 z-20">
+          <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-800">
             <div className="flex items-center gap-2">
               <span
                 className={`h-2.5 w-2.5 rounded-full ${
-                  activeTooltip.type === "hub"
-                    ? "bg-primary ring-2 ring-navy"
-                    : activeTooltip.type === "sourcing"
-                    ? "bg-navy"
-                    : activeTooltip.status === "target"
-                    ? "bg-emerald-500"
-                    : "bg-primary"
+                  activeNode.type === "hub"
+                    ? "bg-orange-500 ring-2 ring-orange-300"
+                    : activeNode.status === "target"
+                    ? "bg-emerald-500 ring-2 ring-emerald-300"
+                    : activeNode.type === "sourcing"
+                    ? "bg-slate-400"
+                    : "bg-blue-500 ring-2 ring-blue-300"
                 }`}
               />
-              <span className="text-xs font-bold text-gray-900">
-                {activeTooltip.name}
-              </span>
+              <span className="text-xs font-bold text-white">{activeNode.name}</span>
             </div>
             <span
-              className={`rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
-                activeTooltip.type === "hub"
-                  ? "bg-orange-100 text-primary-darker"
-                  : activeTooltip.type === "sourcing"
-                  ? "bg-slate-100 text-navy"
-                  : activeTooltip.status === "target"
-                  ? "bg-emerald-100 text-emerald-800"
-                  : "bg-orange-50 text-primary"
+              className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
+                activeNode.type === "hub"
+                  ? "bg-orange-950 text-orange-300 border border-orange-700/50"
+                  : activeNode.status === "target"
+                  ? "bg-emerald-950 text-emerald-300 border border-emerald-700/50"
+                  : activeNode.type === "sourcing"
+                  ? "bg-slate-800 text-slate-300 border border-slate-700"
+                  : "bg-blue-950 text-blue-300 border border-blue-700/50"
               }`}
             >
-              {activeTooltip.type === "hub"
+              {activeNode.type === "hub"
                 ? "Trading Hub"
-                : activeTooltip.type === "sourcing"
-                ? "Sourcing Origin"
-                : activeTooltip.status === "target"
-                ? "Target Market"
-                : "Active Market"}
+                : activeNode.status === "target"
+                ? "▲ Target Expansion"
+                : activeNode.type === "sourcing"
+                ? "Refinery Sourcing"
+                : "● Active Market"}
             </span>
           </div>
 
-          {activeTooltip.countries && activeTooltip.countries.length > 0 && (
-            <div className="mt-2">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-gray-400 block mb-0.5">
-                Key Countries Covered:
+          {activeNode.countries && activeNode.countries.length > 0 && (
+            <div className="mt-2.5">
+              <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                Countries Covered:
               </span>
-              <p className="text-[11px] font-semibold text-gray-800">
-                {activeTooltip.countries.join(", ")}
-              </p>
+              <div className="flex flex-wrap gap-1">
+                {activeNode.countries.map((c, i) => (
+                  <span
+                    key={i}
+                    className="rounded bg-slate-800 border border-slate-700 px-2 py-0.5 text-[10px] font-semibold text-slate-200"
+                  >
+                    {c}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
 
-          {activeTooltip.description && (
-            <p className="mt-1.5 text-[11px] text-gray-600 leading-snug">
-              {activeTooltip.description}
+          {activeNode.description && (
+            <p className="mt-2 text-[11px] text-slate-300 leading-relaxed">
+              {activeNode.description}
             </p>
           )}
 
-          {activeTooltip.ports && activeTooltip.ports.length > 0 && (
-            <div className="mt-2 pt-1.5 border-t border-gray-100">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-gray-400 block mb-1">
-                Major Terminals / Ports:
+          {activeNode.ports && activeNode.ports.length > 0 && (
+            <div className="mt-2.5 pt-2 border-t border-slate-800">
+              <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                Major Container Ports / Terminals:
               </span>
               <div className="flex flex-wrap gap-1">
-                {activeTooltip.ports.map((port, pIdx) => (
+                {activeNode.ports.map((port, pIdx) => (
                   <span
                     key={pIdx}
-                    className="rounded bg-gray-100 border border-gray-200 px-1.5 py-0.5 text-[9px] font-mono text-gray-700 font-medium"
+                    className="rounded bg-slate-800/80 border border-slate-700/60 px-1.5 py-0.5 text-[9px] font-mono text-slate-300"
                   >
                     {port}
                   </span>
@@ -714,14 +758,14 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
             </div>
           )}
 
-          <div className="mt-2.5 pt-1.5 border-t border-gray-100 flex items-center justify-between">
-            <span className="text-[9px] text-gray-400 font-medium">Click / tap node for info</span>
+          <div className="mt-3 pt-2 border-t border-slate-800 flex items-center justify-between">
+            <span className="text-[9px] text-slate-400 font-medium">Click card below for rates</span>
             <Link
-              href={`/enquiry?route=${encodeURIComponent(activeTooltip.name)}`}
-              className="text-[10px] font-bold text-primary hover:underline flex items-center gap-0.5"
+              href={`/enquiry?route=${encodeURIComponent(activeNode.name)}`}
+              className="text-[10.5px] font-bold text-orange-400 hover:text-orange-300 flex items-center gap-1 transition"
             >
-              <span>Request Quote</span>
-              <span aria-hidden="true">→</span>
+              <span>Get Freight Quote</span>
+              <span>→</span>
             </Link>
           </div>
         </div>
@@ -732,368 +776,261 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
 
 export function MapLegend() {
   return (
-    <div className="flex flex-wrap items-center gap-3 sm:gap-5 text-xs">
-      <span className="flex items-center gap-1.5">
-        <span className="h-3 w-3 rounded-full bg-navy ring-2 ring-white shadow-xs" />
-        <span className="font-semibold text-gray-800">Sourcing Corridors</span>
+    <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-xs">
+      <span className="flex items-center gap-2">
+        <span className="h-3 w-3 rounded-full bg-blue-600 ring-2 ring-blue-200 shadow-xs" />
+        <span className="font-bold text-slate-900">Existing Active Markets</span>
       </span>
-      <span className="flex items-center gap-1.5">
-        <span className="h-3 w-3 rounded-full bg-primary ring-2 ring-white shadow-xs" />
-        <span className="font-semibold text-gray-800">Active Business Markets</span>
+      <span className="flex items-center gap-2">
+        <span className="h-3 w-3 rounded-full bg-emerald-500 ring-2 ring-emerald-200 shadow-xs" />
+        <span className="font-bold text-slate-900">Potential Target Markets</span>
       </span>
-      <span className="flex items-center gap-1.5">
-        <span className="h-3 w-3 rounded-full bg-emerald-500 ring-2 ring-white shadow-xs" />
-        <span className="font-semibold text-gray-800">Target Expansion Markets</span>
+      <span className="flex items-center gap-2">
+        <span className="h-3 w-3 rounded-full bg-slate-500 ring-2 ring-slate-200 shadow-xs" />
+        <span className="font-semibold text-slate-700">Refinery Sourcing</span>
       </span>
-      <span className="flex items-center gap-1.5">
-        <span className="h-3.5 w-3.5 rounded-full border-2 border-gray-950 bg-primary ring-2 ring-orange-200 shadow-xs" />
-        <span className="font-bold text-gray-950">Trading Desk (Dubai HQ)</span>
+      <span className="flex items-center gap-2">
+        <span className="h-3.5 w-3.5 rounded-full bg-orange-500 border-2 border-white ring-2 ring-orange-300 shadow-xs" />
+        <span className="font-extrabold text-orange-950">Dubai Commercial HQ</span>
       </span>
     </div>
   );
 }
 
 export const GlobalTradingMapSection: React.FC = () => {
-  const [mobileTab, setMobileTab] = useState<"all" | "sourcing" | "active-market" | "target-market">("all");
-  const [showMobileMap, setShowMobileMap] = useState(false);
+  const [filterTab, setFilterTab] = useState<"all" | "active" | "target" | "sourcing">("all");
+  const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null);
 
-  const filteredMobileRoutes = MOBILE_ROUTES.filter((r) => {
-    if (mobileTab === "all") return true;
-    if (mobileTab === "sourcing") return r.type === "sourcing";
-    if (mobileTab === "active-market") return r.type === "market" && r.status === "active";
-    if (mobileTab === "target-market") return r.type === "market" && r.status === "target";
+  const activeMarkets = GLOBAL_ROUTES.filter((r) => r.type === "market" && r.status === "active");
+  const targetMarkets = GLOBAL_ROUTES.filter((r) => r.type === "market" && r.status === "target");
+  const sourcingRoutes = GLOBAL_ROUTES.filter((r) => r.type === "sourcing");
+
+  const displayedRoutes = GLOBAL_ROUTES.filter((r) => {
+    if (filterTab === "all") return true;
+    if (filterTab === "active") return r.type === "market" && r.status === "active";
+    if (filterTab === "target") return r.type === "market" && r.status === "target";
+    if (filterTab === "sourcing") return r.type === "sourcing";
     return true;
   });
 
   return (
-    <div
+    <section
       id="global-network"
       data-aos="fade-up"
-      className="mt-16 w-full rounded-2xl border border-orange-100/80 bg-gradient-to-b from-orange-50/20 via-white to-slate-50/30 p-4 sm:p-8 lg:p-10 shadow-sm"
+      className="mt-16 w-full rounded-3xl border border-slate-200 bg-white p-5 sm:p-8 lg:p-10 shadow-lg"
     >
-      {/* ═══════════════════════════════════════════════════════════ */}
-      {/* ─── DESKTOP VIEW (hidden md:block) ─── */}
-      {/* ═══════════════════════════════════════════════════════════ */}
-      <div className="hidden md:block">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-gray-200/70">
-          <div className="space-y-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-darker block">
-              Global Supply &amp; Distribution Network
-            </span>
-            <h3 className="text-2xl sm:text-3xl font-light text-gray-900 tracking-tight">
-              International Trade Corridors &amp; Expansion Markets
-            </h3>
-            <p className="text-xs sm:text-sm text-gray-600 max-w-2xl leading-relaxed">
-              Coordinating containerized polymer trade from North America, Western Europe, and East Asian refiners
-              directly to plastics converters in 40+ countries across Turkey, China/Far East, Australia/NZ,
-              East &amp; West Africa, and Latin America through our Dubai headquarters.
-            </p>
-          </div>
-
-          {/* Legend */}
-          <div className="shrink-0 bg-white/95 border border-orange-100 rounded-xl p-3 sm:p-4 shadow-xs">
-            <MapLegend />
-          </div>
-        </div>
-
-        {/* World Map Container */}
-        <div className="mt-6 w-full">
-          <WorldMap />
-        </div>
-
-        {/* Quick Route Summary Highlights */}
-        <div className="mt-6 pt-6 border-t border-gray-200/70 grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
-          <div className="rounded-xl bg-white/90 border border-gray-200 p-4 shadow-xs">
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-navy" />
-              <p className="font-bold text-navy">Refinery Sourcing</p>
-            </div>
-            <p className="mt-1.5 text-slate-600 leading-relaxed">
-              USA Gulf Coast, Alberta (Canada), Western Europe, Far East, and Australia.
-            </p>
-          </div>
-          <div className="rounded-xl bg-white/90 border border-orange-100 p-4 shadow-xs">
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-primary" />
-              <p className="font-bold text-primary">Active Markets</p>
-            </div>
-            <p className="mt-1.5 text-slate-600 leading-relaxed">
-              India, GCC, Turkey, China &amp; Far East, East Africa, Australia &amp; NZ, Southern Europe.
-            </p>
-          </div>
-          <div className="rounded-xl bg-white/90 border border-emerald-100 p-4 shadow-xs">
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              <p className="font-bold text-emerald-800">Target Frontiers</p>
-            </div>
-            <p className="mt-1.5 text-slate-600 leading-relaxed">
-              West Africa (Ghana, Nigeria, Côte d&apos;Ivoire, Senegal) &amp; Latin America.
-            </p>
-          </div>
-          <div className="rounded-xl bg-white/90 border border-slate-200 p-4 shadow-xs">
-            <div className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-full border border-gray-950 bg-primary" />
-              <p className="font-bold text-gray-900">Trading Hub Advantage</p>
-            </div>
-            <p className="mt-1.5 text-slate-600 leading-relaxed">
-              Jebel Ali Free Zone maritime nexus with bonded buffer inventory &amp; 14-21 days demurrage.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* ══════════════════════════════════════════════════════════════════════ */}
-      {/* ─── MOBILE VIEW (block md:hidden) ─── */}
-      {/* ══════════════════════════════════════════════════════════════════════ */}
-      <div className="block md:hidden">
-        {/* Mobile Section Header */}
-        <div className="space-y-1.5 mb-4">
+      {/* ─── SECTION HEADER ─── */}
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-slate-100">
+        <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
-              Global Supply &amp; Logistics
+            <span className="h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-blue-700">
+              International Trade Corridors
             </span>
           </div>
-          <h3 className="text-xl font-extrabold text-navy font-montserrat tracking-tight leading-snug">
-            International Trade Routes
-          </h3>
-          <p className="text-xs text-gray-600 leading-relaxed">
-            Direct containerized distribution connecting Tier-1 petrochemical refineries to converters in 40+ countries.
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
+            Global Presence &amp; Target Expansion Network
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-600 max-w-3xl leading-relaxed">
+            Coordinating containerized polymer trade from world-class refiners directly to plastic converting plants
+            across <strong className="text-slate-900 font-bold">40+ international countries</strong>. Sourced and routed
+            through our Dubai Commercial Headquarters at Jebel Ali Free Zone.
           </p>
         </div>
 
-        {/* Central Dubai Trading Hub Card */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-navy via-[#16234b] to-navy p-4 text-white shadow-md border border-navy/30 mb-4">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-primary/20 blur-2xl"
-          />
-
-          <div className="relative z-10">
-            <div className="flex items-center justify-between gap-2 mb-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/25 border border-primary/40 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary-lighter">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
-                </span>
-                Global Epicenter
-              </span>
-              <span className="text-[10px] text-white/60 font-mono">25.20° N, 55.27° E</span>
-            </div>
-
-            <h4 className="text-base font-bold text-white flex items-center gap-1.5">
-              <span>Dubai Commercial HQ</span>
-              <span className="text-primary font-normal text-xs">(Jebel Ali)</span>
-            </h4>
-            <p className="mt-1 text-[11px] text-white/80 leading-snug">
-              Crossroads for Middle East trade arbitrage, bonded buffer stock, and multi-modal container charters.
-            </p>
-
-            {/* Micro Stats Row */}
-            <div className="mt-3 pt-3 border-t border-white/10 grid grid-cols-3 gap-2 text-center">
-              <div className="bg-white/5 rounded-lg py-1.5 px-1 border border-white/5">
-                <span className="block text-xs font-bold text-primary">40+</span>
-                <span className="text-[9px] text-white/70 uppercase tracking-wide">Countries</span>
-              </div>
-              <div className="bg-white/5 rounded-lg py-1.5 px-1 border border-white/5">
-                <span className="block text-xs font-bold text-primary">10k+ MT</span>
-                <span className="text-[9px] text-white/70 uppercase tracking-wide">Monthly</span>
-              </div>
-              <div className="bg-white/5 rounded-lg py-1.5 px-1 border border-white/5">
-                <span className="block text-xs font-bold text-primary">14-21 Days</span>
-                <span className="text-[9px] text-white/70 uppercase tracking-wide">Free Demurrage</span>
-              </div>
-            </div>
-          </div>
+        {/* Legend Box */}
+        <div className="shrink-0 bg-slate-50 border border-slate-200 rounded-2xl p-3 sm:p-4 shadow-xs">
+          <MapLegend />
         </div>
+      </div>
 
-        {/* Interactive Filter Pills */}
-        <div className="flex flex-wrap items-center gap-1.5 bg-gray-100/90 p-1.5 rounded-xl mb-3 border border-gray-200">
+      {/* ─── INTERACTIVE SVG WORLD MAP ─── */}
+      <div className="mt-8">
+        <WorldMap selectedId={selectedRouteId} onSelect={(name) => {
+          const match = GLOBAL_ROUTES.find((r) => r.name === name);
+          setSelectedRouteId(match ? match.id : null);
+        }} />
+      </div>
+
+      {/* ─── FILTER TABS ─── */}
+      <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
-            onClick={() => setMobileTab("all")}
-            className={`py-1.5 px-2.5 rounded-lg text-[10.5px] font-bold transition-all text-center ${
-              mobileTab === "all"
-                ? "bg-white text-navy shadow-xs border border-gray-200/80"
-                : "text-gray-600 hover:text-gray-900"
+            onClick={() => setFilterTab("all")}
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+              filterTab === "all"
+                ? "bg-slate-900 text-white shadow-sm"
+                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
-            All Corridors ({MOBILE_ROUTES.length})
+            All Corridors ({GLOBAL_ROUTES.length})
           </button>
+
           <button
             type="button"
-            onClick={() => setMobileTab("sourcing")}
-            className={`py-1.5 px-2.5 rounded-lg text-[10.5px] font-bold transition-all text-center flex items-center justify-center gap-1 ${
-              mobileTab === "sourcing"
-                ? "bg-navy text-white shadow-xs"
-                : "text-gray-600 hover:text-gray-900"
+            onClick={() => setFilterTab("active")}
+            className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+              filterTab === "active"
+                ? "bg-blue-600 text-white shadow-sm"
+                : "bg-blue-50 text-blue-800 hover:bg-blue-100 border border-blue-200"
             }`}
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-white" />
-            Sourcing (5)
+            <span className="h-2 w-2 rounded-full bg-blue-500" />
+            Existing Active Markets ({activeMarkets.length})
           </button>
+
           <button
             type="button"
-            onClick={() => setMobileTab("active-market")}
-            className={`py-1.5 px-2.5 rounded-lg text-[10.5px] font-bold transition-all text-center flex items-center justify-center gap-1 ${
-              mobileTab === "active-market"
-                ? "bg-primary text-white shadow-xs"
-                : "text-gray-600 hover:text-gray-900"
+            onClick={() => setFilterTab("target")}
+            className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+              filterTab === "target"
+                ? "bg-emerald-600 text-white shadow-sm"
+                : "bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200"
             }`}
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-white" />
-            Active Markets (7)
+            <span className="h-2 w-2 rounded-full bg-emerald-500" />
+            Potential Target Markets ({targetMarkets.length})
           </button>
+
           <button
             type="button"
-            onClick={() => setMobileTab("target-market")}
-            className={`py-1.5 px-2.5 rounded-lg text-[10.5px] font-bold transition-all text-center flex items-center justify-center gap-1 ${
-              mobileTab === "target-market"
-                ? "bg-emerald-600 text-white shadow-xs"
-                : "text-gray-600 hover:text-gray-900"
+            onClick={() => setFilterTab("sourcing")}
+            className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+              filterTab === "sourcing"
+                ? "bg-slate-700 text-white shadow-sm"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300"
             }`}
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-white" />
-            Target (2)
+            <span className="h-2 w-2 rounded-full bg-slate-500" />
+            Refinery Sourcing ({sourcingRoutes.length})
           </button>
         </div>
 
-        {/* Mobile Route Cards List */}
-        <div className="space-y-2.5">
-          {filteredMobileRoutes.map((route, idx) => {
-            const isSourcing = route.type === "sourcing";
-            const isTarget = route.status === "target";
+        <p className="text-xs text-slate-500 font-medium">
+          👉 Click any region card below to inspect covered countries &amp; discharge ports
+        </p>
+      </div>
 
-            return (
-              <div
-                key={route.id}
-                className="rounded-xl border border-gray-200 bg-white p-3.5 shadow-2xs hover:border-primary/50 transition-all text-left"
-              >
-                {/* Top Badge & Type */}
-                <div className="flex items-center justify-between gap-2 mb-1.5">
-                  <div className="flex items-center gap-1.5">
-                    <span
-                      className={`h-2 w-2 rounded-full shrink-0 ${
-                        isSourcing
-                          ? "bg-navy"
-                          : isTarget
-                          ? "bg-emerald-500"
-                          : "bg-primary"
-                      }`}
-                    />
-                    <span className="text-[10px] font-mono font-bold text-gray-500 uppercase">
-                      {isSourcing ? `Origin 0${idx + 1}` : `Corridor 0${idx + 1}`}
-                    </span>
-                  </div>
+      {/* ─── REGIONAL CARDS GRID (CLEARLY DIFFERENTIATING EXISTING VS POTENTIAL) ─── */}
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+        {displayedRoutes.map((route) => {
+          const isTarget = route.status === "target";
+          const isSourcing = route.type === "sourcing";
+          const isSelected = selectedRouteId === route.id;
+
+          return (
+            <div
+              key={route.id}
+              onClick={() => setSelectedRouteId(isSelected ? null : route.id)}
+              className={`group flex flex-col justify-between rounded-2xl p-5 border-2 transition-all cursor-pointer ${
+                isSelected
+                  ? "border-blue-600 bg-blue-50/40 shadow-md ring-2 ring-blue-400"
+                  : isTarget
+                  ? "border-emerald-200 bg-emerald-50/20 hover:border-emerald-400 hover:shadow-md"
+                  : isSourcing
+                  ? "border-slate-200 bg-slate-50/50 hover:border-slate-400 hover:shadow-md"
+                  : "border-blue-100 bg-white hover:border-blue-300 hover:shadow-md"
+              }`}
+            >
+              <div>
+                {/* Header Badge */}
+                <div className="flex items-center justify-between gap-2 mb-3">
+                  <span className="text-xl">{route.flag || "🌐"}</span>
                   <span
-                    className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
-                      isSourcing
-                        ? "bg-slate-100 text-navy border border-navy/20"
-                        : isTarget
-                        ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                        : "bg-orange-50 text-primary border border-primary/20"
+                    className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                      isTarget
+                        ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                        : isSourcing
+                        ? "bg-slate-200 text-slate-800 border border-slate-300"
+                        : "bg-blue-100 text-blue-800 border border-blue-300"
                     }`}
                   >
-                    {isSourcing
-                      ? "Sourcing Origin"
-                      : isTarget
-                      ? "Target Expansion"
-                      : "Active Market"}
+                    {isTarget
+                      ? "▲ Potential Target Market"
+                      : isSourcing
+                      ? "Refinery Sourcing Origin"
+                      : "● Existing Active Market"}
                   </span>
                 </div>
 
-                {/* Corridor Name */}
-                <h4 className="text-sm font-bold text-gray-900 leading-snug">
+                {/* Region Title */}
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
                   {route.name}
-                </h4>
+                </h3>
 
-                {/* Country List if available */}
-                {route.countries && (
-                  <p className="mt-0.5 text-[10px] font-semibold text-primary/90">
-                    Countries: {route.countries.join(", ")}
-                  </p>
+                {/* Countries Covered as Colorful Pills */}
+                {route.countries && route.countries.length > 0 && (
+                  <div className="mt-3">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-1">
+                      Key Countries Covered:
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {route.countries.map((c, i) => (
+                        <span
+                          key={i}
+                          className={`rounded-lg px-2.5 py-1 text-xs font-semibold ${
+                            isTarget
+                              ? "bg-emerald-100/80 text-emerald-900 border border-emerald-200"
+                              : "bg-blue-50 text-blue-950 border border-blue-200"
+                          }`}
+                        >
+                          {c}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 )}
 
                 {/* Description */}
-                <p className="mt-1 text-[11px] text-gray-600 leading-relaxed">
+                <p className="mt-3 text-xs text-slate-600 leading-relaxed">
                   {route.description}
                 </p>
 
-                {/* Ports Pills */}
-                <div className="mt-2.5 pt-2 border-t border-gray-100">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-gray-400 block mb-1">
-                    {isSourcing ? "Loading Terminals / Ports:" : "Discharge Container Ports:"}
+                {/* Ports */}
+                <div className="mt-3.5 pt-3 border-t border-slate-100">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                    Major Ports &amp; ICD Terminals:
                   </span>
                   <div className="flex flex-wrap gap-1">
-                    {route.ports.map((p, i) => (
+                    {route.ports.map((port, idx) => (
                       <span
-                        key={i}
-                        className="rounded-md bg-gray-50 border border-gray-200 px-1.5 py-0.5 text-[10px] font-medium text-gray-700 font-mono"
+                        key={idx}
+                        className="rounded-md bg-white border border-slate-200 px-2 py-0.5 text-[11px] font-mono text-slate-700 font-medium shadow-2xs"
                       >
-                        {p}
+                        {port}
                       </span>
                     ))}
                   </div>
                 </div>
 
-                {/* Advantage & CTA Link */}
-                <div className="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between gap-2">
-                  <span className="text-[10px] text-gray-500 font-medium line-clamp-1">
-                    💡 {route.advantage}
-                  </span>
-                  <Link
-                    href={`/enquiry?route=${encodeURIComponent(route.name)}`}
-                    className="shrink-0 text-[10px] font-bold text-primary hover:text-primary-darker flex items-center gap-0.5"
-                  >
-                    <span>Get Rate</span>
-                    <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </Link>
+                {/* Materials & Advantage */}
+                <div className="mt-3 pt-2 text-xs text-slate-500">
+                  <div className="font-semibold text-slate-700">📦 {route.materials}</div>
+                  <div className="text-[11px] text-slate-500 mt-1">💡 {route.advantage}</div>
                 </div>
               </div>
-            );
-          })}
-        </div>
 
-        {/* Expandable Geographic World Map View on Mobile */}
-        <div className="mt-4 pt-3 border-t border-gray-200 text-center">
-          <button
-            type="button"
-            onClick={() => setShowMobileMap((prev) => !prev)}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs font-semibold text-navy hover:bg-gray-50 shadow-2xs transition-colors"
-          >
-            <span>{showMobileMap ? "Hide Geographic SVG Map" : "🗺️ View Interactive World Map"}</span>
-            <svg
-              className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                showMobileMap ? "rotate-180" : ""
-              }`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
-          {showMobileMap && (
-            <div className="mt-3 rounded-xl border border-orange-200 bg-white p-2 shadow-sm animate-news-fade">
-              <p className="text-[10px] text-gray-400 mb-2 font-medium">
-                👉 Tip: Tap any node to inspect covered countries &amp; discharge ports
-              </p>
-              <div className="overflow-x-auto pb-2 scrollbar-thin">
-                <div className="min-w-[620px]">
-                  <WorldMap compact={false} />
-                </div>
-              </div>
-              <div className="mt-2 pt-2 border-t border-gray-100 flex justify-center">
-                <MapLegend />
+              {/* Action Link */}
+              <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-[11px] font-medium text-slate-400">Incoterms: CIF / CFR / FOB</span>
+                <Link
+                  href={`/enquiry?route=${encodeURIComponent(route.name)}`}
+                  className={`inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-bold transition shadow-xs ${
+                    isTarget
+                      ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                      : "bg-blue-600 text-white hover:bg-blue-700"
+                  }`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <span>Request Quote</span>
+                  <span>→</span>
+                </Link>
               </div>
             </div>
-          )}
-        </div>
+          );
+        })}
       </div>
-    </div>
+    </section>
   );
 };

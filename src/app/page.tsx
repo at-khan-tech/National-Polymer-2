@@ -9,6 +9,7 @@ import { InDemandMaterials } from "@/components/InDemandMaterials";
 import { GradeSystem } from "@/components/GradeSystem";
 import { MaterialFinder } from "@/components/MaterialFinder";
 import { SuppliersSection } from "@/components/SuppliersSection";
+import { TradeShowsGallery } from "@/components/TradeShowsGallery";
 import { Testimonials } from "@/components/Testimonials";
 import { LatestInsights } from "@/components/LatestInsights";
 import { LatestNews } from "@/components/LatestNews";
@@ -50,6 +51,9 @@ export default function Home() {
 
         {/* 5. Dubai Trading Desk Callout & Our Suppliers Carousel */}
         <SuppliersSection />
+
+        {/* 6. Trade Shows & Exhibitions Showcase */}
+        <TradeShowsGallery />
 
         {/* Client Testimonials / Highlights */}
       </main>
