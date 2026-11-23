@@ -26,6 +26,7 @@ import { TdsDownloadButton } from "@/components/TdsDownloadButton";
 
 interface CategoryMeta {
   code: string;
+  shortCode: string;
   name: string;
   description: string;
   badgeColor: string;
@@ -34,48 +35,56 @@ interface CategoryMeta {
 const CATEGORIES_META: CategoryMeta[] = [
   {
     code: "PP",
+    shortCode: "PP",
     name: "Polypropylene",
     description: "Homopolymer, Impact Copolymer, Raffia, BOPP",
     badgeColor: "bg-blue-50 text-blue-700 border-blue-200",
   },
   {
     code: "HDPE",
+    shortCode: "HDPE",
     name: "High-Density Polyethylene",
     description: "Blow Moulding, PE100 Pipe, Injection Moulding",
     badgeColor: "bg-indigo-50 text-indigo-700 border-indigo-200",
   },
   {
     code: "LDPE",
+    shortCode: "LDPE",
     name: "Low-Density Polyethylene",
     description: "General Purpose Film, Heavy Duty Sacks, Shrink",
     badgeColor: "bg-cyan-50 text-cyan-700 border-cyan-200",
   },
   {
     code: "LLDPE",
+    shortCode: "LLDPE",
     name: "Linear Low-Density PE",
     description: "Blown Film C4/C6, Stretch Film, Rotomoulding",
     badgeColor: "bg-teal-50 text-teal-700 border-teal-200",
   },
   {
     code: "PVC",
+    shortCode: "PVC",
     name: "Polyvinyl Chloride",
     description: "Suspension Resin K67, Pipe Compounds, Rigid",
     badgeColor: "bg-emerald-50 text-emerald-700 border-emerald-200",
   },
   {
     code: "EVA",
+    shortCode: "EVA",
     name: "Ethylene Vinyl Acetate",
     description: "Solar Encapsulation, Shoe Sole Foaming, Hot Melt",
     badgeColor: "bg-amber-50 text-amber-700 border-amber-200",
   },
   {
     code: "Recycled",
+    shortCode: "PCR",
     name: "Circular & Recycled Pellets",
     description: "Certified PCR & PIR rHDPE, rPP, rLDPE Pellets",
     badgeColor: "bg-green-50 text-green-700 border-green-200",
   },
   {
     code: "Engineering",
+    shortCode: "ENG",
     name: "Engineering Polymers",
     description: "Polycarbonate (PC), ABS, POM, Polyamide (Nylon)",
     badgeColor: "bg-purple-50 text-purple-700 border-purple-200",
@@ -360,18 +369,18 @@ export function MobileCustomerJourney({
                   onClick={() => handleCategorySelect(cat.code)}
                   className="w-full text-left bg-white rounded-xl border border-gray-200 p-3.5 shadow-2xs hover:border-primary hover:shadow-sm transition-all flex items-center justify-between group active:scale-[0.99]"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
                     <div
-                      className={`w-12 h-12 rounded-xl flex items-center justify-center font-extrabold text-xs border ${cat.badgeColor} shrink-0 group-hover:scale-105 transition-transform`}
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center font-extrabold text-[11px] sm:text-xs tracking-tight border ${cat.badgeColor} shrink-0 overflow-hidden text-center group-hover:scale-105 transition-transform`}
                     >
-                      {cat.code}
+                      {cat.shortCode}
                     </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-sm text-gray-900 group-hover:text-primary transition-colors">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                        <span className="font-bold text-sm text-gray-900 group-hover:text-primary transition-colors truncate">
                           {cat.name}
                         </span>
-                        <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full shrink-0">
                           {count > 0 ? `${count} Grades` : "Available"}
                         </span>
                       </div>
