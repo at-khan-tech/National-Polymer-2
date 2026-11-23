@@ -65,7 +65,7 @@ export default async function ProductsPage() {
             <div className="absolute inset-0 bg-white/70 bg-gradient-to-r from-white/95 via-white/85 to-white/50 backdrop-blur-[1px]" />
           </div>
 
-          <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+          <div className="relative z-10 w-full container mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 max-w-[1440px]">
             {/* Breadcrumb */}
             <nav className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-gray-600 mb-5">
               <Link href="/" className="hover:text-primary transition-colors">Home</Link>
@@ -94,9 +94,9 @@ export default async function ProductsPage() {
             <div className="mt-8 flex flex-wrap gap-3">
               {[
                 { label: "Polymer Families", value: `${products.length}+` },
-                { label: "Manufacturer Brands", value: `${MAJOR_BRANDS.length}+` },
+                { label: "Manufacturer Brands", value: `${distinctBrands.length}+` },
                 { label: "Export Destinations", value: "40+" },
-                { label: "Grade SKUs", value: "500+" },
+                { label: "Verified Sourcing Grades", value: `${allGrades.length}+ Verified` },
               ].map((s) => (
                 <div
                   key={s.label}
@@ -110,7 +110,7 @@ export default async function ProductsPage() {
           </div>
         </section>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+        <div className="w-full container mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 max-w-[1440px]">
 
           {/* ─── MANUFACTURER BRANDS ─── */}
           <section className="mt-10 sm:mt-14">

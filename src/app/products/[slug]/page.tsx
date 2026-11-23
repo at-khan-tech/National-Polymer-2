@@ -59,7 +59,7 @@ export default async function ProductInnerPage({ params }: PageProps) {
             <div className="absolute inset-0 bg-white/70 bg-gradient-to-r from-white/95 via-white/85 to-white/50 backdrop-blur-[1px]" />
           </div>
 
-          <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+          <div className="relative z-10 w-full container mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 max-w-[1400px]">
             {/* Breadcrumb */}
             <nav className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-gray-600 mb-6">
               <Link href="/" className="hover:text-primary transition-colors">Home</Link>
@@ -137,7 +137,7 @@ export default async function ProductInnerPage({ params }: PageProps) {
         </section>
 
         {/* ─── MAIN CONTENT ─── */}
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl mt-10 sm:mt-14">
+        <div className="w-full container mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 max-w-[1400px] mt-10 sm:mt-14">
           <div className="grid gap-8 lg:gap-10 lg:grid-cols-[1fr_300px] xl:grid-cols-[1fr_320px]">
 
             {/* ═══ LEFT MAIN CONTENT ═══ */}
@@ -179,8 +179,8 @@ export default async function ProductInnerPage({ params }: PageProps) {
                     {product.subTypes.length} grades available
                   </span>
                 </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left min-w-[580px]">
+                <div className="w-full overflow-x-auto lg:overflow-x-visible">
+                  <table className="w-full text-left border-collapse table-auto">
                     <thead className="bg-gray-50 border-b border-gray-200">
                       <tr className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
                         <th className="py-3.5 px-5">Grade Classification</th>
@@ -236,8 +236,8 @@ export default async function ProductInnerPage({ params }: PageProps) {
                     </span>
                   </div>
 
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left min-w-[600px]">
+                  <div className="w-full overflow-x-auto lg:overflow-x-visible">
+                    <table className="w-full text-left border-collapse table-auto">
                       <thead className="bg-gray-50 border-b border-gray-200">
                         <tr className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
                           <th className="py-3.5 px-5">Manufacturer</th>
