@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { regions } from "@/data/content";
+import { regions, directShippingRoutes } from "@/data/content";
 
 const W = 1000,
   H = 500;
@@ -251,35 +251,41 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
           </g>
         ))}
 
-        {/* ─── INBOUND SOURCING ARCS (Dotted Slate) ─── */}
-        {regions.sourcing.map((s) => (
-          <path
-            key={`sourcing-${s.name}`}
-            d={arc(s, hub)}
-            fill="none"
-            stroke="#475569"
-            strokeWidth="1.4"
-            strokeDasharray="4 4"
-            className="opacity-50"
-          />
-        ))}
-
-        {/* ─── OUTBOUND MARKET ARCS (Active = Royal Blue, Target = Emerald) ─── */}
-        {regions.markets.map((m) => {
-          const isTarget = m.status === "target";
+        {/* ─── DIRECT-TO-DESTINATION TRADE ROUTES (Direct International Shipments from Origin Refineries to Customer Destination Ports) ─── */}
+        {directShippingRoutes.map((route) => {
+          const isTarget = route.status === "target";
           const strokeColor = isTarget ? "#10B981" : "#2563EB";
           return (
             <path
-              key={`market-${m.name}`}
-              d={arc(hub, m)}
+              key={route.id}
+              d={arc(route.from, route.to)}
               fill="none"
               stroke={strokeColor}
-              strokeWidth={isTarget ? "1.6" : "1.8"}
+              strokeWidth={isTarget ? "1.4" : "1.7"}
               strokeDasharray={isTarget ? "3 4" : "5 5"}
-              className="opacity-80"
+              className="opacity-75"
             />
           );
         })}
+
+        {/* ─── DUBAI COMMERCIAL OPERATIONS BASE COORDINATION LINES ─── */}
+        {[
+          { lon: 49.6, lat: 27.0 }, // Middle East Petrochemical Belt
+          { lon: 32.85, lat: 39.93 }, // Turkey
+          { lon: 72.87, lat: 19.07 }, // India
+          { lon: 38.75, lat: 6.0 }, // East Africa
+          { lon: 118.0, lat: 28.5 }, // China
+        ].map((pt, i) => (
+          <path
+            key={`hub-coord-${i}`}
+            d={arc(hub, pt)}
+            fill="none"
+            stroke="#f97316"
+            strokeWidth="1.1"
+            strokeDasharray="2 3"
+            className="opacity-45"
+          />
+        ))}
 
         {/* ─── SOURCING NODES (Slate Circles) ─── */}
         {regions.sourcing.map((s) => {
@@ -382,7 +388,7 @@ export function WorldMap({ compact = false }: { compact?: boolean }) {
             y={hy - 8}
             className="fill-slate-900 text-[11px] font-extrabold tracking-normal pointer-events-none select-none drop-shadow-[0_1px_3px_rgba(255,255,255,1)]"
           >
-            Dubai Commercial HQ (JAFZA)
+            Dubai Commercial HQ (Trading Base)
           </text>
         </g>
       </svg>
@@ -395,19 +401,19 @@ export function MapLegend() {
     <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-xs">
       <span className="flex items-center gap-2">
         <span className="h-3 w-3 rounded-full bg-blue-600 ring-2 ring-blue-100 shadow-xs" />
-        <span className="font-bold text-slate-900">Existing Active Markets</span>
+        <span className="font-bold text-slate-900">Direct Destination Markets</span>
       </span>
       <span className="flex items-center gap-2">
         <span className="h-3 w-3 rounded-full bg-emerald-500 ring-2 ring-emerald-100 shadow-xs" />
-        <span className="font-bold text-slate-900">Potential Target Markets</span>
+        <span className="font-bold text-slate-900">Target Expansion Ports</span>
       </span>
       <span className="flex items-center gap-2">
         <span className="h-3 w-3 rounded-full bg-slate-600 ring-2 ring-slate-100 shadow-xs" />
-        <span className="font-semibold text-slate-700">Refinery Sourcing</span>
+        <span className="font-semibold text-slate-700">Petrochemical Sourcing Origins</span>
       </span>
       <span className="flex items-center gap-2">
         <span className="h-3.5 w-3.5 rounded-full bg-orange-500 border-2 border-white ring-2 ring-orange-200 shadow-xs" />
-        <span className="font-bold text-slate-900">Dubai Commercial HQ</span>
+        <span className="font-bold text-slate-900">Dubai Commercial Base (HQ)</span>
       </span>
     </div>
   );
@@ -433,8 +439,8 @@ export const GlobalTradingMapSection: React.FC = () => {
             International Trade Corridors &amp; Expansion Markets
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 max-w-2xl leading-relaxed">
-            Coordinating containerized polymer trade from world-class refiners directly to plastic converting plants
-            across <strong className="text-slate-900 font-bold">40+ international countries</strong> via our Dubai headquarters.
+            Coordinating containerized polymer trade with direct shipments from world-class refiners straight to customer destination discharge ports
+            across <strong className="text-slate-900 font-bold">40+ international countries</strong>, commercially managed and underwritten via our Dubai headquarters.
           </p>
         </div>
 
@@ -457,7 +463,7 @@ export const GlobalTradingMapSection: React.FC = () => {
             <div className="flex items-center gap-2">
               <span className="h-2.5 w-2.5 rounded-full bg-blue-600 ring-4 ring-blue-100 animate-pulse" />
               <h3 className="text-xs font-bold uppercase tracking-wider text-blue-900">
-                Existing Active Business Markets
+                Direct Customer Destination Markets
               </h3>
             </div>
             <span className="text-[11px] font-bold text-blue-700 bg-blue-100 px-2.5 py-0.5 rounded-full self-start sm:self-auto">
@@ -530,7 +536,7 @@ export const GlobalTradingMapSection: React.FC = () => {
             <div className="flex items-center gap-2">
               <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 ring-4 ring-emerald-100" />
               <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-900">
-                Potential Target Expansion Markets
+                Target Direct Expansion Markets
               </h3>
             </div>
             <span className="text-[11px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full self-start sm:self-auto">
@@ -555,40 +561,40 @@ export const GlobalTradingMapSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Row 3: Direct Refinery Sourcing Origins */}
+        {/* Row 3: Global Petrochemical Sourcing & Direct-to-Destination Supply */}
         <div className="rounded-2xl border border-slate-200 bg-slate-50/60 p-4 sm:p-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
             <div className="flex items-center gap-2">
               <span className="h-2.5 w-2.5 rounded-full bg-slate-600" />
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800">
-                Direct Petrochemical Refinery Sourcing (Origins to Dubai Hub)
+                Global Petrochemical Sourcing &amp; Direct-to-Destination Supply
               </h3>
             </div>
             <span className="text-[11px] font-bold text-slate-700 bg-slate-200 px-2.5 py-0.5 rounded-full self-start sm:self-auto">
-              5 Global Producer Regions
+              Direct International Shipments (Origin Port to Destination Port)
             </span>
           </div>
 
           <div className="flex flex-wrap gap-2">
             <span className="inline-flex items-center gap-1.5 rounded-xl bg-white border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700">
               <span>🇺🇸</span>
-              <span>USA Gulf Coast Refiners (Houston, Beaumont, Corpus Christi)</span>
+              <span>USA Gulf Coast Refiners (Houston, Beaumont, Corpus Christi &rarr; Direct to Port)</span>
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-xl bg-white border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700">
               <span>🇨🇦</span>
-              <span>Alberta Polyolefin Corridors (Canada)</span>
+              <span>Alberta Polyolefin Corridors (Canada &rarr; Direct to Port)</span>
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-xl bg-white border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700">
               <span>🇪🇺</span>
-              <span>Western Europe Refineries (Antwerp, Rotterdam, Hamburg)</span>
+              <span>Western Europe Refineries (Antwerp, Rotterdam, Hamburg &rarr; Direct to Port)</span>
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-xl bg-white border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700">
               <span>🌏</span>
-              <span>Far East Producers (South Korea, Taiwan, Japan)</span>
+              <span>Far East Producers (South Korea, Taiwan, Japan &rarr; Direct to Port)</span>
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-xl bg-white border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700">
               <span>🇦🇺</span>
-              <span>Australia Sourcing Desks (Melbourne, Sydney, Brisbane)</span>
+              <span>Australia Sourcing Desks (Melbourne, Sydney, Brisbane &rarr; Direct to Port)</span>
             </span>
           </div>
         </div>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 80" fill="none">
+    <path d="M22 28 C30 18 45 18 52 28" stroke="#009944" stroke-width="6" stroke-linecap="round" fill="none"/>
+    <path d="M22 52 C30 62 45 62 52 52" stroke="#FF6600" stroke-width="6" stroke-linecap="round" fill="none"/>
+    <circle cx="37" cy="40" r="5" fill="#003399"/>
+    <text x="68" y="52" font-family="Arial, sans-serif" font-weight="900" font-size="28" fill="#003399">GS <tspan fill="#444444" font-weight="700">Caltex</tspan></text>
+  </svg>

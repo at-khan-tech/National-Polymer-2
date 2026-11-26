@@ -68,13 +68,13 @@ const products: ProductCard[] = [
     delay: 320,
   },
   {
-    badge: "Circular Solutions",
-    name: "Recycled Granules & Regrind",
-    desc: "Cost-effective, washed and filtered recycled granules, floor sweeping, plastic scraps, lumps, and plant wastes.",
-    tags: "Reprocessed · Lumps · Regrinds · Scrap",
+    badge: "Prime Virgin",
+    name: "PET Resins (Bottle & Sheet Grade)",
+    desc: "Virgin bottle-grade polyethylene terephthalate chips with balanced IV values for mineral water, CSD, APET thermoforming and food packaging.",
+    tags: "Bottle Grade · CSD · APET Sheet · Packaging",
     image: "/images/Product/p6.png",
-    href: "/products/recycled",
-    enquiryHref: "/enquiry?product=recycled&grade=Post-Consumer%20Recycled%20Granules",
+    href: "/products#grades-explorer",
+    enquiryHref: "/enquiry?product=pe&grade=PET%20Bottle%20Grade%20Resin",
     delay: 400,
   },
 ];
@@ -100,11 +100,11 @@ export const InDemandMaterials: React.FC = () => {
               id="top-selling-products-title"
               className="mt-2.5 sm:mt-3 text-2xl sm:text-4xl md:text-5xl font-light text-gray-900 leading-tight tracking-tight"
             >
-              Prime, Off-Grade &amp; Recycled Polymers
+              Prime Virgin Polymers &amp; Global Petrochemical Solutions
             </h2>
             <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-xs sm:text-base leading-relaxed text-gray-600">
-              Supplying certified prime resins, near-prime off-spec lots, and high-quality recycled
-              granules backed by responsive UAE logistics and worldwide shipping.
+              International supplier and trading company focused on certified prime virgin polymer resins,
+              with specialized allocations of near-prime and off-grade materials for global converters.
             </p>
           </div>
           <Link
@@ -194,6 +194,38 @@ export const InDemandMaterials: React.FC = () => {
               </article>
             );
           })}
+        </div>
+
+        {/* Separate Compact Recycled & Circular Polymers Section (Supplemental Sourcing) */}
+        <div
+          data-aos="fade-up"
+          className="mt-10 sm:mt-12 rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50/70 via-white to-emerald-50/40 p-5 sm:p-7 shadow-xs"
+        >
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
+            <div className="space-y-1.5 max-w-3xl">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800">
+                  Additional Sourcing Solutions
+                </span>
+                <span className="text-xs text-gray-500 font-medium">Secondary &amp; Eco-Compliance Programs</span>
+              </div>
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 tracking-tight">
+                Circular &amp; Recycled Polymers (PCR / PIR Granules)
+              </h3>
+              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                For manufacturing converters with specialized eco-compliance, PCR mandates, or cost-optimization requirements, National Polymers provides washed and filtered recycled granules, floor sweeping lots, plastic regrinds, and plant scrap as a supplemental sourcing solution.
+              </p>
+            </div>
+            <div className="shrink-0 flex items-center gap-3">
+              <Link
+                href="/products/recycled"
+                className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-emerald-600 text-emerald-700 hover:bg-emerald-600 hover:text-white px-4 py-2.5 text-xs sm:text-sm font-semibold transition-all shadow-2xs active:scale-95"
+              >
+                <span>View Recycled Solutions</span>
+                <Icon name="arrow-right" className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </section>

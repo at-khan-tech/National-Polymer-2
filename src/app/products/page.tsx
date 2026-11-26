@@ -86,7 +86,7 @@ export default async function ProductsPage() {
                 </span>
               </h1>
               <p className="mt-5 text-sm sm:text-base text-gray-700 leading-relaxed max-w-2xl">
-                Direct containerized distribution of certified Prime, Near-Prime, Off-Grade &amp; Recycled polymer resins — sourced from global petrochemical refiners across Saudi Arabia, South Korea, Egypt, USA &amp; Asia.
+                International supplier and trading company focused on Prime Virgin Polymers &amp; Global Petrochemical Solutions — with specialized allocations of near-prime, off-grade, and alternative materials directly shipped to global converter destinations.
               </p>
             </div>
 

@@ -14,14 +14,148 @@ export interface RegionsData {
   markets: RegionPoint[];
 }
 
+export interface DirectRoute {
+  id: string;
+  fromName: string;
+  toName: string;
+  from: { lon: number; lat: number };
+  to: { lon: number; lat: number };
+  status: "active" | "target";
+  corridor: string;
+}
+
+export const directShippingRoutes: DirectRoute[] = [
+  // 1. Trans-Atlantic & Pan-American Direct Corridors
+  {
+    id: "usa-latam",
+    fromName: "USA Gulf Coast",
+    toName: "Latin America",
+    from: { lon: -95.36, lat: 29.76 },
+    to: { lon: -48.0, lat: -18.0 },
+    status: "target",
+    corridor: "Direct Houston to Santos / Callao",
+  },
+  {
+    id: "usa-europe",
+    fromName: "USA Gulf Coast",
+    toName: "Southern Europe & Mediterranean",
+    from: { lon: -95.36, lat: 29.76 },
+    to: { lon: 14.55, lat: 41.5 },
+    status: "active",
+    corridor: "Direct Gulf to Genoa / Valencia",
+  },
+  {
+    id: "canada-china",
+    fromName: "Canada",
+    toName: "China & Far East",
+    from: { lon: -113.49, lat: 53.54 },
+    to: { lon: 118.0, lat: 28.5 },
+    status: "active",
+    corridor: "Direct Vancouver to Shanghai / Ningbo",
+  },
+  // 2. European Direct Export Corridors
+  {
+    id: "europe-turkey",
+    fromName: "Western Europe",
+    toName: "Turkey",
+    from: { lon: 4.4, lat: 51.21 },
+    to: { lon: 32.85, lat: 39.93 },
+    status: "active",
+    corridor: "Direct Antwerp to Mersin / Ambarli",
+  },
+  {
+    id: "europe-westafrica",
+    fromName: "Western Europe",
+    toName: "West Africa",
+    from: { lon: 4.4, lat: 51.21 },
+    to: { lon: 2.5, lat: 6.5 },
+    status: "target",
+    corridor: "Direct Rotterdam to Lagos / Tema",
+  },
+  // 3. Middle East Direct-to-Destination Corridors (Direct Shipments from Producer Refineries)
+  {
+    id: "me-turkey",
+    fromName: "Middle East Refineries",
+    toName: "Turkey",
+    from: { lon: 49.6, lat: 27.0 }, // Jubail / Yanbu / Sohar petrochemical belt
+    to: { lon: 32.85, lat: 39.93 },
+    status: "active",
+    corridor: "Direct Jubail to Mersin / Aliaga",
+  },
+  {
+    id: "me-india",
+    fromName: "Middle East Refineries",
+    toName: "Indian Subcontinent",
+    from: { lon: 49.6, lat: 27.0 },
+    to: { lon: 72.87, lat: 19.07 },
+    status: "active",
+    corridor: "Direct Arabian Sea to Nhava Sheva / Mundra",
+  },
+  {
+    id: "me-eastafrica",
+    fromName: "Middle East Refineries",
+    toName: "East Africa",
+    from: { lon: 49.6, lat: 27.0 },
+    to: { lon: 38.75, lat: 6.0 },
+    status: "active",
+    corridor: "Direct Red Sea to Mombasa / Dar es Salaam",
+  },
+  {
+    id: "me-westafrica",
+    fromName: "Middle East Refineries",
+    toName: "West Africa",
+    from: { lon: 49.6, lat: 27.0 },
+    to: { lon: 2.5, lat: 6.5 },
+    status: "target",
+    corridor: "Direct Vessel to Lagos Apapa / Abidjan",
+  },
+  {
+    id: "me-china",
+    fromName: "Middle East Refineries",
+    toName: "China & Far East",
+    from: { lon: 49.6, lat: 27.0 },
+    to: { lon: 118.0, lat: 28.5 },
+    status: "active",
+    corridor: "Direct Strait of Malacca to Qingdao / Ningbo",
+  },
+  // 4. Far East & Asia Pacific Direct Corridors
+  {
+    id: "fareast-australia",
+    fromName: "Far East Producers",
+    toName: "Australia",
+    from: { lon: 121.47, lat: 31.23 },
+    to: { lon: 135.0, lat: -26.0 },
+    status: "active",
+    corridor: "Direct Asian Pacific to Melbourne / Sydney",
+  },
+  {
+    id: "fareast-nz",
+    fromName: "Far East Producers",
+    toName: "New Zealand",
+    from: { lon: 121.47, lat: 31.23 },
+    to: { lon: 174.5, lat: -40.5 },
+    status: "active",
+    corridor: "Direct Asian Pacific to Auckland / Tauranga",
+  },
+  {
+    id: "fareast-latam",
+    fromName: "Far East Producers",
+    toName: "Latin America",
+    from: { lon: 121.47, lat: 31.23 },
+    to: { lon: -48.0, lat: -18.0 },
+    status: "target",
+    corridor: "Direct Trans-Pacific to Manzanillo / Callao",
+  },
+];
+
 export const regions: RegionsData = {
   hub: {
     name: "Dubai HQ",
     lon: 55.27,
     lat: 25.2,
-    description: "Global Commercial Trading Desk & Maritime Crossroads (Jebel Ali Free Zone)",
+    description: "Commercial Operations & Trading Base (JAFZA)",
     status: "active",
-    ports: ["Jebel Ali (JAFZA)", "Port Rashid"],
+    ports: ["Dubai Commercial Operations Base", "Global Trade Coordination"],
   },
   sourcing: [
     {

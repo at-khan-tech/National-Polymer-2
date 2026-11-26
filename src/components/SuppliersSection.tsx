@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "./Icons";
-import { MAJOR_BRANDS, BrandInfo } from "@/data/gradesCatalog";
+import { MAJOR_BRANDS, ALL_MANUFACTURER_BRANDS, BrandInfo } from "@/data/gradesCatalog";
 
 interface TripletUnitProps {
   brands: [BrandInfo, BrandInfo, BrandInfo];
@@ -30,7 +30,7 @@ const TripletUnit: React.FC<TripletUnitProps> = ({ brands }) => {
   ];
 
   return (
-    <div className="relative w-full aspect-[350/340] max-w-[400px] sm:max-w-[480px] lg:max-w-[390px] xl:max-w-[450px] 2xl:max-w-[490px] mx-auto select-none shrink-0">
+    <div className="relative w-full aspect-[350/340] max-w-[280px] sm:max-w-[340px] lg:max-w-[300px] xl:max-w-[340px] mx-auto select-none shrink-0">
       {/* SVG Canvas for 3 Hexagons with Bold Borders, Chemical Accents & Orange Contact Nodes */}
       <svg
         viewBox="0 0 350 340"
@@ -217,7 +217,7 @@ export const SuppliersSection: React.FC = () => {
               <TripletUnit brands={group1Brands} />
 
               {/* Connecting Bond Line 1 */}
-              <div className="flex items-center justify-center w-8 xl:w-12 shrink-0">
+              <div className="flex items-center justify-center w-6 xl:w-8 shrink-0">
                 <div className="w-full h-[3.5px] bg-slate-900"></div>
               </div>
 
@@ -225,7 +225,7 @@ export const SuppliersSection: React.FC = () => {
               <TripletUnit brands={group2Brands} />
 
               {/* Connecting Bond Line 2 */}
-              <div className="flex items-center justify-center w-8 xl:w-12 shrink-0">
+              <div className="flex items-center justify-center w-6 xl:w-8 shrink-0">
                 <div className="w-full h-[3.5px] bg-slate-900"></div>
               </div>
 
@@ -265,7 +265,7 @@ export const SuppliersSection: React.FC = () => {
           {/* Continuous Infinite Smooth Auto-Scrolling Marquee Slider - Official Brand Logos Only */}
           <div className="relative w-full overflow-hidden py-3 before:pointer-events-none before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-10 sm:before:w-28 before:bg-gradient-to-r before:from-white before:to-transparent after:pointer-events-none after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-10 sm:after:w-28 after:bg-gradient-to-l after:from-white after:to-transparent">
             <div className="animate-marquee-left flex items-center gap-4 sm:gap-6">
-              {[...MAJOR_BRANDS, ...MAJOR_BRANDS].map((brand, idx) => (
+              {[...ALL_MANUFACTURER_BRANDS, ...ALL_MANUFACTURER_BRANDS].map((brand, idx) => (
                 <Link
                   key={`${brand.id}-${idx}`}
                   href={`/products?brand=${encodeURIComponent(brand.name)}#grades-explorer`}

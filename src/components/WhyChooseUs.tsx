@@ -166,6 +166,70 @@ export const WhyChooseUs: React.FC = () => {
           })}
         </div>
 
+        {/* Flexible Payment Solutions for Global Trade (Commercial Advantages) */}
+        <div
+          data-aos="fade-up"
+          className="relative overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-br from-slate-900 via-navy to-slate-900 text-white p-6 sm:p-8 lg:p-10 shadow-lg"
+        >
+          {/* Subtle decorative glowing background blur */}
+          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-80 h-80 bg-primary/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-72 h-72 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+            <div className="space-y-3 max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-primary">
+                <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                Commercial Trade Finance
+              </div>
+
+              <h3 className="font-montserrat text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+                Flexible Payment Solutions for Global Trade
+              </h3>
+
+              <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-light">
+                Our Flexible Payment Terms: LC 30–90 days and Open Account up to 90 days for large-volume orders, subject to credit approval and agreed commercial terms.
+              </p>
+
+              {/* Badges / Terms Highlights */}
+              <div className="pt-2 flex flex-wrap gap-2.5 sm:gap-3">
+                <div className="flex items-center gap-2 rounded-xl bg-white/10 backdrop-blur-xs border border-white/15 px-3.5 py-2 text-xs sm:text-sm font-semibold text-white">
+                  <span className="text-primary font-bold">✓</span>
+                  <span>Letter of Credit (LC 30–90 Days)</span>
+                </div>
+                <div className="flex items-center gap-2 rounded-xl bg-white/10 backdrop-blur-xs border border-white/15 px-3.5 py-2 text-xs sm:text-sm font-semibold text-white">
+                  <span className="text-primary font-bold">✓</span>
+                  <span>Open Account (Up to 90 Days)</span>
+                </div>
+                <div className="flex items-center gap-2 rounded-xl bg-white/10 backdrop-blur-xs border border-white/15 px-3.5 py-2 text-xs sm:text-sm font-semibold text-white">
+                  <span className="text-primary font-bold">✓</span>
+                  <span>Structured Trade Finance</span>
+                </div>
+              </div>
+
+              {/* Caveat note ensuring professional presentation without automatic guarantee */}
+              <p className="text-[11px] sm:text-xs text-slate-400 leading-normal pt-1 italic">
+                * Commercial terms, deferred settlement periods, and credit facilities are subject to counterparty underwriting, compliance review, and contract-specific volume agreements.
+              </p>
+            </div>
+
+            <div className="shrink-0 flex flex-col sm:flex-row lg:flex-col gap-3">
+              <Link
+                href="/contact?subject=Trade%20Finance%20%26%20Payment%20Terms"
+                className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-darker text-white px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-md active:scale-95 text-center"
+              >
+                <span>Discuss Commercial Terms</span>
+                <Icon name="arrow-right" className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/enquiry"
+                className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-semibold transition-all backdrop-blur-xs text-center"
+              >
+                <span>Submit Volume RFQ</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+
         {/* Global Trading Network Map Section */}
         <GlobalTradingMapSection />
       </div>

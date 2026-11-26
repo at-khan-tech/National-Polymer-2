@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 80" fill="none">
+    <circle cx="35" cy="40" r="22" stroke="#E20074" stroke-width="7" fill="none"/>
+    <circle cx="48" cy="48" r="8" fill="#009CDE"/>
+    <text x="72" y="52" font-family="'Arial Black', Arial, sans-serif" font-weight="900" font-size="32" fill="#E20074">OQ <tspan fill="#009CDE" font-size="22" font-family="Arial, sans-serif" font-weight="700">| Luban</tspan></text>
+  </svg>

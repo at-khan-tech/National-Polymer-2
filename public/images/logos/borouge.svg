@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 80" fill="none">
+    <path d="M20 20 C20 20 45 15 50 40 C55 65 30 65 20 65 Z" fill="#003057"/>
+    <circle cx="48" cy="28" r="8" fill="#E35205"/>
+    <text x="75" y="53" font-family="'Trebuchet MS', Arial, sans-serif" font-weight="800" font-size="34" fill="#003057" letter-spacing="0.5">Borouge</text>
+  </svg>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 80" fill="none">
+    <circle cx="36" cy="40" r="22" stroke="#003366" stroke-width="5" fill="none"/>
+    <path d="M20 40 L52 40" stroke="#003366" stroke-width="3"/>
+    <text x="70" y="52" font-family="'Helvetica Neue', Arial, sans-serif" font-weight="800" font-size="28" fill="#003366" letter-spacing="1">ORIENTAL</text>
+  </svg>

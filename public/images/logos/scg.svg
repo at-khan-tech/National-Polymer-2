@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 80" fill="none">
+    <polygon points="38,16 60,28 60,52 38,64 16,52 16,28" fill="#ED1C24"/>
+    <circle cx="38" cy="40" r="10" fill="#FFFFFF"/>
+    <text x="76" y="53" font-family="'Arial Black', Arial, sans-serif" font-weight="900" font-size="36" fill="#ED1C24" letter-spacing="1">SCG</text>
+    <text x="160" y="53" font-family="Arial, sans-serif" font-weight="700" font-size="16" fill="#444444" letter-spacing="0.5">Chemicals</text>
+  </svg>

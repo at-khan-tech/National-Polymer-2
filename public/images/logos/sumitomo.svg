@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" fill="none">
+    <g transform="translate(15, 16)">
+      <path d="M12 0 L36 0 L48 48 L24 48 Z" fill="#E60012" transform="skewX(-20)"/>
+      <path d="M0 12 L48 12 L48 36 L0 36 Z" fill="#E60012" transform="skewY(-20)"/>
+    </g>
+    <text x="85" y="44" font-family="Arial, sans-serif" font-weight="900" font-size="24" fill="#E60012" letter-spacing="1">SUMITOMO</text>
+    <text x="86" y="62" font-family="Arial, sans-serif" font-weight="700" font-size="14" fill="#333333" letter-spacing="2">CHEMICAL</text>
+  </svg>

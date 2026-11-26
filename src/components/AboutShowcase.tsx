@@ -183,16 +183,15 @@ export const AboutShowcase: React.FC = () => {
             {/* Body Text */}
             <div className="mt-3.5 sm:mt-4 space-y-2.5 sm:space-y-3 text-[13.5px] sm:text-[14.5px] text-gray-600 leading-[1.7]">
               <p>
-                National Polymers LLC FZ is an international distribution and trading company specializing
-                in polymer raw materials. We supply prime, near-prime, and off-grade resins, alongside
-                high-grade recycled polymers, granules, regrinds, and circular materials tailored for film
-                extrusion, blow molding, injection molding, and pipe compounding.
+                National Polymers LLC FZ is an international distribution and trading company focused on
+                certified prime virgin polymer resins and global petrochemical solutions. We primarily supply
+                high-performance prime materials, with specialized near-prime, off-grade, and circular
+                polymer options tailored for film extrusion, blow molding, injection molding, and pipe compounding.
               </p>
               <p>
-                Headquartered at Dubai&apos;s global commercial crossroads, we source directly from major
-                petrochemical producers across the USA, Canada, Australia, and Far East hubs, providing
-                dependable, containerized supply chains to manufacturing converters across the Indian
-                Subcontinent, Africa, Europe, and Latin America.
+                Operating with Dubai as our commercial trading base, we coordinate direct international containerized
+                shipments from major petrochemical refineries across the USA, Canada, Western Europe, and Far East hubs
+                straight to customer destination discharge ports across 40+ international countries.
               </p>
             </div>
 

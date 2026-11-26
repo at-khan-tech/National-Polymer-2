@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 100" fill="none">
+    <rect width="240" height="100" rx="8" fill="transparent"/>
+    <path d="M70 12 L170 12 L205 50 L170 88 L70 88 L35 50 Z" fill="#E11932"/>
+    <text x="120" y="62" font-family="'Arial Black', Arial, sans-serif" font-weight="900" font-size="40" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">DOW</text>
+  </svg>
