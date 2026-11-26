@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Icon } from "@/components/Icons";
 import { getAllProducts, getAllGrades } from "@/lib/content-store";
 import { GradeCatalogExplorer } from "@/components/GradeCatalogExplorer";
-import { MAJOR_BRANDS } from "@/data/gradesCatalog";
+import { ALL_MANUFACTURER_BRANDS } from "@/data/gradesCatalog";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +22,7 @@ export default async function ProductsPage() {
       string,
       { id: string; name: string; origin: string; logoUrl?: string; categories: string[] }
     >();
-    MAJOR_BRANDS.forEach((mb) => {
+    ALL_MANUFACTURER_BRANDS.forEach((mb) => {
       brandMap.set(mb.name.toLowerCase(), { ...mb });
     });
     allGrades.forEach((g) => {
@@ -128,7 +128,7 @@ export default async function ProductsPage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
               {distinctBrands.map((brand) => (
                 <Link
                   key={brand.id}

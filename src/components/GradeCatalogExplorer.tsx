@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
   CANDIDATE_GRADES,
-  MAJOR_BRANDS,
+  ALL_MANUFACTURER_BRANDS,
   type PolymerGrade,
 } from "@/data/gradesCatalog";
 import { TdsDownloadButton } from "@/components/TdsDownloadButton";
@@ -63,7 +63,7 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
   // Dynamically extract all brands from live grades (seeded with MAJOR_BRANDS)
   const dynamicBrands = useMemo(() => {
     const brandMap = new Map<string, { id: string; name: string; origin: string }>();
-    MAJOR_BRANDS.forEach((mb) => {
+    ALL_MANUFACTURER_BRANDS.forEach((mb) => {
       brandMap.set(mb.name.toLowerCase(), {
         id: mb.id,
         name: mb.name,
@@ -131,13 +131,19 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
         if (!match) return false;
       }
 
-      // Brand filter
+      // Brand filter (smart multi-alias & keyword matching)
       if (selectedBrand && selectedBrand !== "all") {
-        const targetBrand = selectedBrand.toLowerCase();
-        if (
-          !g.brand.toLowerCase().includes(targetBrand) &&
-          !targetBrand.includes(g.brand.toLowerCase())
-        ) {
+        const target = selectedBrand.toLowerCase().trim();
+        const gBrand = g.brand.toLowerCase().trim();
+        const targetKeywords = target.split(/[\/\-,]/).map((k) => k.trim()).filter(Boolean);
+        const gKeywords = gBrand.split(/[\/\-,]/).map((k) => k.trim()).filter(Boolean);
+
+        const directMatch = gBrand.includes(target) || target.includes(gBrand);
+        const keywordMatch =
+          targetKeywords.some((tk) => gBrand.includes(tk)) ||
+          gKeywords.some((gk) => target.includes(gk));
+
+        if (!directMatch && !keywordMatch) {
           return false;
         }
       }

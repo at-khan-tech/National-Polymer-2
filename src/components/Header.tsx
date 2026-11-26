@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { Icon } from "./Icons";
 import { MAIN_NAVIGATION } from "@/data/siteNavigation";
-import { CANDIDATE_GRADES, MAJOR_BRANDS, type PolymerGrade } from "@/data/gradesCatalog";
+import { CANDIDATE_GRADES, MAJOR_BRANDS, ALL_MANUFACTURER_BRANDS, type PolymerGrade } from "@/data/gradesCatalog";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 const SEARCH_CATEGORIES = [
@@ -254,7 +254,7 @@ export const Header: React.FC = () => {
       string,
       { id: string; name: string; fullName: string; origin: string; categories: string[]; logoUrl?: string }
     >();
-    MAJOR_BRANDS.forEach((mb) => {
+    ALL_MANUFACTURER_BRANDS.forEach((mb) => {
       brandMap.set(mb.name.toLowerCase(), { ...mb });
     });
     liveGrades.forEach((g) => {
