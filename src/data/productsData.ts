@@ -216,38 +216,6 @@ export const PRODUCTS_DATA: ProductDetail[] = [
     imageUrl: "/images/Product/p2.png",
   },
   {
-    slug: "masterbatch-additives",
-    name: "Masterbatch & Polymer Additives",
-    category: "Performance Modifiers",
-    tagline: "White, Black, Color, UV Stabilizers, Slip & Antiblock",
-    description:
-      "High-concentration color and additive masterbatches designed to optimize appearance, processing efficiency, and outdoor service life of end products.",
-    overview: [
-      "White Masterbatch (up to 75% TiO2): High opacity, brilliant whiteness, food contact approved.",
-      "Black Masterbatch (up to 50% Carbon Black): High jetness, UV weatherability, pipe and drip lateral grades.",
-      "Additive Masterbatch: Slip, Antiblock, Optical Brighteners, Antistatic, Desiccants, and Processing Aids (PPA).",
-    ],
-    specs: [
-      { property: "Carrier Resin", value: "PE, PP, PS, Universal" },
-      { property: "Active Concentration", value: "20% – 75% Pigment / Additive Loading" },
-      { property: "Dispersion", value: "Filter Pressure Value (FPV) < 1.0 bar/g" },
-    ],
-    subTypes: [
-      { name: "White TiO2 Masterbatch 70%", mfi: "12", density: "1.95", useCase: "Milk pouches, lamination films, injection molding" },
-      { name: "Black Carbon Masterbatch 40%", mfi: "20", density: "1.25", useCase: "Geomembranes, agricultural pipes, trash bags" },
-      { name: "UV Stabilizer Masterbatch (HALS)", mfi: "8", density: "0.98", useCase: "Greenhouse films, stadium seating, raffia" },
-      { name: "Slip & Antiblock Combination", mfi: "10", density: "0.96", useCase: "BOPP and blown film packaging efficiency" },
-    ],
-    applications: [
-      "Flexible film extrusion & converting",
-      "Rigid packaging coloration & opacity",
-      "Agricultural long-life greenhouse covers",
-      "Cable jacketing & pipe extrusion",
-    ],
-    packaging: ["25 kg moisture-sealed PE bags"],
-    imageUrl: "/images/Product/p3.png",
-  },
-  {
     slug: "recycled",
     name: "Recycled Granules & Regrinds",
     category: "Sustainable Polymers",
