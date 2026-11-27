@@ -263,7 +263,7 @@ export const SuppliersSection: React.FC = () => {
           </div>
 
           {/* Continuous Infinite Smooth Auto-Scrolling Marquee Slider - Official Brand Logos Only */}
-          <div className="relative w-full overflow-hidden py-3 before:pointer-events-none before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-10 sm:before:w-28 before:bg-gradient-to-r before:from-white before:to-transparent after:pointer-events-none after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-10 sm:after:w-28 after:bg-gradient-to-l after:from-white after:to-transparent">
+          <div className="relative w-full overflow-hidden py-4 sm:py-6 before:pointer-events-none before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-12 sm:before:w-32 before:bg-gradient-to-r before:from-white before:to-transparent after:pointer-events-none after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-12 sm:after:w-32 after:bg-gradient-to-l after:from-white after:to-transparent">
             <div className="animate-marquee-left flex items-center gap-4 sm:gap-6">
               {[...ALL_MANUFACTURER_BRANDS, ...ALL_MANUFACTURER_BRANDS].map((brand, idx) => (
                 <Link
@@ -271,15 +271,15 @@ export const SuppliersSection: React.FC = () => {
                   href={`/products?brand=${encodeURIComponent(brand.name)}#grades-explorer`}
                   title={brand.fullName}
                   aria-label={brand.fullName}
-                  className="flex h-16 w-36 sm:h-20 sm:w-44 shrink-0 items-center justify-center rounded-2xl border border-gray-200/80 bg-white p-3.5 sm:p-4 shadow-2xs transition-all duration-300 hover:border-primary hover:shadow-md group"
+                  className="flex h-20 w-44 sm:h-24 sm:w-52 md:h-28 md:w-60 shrink-0 items-center justify-center rounded-2xl border border-gray-200/90 bg-white p-3.5 sm:p-5 shadow-xs transition-all duration-300 hover:border-primary hover:shadow-md hover:bg-orange-50/10 group"
                 >
                   <div className="relative h-full w-full">
                     <Image
                       src={brand.logoUrl}
                       alt={`${brand.name} official logo`}
                       fill
-                      sizes="(max-width: 640px) 140px, 180px"
-                      className="object-contain filter grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300"
+                      sizes="(max-width: 640px) 180px, (max-width: 1024px) 220px, 260px"
+                      className="object-contain opacity-100 group-hover:scale-110 transition-transform duration-300 drop-shadow-xs"
                     />
                   </div>
                 </Link>
