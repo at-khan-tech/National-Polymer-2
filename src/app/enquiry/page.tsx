@@ -8,6 +8,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Icon } from "@/components/Icons";
 import type { ProductDetail } from "@/data/productsData";
+import { trackEnquirySubmit } from "@/lib/analytics";
 
 const COMMON_PORTS = [
   "Jebel Ali Port (Dubai, UAE)",
@@ -168,6 +169,17 @@ function EnquiryFormContent() {
       if (!response.ok) {
         throw new Error(result.message || "Unable to submit your enquiry.");
       }
+
+      // Track conversion in GA4 & GTM
+      trackEnquirySubmit({
+        product: currentProductData?.slug || selectedProduct,
+        grade: selectedGrade || "Standard Grade",
+        brand: selectedBrand || undefined,
+        volume: finalVolume,
+        destinationPort: formData.destinationPort,
+        country: formData.country,
+      });
+
       setSubmitted(true);
     } catch (error) {
       setSubmitError(

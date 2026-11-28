@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Download, FileText, Check, Loader2 } from "lucide-react";
 import type { PolymerGrade } from "@/data/gradesCatalog";
+import { trackTdsDownload, trackTdsRequest } from "@/lib/analytics";
 
 interface TdsDownloadButtonProps {
   grade: PolymerGrade;
@@ -19,12 +20,14 @@ export const TdsDownloadButton: React.FC<TdsDownloadButtonProps> = ({
   const handleDownload = () => {
     // If a direct TDS file exists, open it
     if (grade.tdsUrl && (grade.tdsUrl.startsWith("http") || grade.tdsUrl.endsWith(".pdf"))) {
+      trackTdsDownload(grade.grade, grade.brand, grade.category, grade.tdsUrl);
       window.open(grade.tdsUrl, "_blank", "noopener,noreferrer");
       return;
     }
 
     // If enquiry lead, route to enquiry form
     if (grade.tdsStatus === "request" || grade.tdsStatus === "pending") {
+      trackTdsRequest(grade.grade, grade.brand, grade.category);
       const enquiryUrl = `/enquiry?product=${grade.category.toLowerCase()}&grade=${encodeURIComponent(
         grade.grade
       )}&brand=${encodeURIComponent(grade.brand)}&origin=${encodeURIComponent(

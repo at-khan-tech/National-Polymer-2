@@ -11,6 +11,13 @@ import {
 import { TdsDownloadButton } from "@/components/TdsDownloadButton";
 import { MobileCustomerJourney } from "@/components/MobileCustomerJourney";
 import { ExternalLink, FileText } from "lucide-react";
+import {
+  trackTdsDownload,
+  trackTdsRequest,
+  trackQuoteRequest,
+  trackBrandFilter,
+  trackGradeView,
+} from "@/lib/analytics";
 
 interface GradeCatalogExplorerProps {
   initialBrand?: string;
@@ -496,6 +503,7 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
                           {/* Direct Grade Detail Link */}
                           <Link
                             href={`/grades/${g.id}`}
+                            onClick={() => trackGradeView(g.grade, g.brand, g.category)}
                             title={`View dynamic specs for ${g.grade}`}
                             className="px-2 py-1 rounded border border-gray-200 hover:border-primary text-[11px] font-medium text-gray-700 hover:text-primary hover:bg-primary-soft transition flex items-center gap-1 shrink-0"
                           >
@@ -509,6 +517,7 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
                               href={g.tdsUrl}
                               target="_blank"
                               rel="noopener noreferrer"
+                              onClick={() => trackTdsDownload(g.grade, g.brand, g.category, g.tdsUrl)}
                               title="Download exact-grade producer Technical Data Sheet (PDF)"
                               className="px-2 py-1 rounded border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-[11px] font-semibold text-emerald-800 transition flex items-center gap-1 shrink-0"
                             >
@@ -518,7 +527,10 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
                           ) : g.tdsStatus === "pending" || g.status === "Pending" ? (
                             <button
                               type="button"
-                              onClick={() => setActiveTdsGrade(g)}
+                              onClick={() => {
+                                setActiveTdsGrade(g);
+                                trackGradeView(g.grade, g.brand, g.category);
+                              }}
                               title="Technical verification in progress from refiner documentation"
                               className="px-2 py-1 rounded border border-amber-300 bg-amber-50 hover:bg-amber-100 text-[10.5px] font-medium text-amber-800 transition flex items-center gap-1 shrink-0 cursor-pointer"
                             >
@@ -528,6 +540,7 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
                           ) : (
                             <Link
                               href={`${enquiryUrl}&action=request-tds`}
+                              onClick={() => trackTdsRequest(g.grade, g.brand, g.category)}
                               title="Request manufacturer Technical Data Sheet from trade desk"
                               className="px-2 py-1 rounded border border-navy/30 hover:border-navy bg-slate-50 hover:bg-navy/5 text-[11px] font-medium text-navy transition flex items-center gap-1 shrink-0"
                             >
@@ -539,6 +552,7 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
                           {/* Request Quote Button */}
                           <Link
                             href={enquiryUrl}
+                            onClick={() => trackQuoteRequest(g.category.toLowerCase(), g.grade, g.brand)}
                             className="px-2.5 py-1 rounded-lg bg-primary hover:bg-primary-darker text-white text-[11px] font-bold shadow-2xs hover:shadow-sm transition cursor-pointer flex items-center gap-1 shrink-0"
                           >
                             <span>Quote</span>

@@ -6,6 +6,7 @@ import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { SiteSettingsProvider } from "@/context/SiteSettingsContext";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { Analytics, GTMNoScript } from "@/components/Analytics";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -41,6 +42,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={montserrat.variable}>
       <body className="font-montserrat antialiased bg-white text-gray-900 overflow-x-hidden min-h-screen w-full relative selection:bg-primary selection:text-white">
+        <GTMNoScript />
+        <Analytics />
         <ThemeProvider>
           <SiteSettingsProvider>
             <SmoothScrollProvider>

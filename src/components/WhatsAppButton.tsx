@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Icon } from "./Icons";
+import { trackContactClick } from "@/lib/analytics";
 
 export const WhatsAppButton: React.FC = () => {
   const [showTooltip, setShowTooltip] = useState(false);
@@ -29,6 +30,7 @@ export const WhatsAppButton: React.FC = () => {
         href={waUrl}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackContactClick("whatsapp", "Floating WhatsApp button")}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
         className="group relative flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl transition-all duration-300 hover:scale-110 hover:bg-[#20bd5a] focus:outline-none focus:ring-4 focus:ring-emerald-400/40 cursor-pointer"
