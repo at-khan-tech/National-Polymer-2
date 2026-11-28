@@ -23,6 +23,17 @@ export const TdsDownloadButton: React.FC<TdsDownloadButtonProps> = ({
       return;
     }
 
+    // If enquiry lead, route to enquiry form
+    if (grade.tdsStatus === "request" || grade.tdsStatus === "pending") {
+      const enquiryUrl = `/enquiry?product=${grade.category.toLowerCase()}&grade=${encodeURIComponent(
+        grade.grade
+      )}&brand=${encodeURIComponent(grade.brand)}&origin=${encodeURIComponent(
+        grade.origin
+      )}&action=request-tds`;
+      window.location.href = enquiryUrl;
+      return;
+    }
+
     // Otherwise, generate a printable Technical Data Sheet in a new window
     setIsGenerating(true);
 
@@ -305,7 +316,13 @@ export const TdsDownloadButton: React.FC<TdsDownloadButtonProps> = ({
       ) : (
         <>
           <Download className="w-4 h-4" />
-          <span>Download TDS Sheet</span>
+          <span>
+            {grade.tdsStatus === "available"
+              ? "Download TDS (PDF)"
+              : grade.tdsStatus === "pending"
+              ? "Verification Pending"
+              : "Request TDS Document"}
+          </span>
         </>
       )}
     </button>

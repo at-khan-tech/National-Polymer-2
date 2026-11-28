@@ -732,9 +732,13 @@ export async function getAllGrades(): Promise<PolymerGrade[]> {
         application: row.application,
         mfi: row.mfi,
         density: row.density,
-        availability: row.availability || "Available on request",
+        availability: row.availability || "Availability on request",
         status: row.status || "Verified",
         tdsUrl: row.tds_url || row.tdsUrl,
+        tdsStatus: row.tds_status || row.tdsStatus || (row.tds_url?.startsWith("http") && row.tds_url?.endsWith(".pdf") ? "available" : "request"),
+        packaging: row.packaging || "25 kg PE bags",
+        paymentTerms: row.payment_terms || row.paymentTerms || "LC 30-90 days / TT",
+        flowPropertyType: row.flow_property_type || row.flowPropertyType,
         notes: row.notes,
       }));
     }
@@ -802,9 +806,13 @@ export async function addGrade(input: Omit<PolymerGrade, "id"> & { id?: string }
     application,
     mfi,
     density,
-    availability: input.availability?.trim() || "Available on request",
+    availability: input.availability?.trim() || "Availability on request",
     status: input.status || "Verified",
     tdsUrl: input.tdsUrl?.trim() || undefined,
+    tdsStatus: input.tdsStatus || (input.tdsUrl?.startsWith("http") && input.tdsUrl?.endsWith(".pdf") ? "available" : "request"),
+    packaging: input.packaging || "25 kg PE bags",
+    paymentTerms: input.paymentTerms || "LC 30-90 days / TT on commercial terms",
+    flowPropertyType: input.flowPropertyType,
     notes: input.notes?.trim() || undefined,
   };
 

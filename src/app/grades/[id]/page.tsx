@@ -114,16 +114,16 @@ export default async function GradeDetailPage({ params }: GradePageProps) {
                 {/* Quick Spec Pills */}
                 <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-lg">
                   <div className="bg-white/90 border border-gray-200 rounded-xl p-3 shadow-2xs">
-                    <span className="text-[10px] uppercase font-bold text-gray-500 block">MFI / MFR</span>
-                    <span className="font-mono text-base font-bold text-navy block mt-0.5">{grade.mfi}</span>
+                    <span className="text-[10px] uppercase font-bold text-gray-500 block">Typical Flow Property</span>
+                    <span className="font-mono text-xs sm:text-sm font-bold text-navy block mt-0.5">{grade.mfi}</span>
                   </div>
                   <div className="bg-white/90 border border-gray-200 rounded-xl p-3 shadow-2xs">
-                    <span className="text-[10px] uppercase font-bold text-gray-500 block">Density</span>
-                    <span className="font-mono text-base font-bold text-navy block mt-0.5">{grade.density}</span>
+                    <span className="text-[10px] uppercase font-bold text-gray-500 block">Typical Density</span>
+                    <span className="font-mono text-xs sm:text-sm font-bold text-navy block mt-0.5">{grade.density}</span>
                   </div>
                   <div className="bg-white/90 border border-gray-200 rounded-xl p-3 shadow-2xs col-span-2 sm:col-span-1">
-                    <span className="text-[10px] uppercase font-bold text-gray-500 block">Origin</span>
-                    <span className="text-sm font-bold text-navy block mt-0.5 truncate">{grade.origin}</span>
+                    <span className="text-[10px] uppercase font-bold text-gray-500 block">Availability</span>
+                    <span className="text-xs sm:text-sm font-bold text-emerald-700 block mt-0.5 truncate">{grade.availability || "On request"}</span>
                   </div>
                 </div>
 
@@ -213,7 +213,7 @@ export default async function GradeDetailPage({ params }: GradePageProps) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex flex-col justify-between gap-1.5 min-w-0 transition-colors hover:border-primary/40">
                     <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 block leading-tight">
-                      Melt Flow Rate (MFI/MFR)
+                      Typical Flow Property
                     </span>
                     <span className="text-sm sm:text-base font-mono font-bold text-navy leading-snug break-words block">
                       {grade.mfi}
@@ -222,7 +222,7 @@ export default async function GradeDetailPage({ params }: GradePageProps) {
 
                   <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex flex-col justify-between gap-1.5 min-w-0 transition-colors hover:border-primary/40">
                     <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 block leading-tight">
-                      Polymer Density
+                      Typical Density
                     </span>
                     <span className="text-sm sm:text-base font-mono font-bold text-navy leading-snug break-words block">
                       {grade.density}
@@ -231,7 +231,7 @@ export default async function GradeDetailPage({ params }: GradePageProps) {
 
                   <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex flex-col justify-between gap-1.5 min-w-0 transition-colors hover:border-primary/40">
                     <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 block leading-tight">
-                      Polymer Classification
+                      Material Type / Subtype
                     </span>
                     <span className="text-sm sm:text-base font-bold text-navy leading-snug break-words block">
                       {grade.category} ({grade.subCategory})
@@ -244,6 +244,24 @@ export default async function GradeDetailPage({ params }: GradePageProps) {
                     </span>
                     <span className="text-sm sm:text-base font-bold text-navy leading-snug break-words block">
                       {grade.origin}
+                    </span>
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex flex-col justify-between gap-1.5 min-w-0 transition-colors hover:border-primary/40">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 block leading-tight">
+                      Export Packaging Spec
+                    </span>
+                    <span className="text-sm sm:text-base font-bold text-navy leading-snug break-words block">
+                      {grade.packaging || "25 kg PE bags / 1,000 kg FIBC"}
+                    </span>
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 flex flex-col justify-between gap-1.5 min-w-0 transition-colors hover:border-primary/40">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500 block leading-tight">
+                      Payment &amp; Trade Terms
+                    </span>
+                    <span className="text-sm sm:text-base font-bold text-navy leading-snug break-words block">
+                      {grade.paymentTerms || "LC 30-90 days / TT on agreed terms"}
                     </span>
                   </div>
                 </div>

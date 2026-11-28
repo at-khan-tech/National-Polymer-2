@@ -175,18 +175,18 @@ export default async function ProductInnerPage({ params }: PageProps) {
                       Standard Processing Grades
                     </h2>
                   </div>
-                  <span className="text-xs text-gray-400 bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 font-medium">
-                    {product.subTypes.length} grades available
+                  <span className="text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 font-medium">
+                    {matchingGrades.length > 0 ? `${matchingGrades.length} verified grades in catalog` : "Typical processing guidance"}
                   </span>
                 </div>
                 <div className="w-full overflow-x-auto lg:overflow-x-visible">
                   <table className="w-full text-left border-collapse table-auto">
                     <thead className="bg-gray-50 border-b border-gray-200">
-                      <tr className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
-                        <th className="py-3.5 px-5">Grade Classification</th>
-                        <th className="py-3.5 px-4">MFI (g/10 min)</th>
-                        <th className="py-3.5 px-4">Density (g/cm³)</th>
-                        <th className="py-3.5 px-4">Target Application</th>
+                      <tr className="text-[11px] font-bold uppercase tracking-wider text-gray-600">
+                        <th className="py-3.5 px-5">Material Type / Processing Grade</th>
+                        <th className="py-3.5 px-4">Typical Flow Property</th>
+                        <th className="py-3.5 px-4">Typical Density</th>
+                        <th className="py-3.5 px-4">Typical Applications</th>
                         <th className="py-3.5 px-4 text-right">Action</th>
                       </tr>
                     </thead>
@@ -239,13 +239,13 @@ export default async function ProductInnerPage({ params }: PageProps) {
                   <div className="w-full overflow-x-auto lg:overflow-x-visible">
                     <table className="w-full text-left border-collapse table-auto">
                       <thead className="bg-gray-50 border-b border-gray-200">
-                        <tr className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
-                          <th className="py-3.5 px-5">Manufacturer</th>
+                        <tr className="text-[11px] font-bold uppercase tracking-wider text-gray-600">
+                          <th className="py-3.5 px-5">Manufacturer &amp; Origin</th>
                           <th className="py-3.5 px-4">Grade Code</th>
-                          <th className="py-3.5 px-4">Subtype</th>
-                          <th className="py-3.5 px-4">MFI Spec</th>
-                          <th className="py-3.5 px-4">Application</th>
-                          <th className="py-3.5 px-4 text-right">RFQ</th>
+                          <th className="py-3.5 px-4">Material Subtype</th>
+                          <th className="py-3.5 px-4">Typical Flow Property</th>
+                          <th className="py-3.5 px-4">Typical Applications</th>
+                          <th className="py-3.5 px-4 text-right">Action</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-100 text-sm">
@@ -357,19 +357,19 @@ export default async function ProductInnerPage({ params }: PageProps) {
                   />
                   <div className="relative p-6 text-center">
                     <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary block mb-2">
-                      Price Indication
+                      Direct Trade Desk Enquiry
                     </span>
                     <h3 className="text-lg font-bold text-white">
-                      Ready for a Quote?
+                      Request TDS &amp; Container Quote
                     </h3>
-                    <p className="mt-2 text-xs text-white/65 leading-relaxed">
-                      Get current CIF rates, shipping schedules, and full COA data sheets for {product.name}.
+                    <p className="mt-2 text-xs text-white/70 leading-relaxed">
+                      Specify your target grade, processing application, container volume, and destination port. Direct producer pricing &amp; TDS in 4 business hours.
                     </p>
                     <Link
-                      href={`/enquiry?product=${product.slug}`}
+                      href={`/enquiry?product=${product.slug}&action=request-tds`}
                       className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-darker py-3.5 text-xs font-bold uppercase tracking-wider text-white transition-colors shadow-sm active:scale-95"
                     >
-                      Request Technical Data &amp; Quote
+                      <span>Request TDS / Enquire</span>
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7-7 7m7-7H3" />
                       </svg>

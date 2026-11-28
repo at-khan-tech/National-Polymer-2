@@ -212,92 +212,110 @@ export default async function ProductsPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-              {products.map((product) => (
-                <article
-                  key={product.slug}
-                  className="group flex flex-col rounded-2xl bg-white border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl hover:border-primary/40 transition-all duration-300"
-                >
-                  {/* Product Image */}
-                  <Link
-                    href={`/products/${product.slug}`}
-                    className="relative block w-full overflow-hidden bg-gray-100"
-                    style={{ aspectRatio: "16/9" }}
-                    title={`View ${product.name} specifications`}
+              {products.map((product) => {
+                const familyGradesCount = allGrades.filter((g) => {
+                  if (product.slug === "pp") return g.category === "PP";
+                  if (product.slug === "pe") return ["HDPE", "LDPE", "LLDPE"].includes(g.category);
+                  if (product.slug === "pvc") return g.category === "PVC";
+                  if (product.slug === "pet") return g.category === "PET";
+                  if (product.slug === "ps") return g.category === "PS";
+                  if (product.slug === "engineering-plastics") return g.category === "Engineering";
+                  if (product.slug === "recycled") return g.category === "Recycled";
+                  return false;
+                }).length;
+
+                return (
+                  <article
+                    key={product.slug}
+                    className="group flex flex-col rounded-2xl bg-white border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl hover:border-primary/40 transition-all duration-300"
                   >
-                    <Image
-                      src={product.imageUrl || "/images/Product/p1.png"}
-                      alt={product.name}
-                      fill
-                      sizes="(max-width: 640px) 100vw, 50vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      unoptimized={Boolean(product.imageUrl && product.imageUrl.startsWith("http"))}
-                    />
-                    {/* Gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                    {/* Category badge */}
-                    <span className="absolute top-3.5 left-3.5 rounded-full bg-white/95 backdrop-blur-sm px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary shadow-sm">
-                      {product.category}
-                    </span>
-                  </Link>
-
-                  {/* Body */}
-                  <div className="flex flex-col flex-1 p-5 sm:p-6">
-                    <div className="flex-1">
-                      <Link href={`/products/${product.slug}`}>
-                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-primary transition-colors leading-snug">
-                          {product.name}
-                        </h3>
-                      </Link>
-                      <p className="mt-1 text-xs font-semibold text-primary/80">
-                        {product.tagline}
-                      </p>
-                      <p className="mt-3 text-xs sm:text-sm text-gray-600 line-clamp-3 leading-relaxed">
-                        {product.description}
-                      </p>
-
-                      {/* Grade pills */}
-                      <div className="mt-4 pt-4 border-t border-gray-100">
-                        <span className="text-[10px] uppercase font-bold text-gray-400 tracking-widest block mb-2">
-                          Standard Processing Grades
+                    {/* Product Image */}
+                    <Link
+                      href={`/products/${product.slug}`}
+                      className="relative block w-full overflow-hidden bg-gray-100"
+                      style={{ aspectRatio: "16/9" }}
+                      title={`View ${product.name} specifications`}
+                    >
+                      <Image
+                        src={product.imageUrl || "/images/Product/p1.png"}
+                        alt={product.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, 50vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        unoptimized={Boolean(product.imageUrl && product.imageUrl.startsWith("http"))}
+                      />
+                      {/* Gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                      {/* Category badge */}
+                      <span className="absolute top-3.5 left-3.5 rounded-full bg-white/95 backdrop-blur-sm px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary shadow-sm">
+                        {product.category}
+                      </span>
+                      {familyGradesCount > 0 && (
+                        <span className="absolute top-3.5 right-3.5 rounded-full bg-navy/90 backdrop-blur-sm px-2.5 py-1 text-[10px] font-bold text-white shadow-sm">
+                          {familyGradesCount} Published Grades
                         </span>
-                        <div className="flex flex-wrap gap-1.5">
-                          {product.subTypes.slice(0, 4).map((sub, i) => (
-                            <span
-                              key={i}
-                              className="rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1 text-[11px] font-semibold text-gray-700"
-                            >
-                              {sub.name}
-                            </span>
-                          ))}
-                          {product.subTypes.length > 4 && (
-                            <span className="rounded-lg border border-dashed border-gray-300 bg-transparent px-2.5 py-1 text-[11px] font-medium text-gray-400">
-                              +{product.subTypes.length - 4} more
-                            </span>
-                          )}
+                      )}
+                    </Link>
+
+                    {/* Body */}
+                    <div className="flex flex-col flex-1 p-5 sm:p-6">
+                      <div className="flex-1">
+                        <Link href={`/products/${product.slug}`}>
+                          <h3 className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-primary transition-colors leading-snug">
+                            {product.name}
+                          </h3>
+                        </Link>
+                        <p className="mt-1 text-xs font-semibold text-primary/80">
+                          {product.tagline}
+                        </p>
+                        <p className="mt-3 text-xs sm:text-sm text-gray-600 line-clamp-3 leading-relaxed">
+                          {product.description}
+                        </p>
+
+                        {/* Grade pills */}
+                        <div className="mt-4 pt-4 border-t border-gray-100">
+                          <span className="text-[10px] uppercase font-bold text-gray-400 tracking-widest block mb-2">
+                            Standard Processing Grades
+                          </span>
+                          <div className="flex flex-wrap gap-1.5">
+                            {product.subTypes.slice(0, 4).map((sub, i) => (
+                              <span
+                                key={i}
+                                className="rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1 text-[11px] font-semibold text-gray-700"
+                              >
+                                {sub.name}
+                              </span>
+                            ))}
+                            {product.subTypes.length > 4 && (
+                              <span className="rounded-lg border border-dashed border-gray-300 bg-transparent px-2.5 py-1 text-[11px] font-medium text-gray-400">
+                                +{product.subTypes.length - 4} more
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* Footer Actions */}
-                    <div className="mt-5 pt-4 border-t border-gray-100 flex items-center justify-between gap-3">
-                      <Link
-                        href={`/products/${product.slug}`}
-                        className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-700 hover:text-primary transition-colors"
-                      >
-                        <span>Technical Specs &amp; COA</span>
-                        <Icon name="arrow-forward" className="w-3.5 h-3.5" />
-                      </Link>
+                      {/* Footer Actions */}
+                      <div className="mt-5 pt-4 border-t border-gray-100 flex items-center justify-between gap-3">
+                        <Link
+                          href={`/products/${product.slug}`}
+                          className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-700 hover:text-primary transition-colors"
+                        >
+                          <span>Technical Specs &amp; COA</span>
+                          <Icon name="arrow-forward" className="w-3.5 h-3.5" />
+                        </Link>
 
-                      <Link
-                        href={`/enquiry?product=${product.slug}`}
-                        className="rounded-xl bg-navy hover:bg-primary px-4 py-2.5 text-xs font-bold text-white transition-colors shadow-sm"
-                      >
-                        RFQ / Quote
-                      </Link>
+                        <Link
+                          href={`/enquiry?product=${product.slug}`}
+                          className="rounded-xl bg-navy hover:bg-primary px-4 py-2.5 text-xs font-bold text-white transition-colors shadow-sm"
+                        >
+                          RFQ / Quote
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
           </section>
 

@@ -412,10 +412,10 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
                 <tr className="bg-gray-50/90 border-b border-gray-200 text-[11px] font-bold uppercase tracking-wider text-gray-600">
                   <th className="py-3.5 px-3 sm:px-4 xl:px-5">Manufacturer &amp; Origin</th>
                   <th className="py-3.5 px-3 sm:px-4">Grade Code</th>
-                  <th className="py-3.5 px-3 sm:px-4">Category &amp; Subtype</th>
-                  <th className="py-3.5 px-3 sm:px-4">MFI / MFR Spec</th>
-                  <th className="py-3.5 px-3 sm:px-4">Density</th>
-                  <th className="py-3.5 px-3 sm:px-4">Typical Application</th>
+                  <th className="py-3.5 px-3 sm:px-4">Material Type / Subtype</th>
+                  <th className="py-3.5 px-3 sm:px-4">Typical Flow Property</th>
+                  <th className="py-3.5 px-3 sm:px-4">Typical Density</th>
+                  <th className="py-3.5 px-3 sm:px-4">Typical Applications</th>
                   <th className="py-3.5 px-3 sm:px-4 text-center">TDS &amp; Action</th>
                 </tr>
               </thead>
@@ -503,16 +503,38 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
                             <ExternalLink className="w-3 h-3" />
                           </Link>
 
-                          {/* TDS Quick View Button */}
-                          <button
-                            type="button"
-                            onClick={() => setActiveTdsGrade(g)}
-                            title="View Technical Data Sheet specifications"
-                            className="px-2 py-1 rounded border border-gray-200 hover:border-navy text-[11px] font-medium text-navy hover:bg-navy/5 transition flex items-center gap-1 cursor-pointer shrink-0"
-                          >
-                            <FileText className="w-3.5 h-3.5 text-navy" />
-                            <span>TDS</span>
-                          </button>
+                          {/* 3-Tier TDS Button */}
+                          {g.tdsStatus === "available" && g.tdsUrl && (g.tdsUrl.startsWith("http") || g.tdsUrl.endsWith(".pdf")) ? (
+                            <a
+                              href={g.tdsUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title="Download exact-grade producer Technical Data Sheet (PDF)"
+                              className="px-2 py-1 rounded border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-[11px] font-semibold text-emerald-800 transition flex items-center gap-1 shrink-0"
+                            >
+                              <FileText className="w-3 h-3 text-emerald-600" />
+                              <span>Download TDS</span>
+                            </a>
+                          ) : g.tdsStatus === "pending" || g.status === "Pending" ? (
+                            <button
+                              type="button"
+                              onClick={() => setActiveTdsGrade(g)}
+                              title="Technical verification in progress from refiner documentation"
+                              className="px-2 py-1 rounded border border-amber-300 bg-amber-50 hover:bg-amber-100 text-[10.5px] font-medium text-amber-800 transition flex items-center gap-1 shrink-0 cursor-pointer"
+                            >
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                              <span>Verification Pending</span>
+                            </button>
+                          ) : (
+                            <Link
+                              href={`${enquiryUrl}&action=request-tds`}
+                              title="Request manufacturer Technical Data Sheet from trade desk"
+                              className="px-2 py-1 rounded border border-navy/30 hover:border-navy bg-slate-50 hover:bg-navy/5 text-[11px] font-medium text-navy transition flex items-center gap-1 shrink-0"
+                            >
+                              <FileText className="w-3 h-3 text-navy" />
+                              <span>Request TDS</span>
+                            </Link>
+                          )}
 
                           {/* Request Quote Button */}
                           <Link
@@ -570,7 +592,7 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
               <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
                 <div className="p-3 bg-gray-50 rounded-xl border border-gray-100">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500 block">
-                    Melt Flow Rate (MFI/MFR)
+                    Typical Flow Property
                   </span>
                   <span className="font-mono font-bold text-gray-900 text-xs sm:text-sm mt-0.5 block">
                     {activeTdsGrade.mfi}
@@ -578,7 +600,7 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
                 </div>
                 <div className="p-3 bg-gray-50 rounded-xl border border-gray-100">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500 block">
-                    Polymer Density
+                    Typical Density
                   </span>
                   <span className="font-mono font-bold text-gray-900 text-xs sm:text-sm mt-0.5 block">
                     {activeTdsGrade.density}
@@ -586,9 +608,28 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
                 </div>
               </div>
 
+              <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+                <div className="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500 block">
+                    Export Packaging
+                  </span>
+                  <span className="font-semibold text-gray-900 text-xs sm:text-sm mt-0.5 block">
+                    {activeTdsGrade.packaging || "25 kg PE bags"}
+                  </span>
+                </div>
+                <div className="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500 block">
+                    Payment Terms
+                  </span>
+                  <span className="font-semibold text-gray-900 text-xs sm:text-sm mt-0.5 block">
+                    {activeTdsGrade.paymentTerms || "LC 30-90 days / TT"}
+                  </span>
+                </div>
+              </div>
+
               <div className="p-3.5 bg-gray-50 rounded-xl border border-gray-100">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500 block">
-                  Processing &amp; Application Use Case
+                  Processing &amp; Application Guidance
                 </span>
                 <span className="font-semibold text-gray-800 text-xs mt-1 block">
                   {activeTdsGrade.application}
@@ -600,8 +641,8 @@ export const GradeCatalogExplorer: React.FC<GradeCatalogExplorerProps> = ({
                 )}
               </div>
 
-              <div className="p-3 bg-amber-50 rounded-xl border border-amber-200/60 text-xs text-amber-800">
-                <strong>Commercial Supply Note:</strong> Certified prime lot, containerized export directly from manufacturer facility. Available on request subject to destination port discharge capacity.
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 text-xs text-slate-700">
+                <strong>Supply &amp; Origin:</strong> Direct international shipment from manufacturer origin ({activeTdsGrade.origin}). Availability on request subject to customer application and agreed commercial terms.
               </div>
             </div>
 
